@@ -1,26 +1,42 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/*
+ * デザイントークン（Tailwind v4 @theme）。
+ * ここで定義した値から bg-brand / text-brand などのユーティリティが生成されます。
+ * リブランド時はこの色とフォントだけ変えればサイト全体に反映されます。
+ */
+@theme {
+  /* ラテン文字は Geist（next/font で自己ホスト）、日本語はOSの高品質フォントに自動フォールバック。
+     Webフォントのダウンロードを最小化し、Core Web Vitals（CLS/LCP）を最優先にしています。 */
+  --font-sans:
+    var(--font-geist-sans), "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP",
+    "Yu Gothic", Meiryo, system-ui, sans-serif;
+
+  --color-brand: #4f46e5; /* indigo-600 */
+  --color-brand-dark: #4338ca; /* indigo-700 */
+  --color-brand-light: #eef2ff; /* indigo-50 */
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* 固定ヘッダー分のアンカーオフセット */
+    scroll-padding-top: 5rem;
+    -webkit-text-size-adjust: 100%;
   }
-}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  body {
+    font-family: var(--font-sans);
+    background-color: #ffffff;
+    color: #334155; /* slate-700 */
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    /* 日本語の約物（句読点・括弧）のアキを詰めて読みやすく */
+    font-feature-settings: "palt";
+  }
+
+  ::selection {
+    background-color: var(--color-brand);
+    color: #ffffff;
+  }
 }
