@@ -7,12 +7,35 @@
  */
 
 import { siteConfig, absoluteUrl } from "@/lib/site";
-import { faqs, services, aggregateRating, steps } from "@/lib/content";
+import { faqs, services, aggregateRating, steps, expert } from "@/lib/content";
 
 type JsonLd = Record<string, unknown>;
 
 const ORGANIZATION_ID = `${siteConfig.url}/#organization`;
 const WEBSITE_ID = `${siteConfig.url}/#website`;
+const PERSON_ID = `${siteConfig.url}/#founder`;
+
+/**
+ * 代表・監修者（Person）。E-E-A-T（経験・専門性・権威性・信頼性）を
+ * 構造化データで裏づけ、Google・生成AIに「誰が監修しているか」を伝える。
+ */
+export function personJsonLd(): JsonLd {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "@id": PERSON_ID,
+    name: expert.name,
+    alternateName: expert.reading,
+    jobTitle: expert.role,
+    description: expert.bio,
+    worksFor: { "@id": ORGANIZATION_ID },
+    knowsAbout: [...siteConfig.knowsAbout],
+    hasCredential: expert.credentials.map((c) => ({
+      "@type": "EducationalOccupationalCredential",
+      name: c,
+    })),
+  };
+}
 
 /**
  * 事業者（ProfessionalService = LocalBusiness のサブタイプ）。
@@ -54,6 +77,7 @@ export function organizationJsonLd(): JsonLd {
       closes: "19:00",
     },
     sameAs: siteConfig.sameAs,
+    founder: { "@id": PERSON_ID },
     aggregateRating: {
       "@type": "AggregateRating",
       ratingValue: aggregateRating.ratingValue,
@@ -170,6 +194,9 @@ export function webPageJsonLd(): JsonLd {
     inLanguage: siteConfig.lang,
     isPartOf: { "@id": WEBSITE_ID },
     about: { "@id": ORGANIZATION_ID },
+    // 監修者を明示（E-E-A-T）。Person ノードは personJsonLd() で出力。
+    author: { "@id": PERSON_ID },
+    reviewedBy: { "@id": PERSON_ID },
     primaryImageOfPage: absoluteUrl("/opengraph-image"),
     datePublished: siteConfig.foundingDate,
     dateModified: new Date().toISOString().slice(0, 10),

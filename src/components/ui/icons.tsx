@@ -20,7 +20,11 @@ export type IconKey =
   | "mail"
   | "pin"
   | "clock"
-  | "sparkles";
+  | "sparkles"
+  | "cube"
+  | "film"
+  | "award"
+  | "user";
 
 const base: SVGProps<SVGSVGElement> = {
   width: 24,
@@ -149,6 +153,30 @@ export const iconMap: Record<IconKey, (props: SVGProps<SVGSVGElement>) => React.
     <svg {...base} {...p}>
       <path d="M12 4l1.7 4.6L18 10l-4.3 1.4L12 16l-1.7-4.6L6 10l4.3-1.4L12 4Z" />
       <path d="M18.5 14l.8 2.1 2 .7-2 .8-.8 2-.8-2-2-.8 2-.7.8-2.1Z" />
+    </svg>
+  ),
+  cube: (p) => (
+    <svg {...base} {...p}>
+      <path d="M12 3 4 7.5v9L12 21l8-4.5v-9L12 3Z" />
+      <path d="M4 7.5 12 12l8-4.5M12 12v9" />
+    </svg>
+  ),
+  film: (p) => (
+    <svg {...base} {...p}>
+      <rect x="3" y="4" width="18" height="16" rx="2" />
+      <path d="M7 4v16M17 4v16M3 9h4M3 15h4M17 9h4M17 15h4" />
+    </svg>
+  ),
+  award: (p) => (
+    <svg {...base} {...p}>
+      <circle cx="12" cy="9" r="5.5" />
+      <path d="m8.8 13.5-1.8 7 5-3 5 3-1.8-7" />
+    </svg>
+  ),
+  user: (p) => (
+    <svg {...base} {...p}>
+      <circle cx="12" cy="8" r="4" />
+      <path d="M4.5 20.5a7.5 7.5 0 0 1 15 0" />
     </svg>
   ),
 };

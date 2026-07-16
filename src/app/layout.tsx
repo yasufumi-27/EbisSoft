@@ -3,12 +3,14 @@ import { Geist, Orbitron } from "next/font/google";
 import "./globals.css";
 
 import { siteConfig } from "@/lib/site";
-import { organizationJsonLd, websiteJsonLd } from "@/lib/jsonld";
+import { organizationJsonLd, websiteJsonLd, personJsonLd } from "@/lib/jsonld";
 import { JsonLd } from "@/components/JsonLd";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { BackgroundFx } from "@/components/fx/BackgroundFx";
 import { RevealInit } from "@/components/fx/RevealInit";
+import { PointerFx } from "@/components/fx/PointerFx";
+import { ScrollProgress } from "@/components/fx/ScrollProgress";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -111,11 +113,13 @@ export default function RootLayout({
         <noscript>
           <style>{`[data-reveal]{opacity:1 !important;transform:none !important;filter:none !important}`}</style>
         </noscript>
-        {/* サイト共通の構造化データ（事業者・サイト） */}
-        <JsonLd data={[organizationJsonLd(), websiteJsonLd()]} />
-        {/* 3D背景（クライアントのみ・遅延読み込み）とスクロールリビール */}
+        {/* サイト共通の構造化データ（事業者・サイト・代表者=E-E-A-T） */}
+        <JsonLd data={[organizationJsonLd(), websiteJsonLd(), personJsonLd()]} />
+        {/* 3D背景（クライアントのみ・遅延読み込み）と各種演出の起動役 */}
         <BackgroundFx />
         <RevealInit />
+        <PointerFx />
+        <ScrollProgress />
         <SiteHeader />
         <main className="flex-1">{children}</main>
         <SiteFooter />

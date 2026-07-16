@@ -7,7 +7,9 @@ import {
   faqJsonLd,
 } from "@/lib/jsonld";
 import { Hero } from "@/components/sections/Hero";
+import { TechMarquee } from "@/components/sections/TechMarquee";
 import { KeyFacts } from "@/components/sections/KeyFacts";
+import { Expert } from "@/components/sections/Expert";
 import { Strengths } from "@/components/sections/Strengths";
 import { Services } from "@/components/sections/Services";
 import { AiSearch } from "@/components/sections/AiSearch";
@@ -36,6 +38,7 @@ export default function Home() {
       />
 
       <Hero />
+      <TechMarquee />
       <KeyFacts />
       <Strengths />
       <Services />
@@ -44,6 +47,7 @@ export default function Home() {
       <Pricing />
       <Process />
       <Testimonials />
+      <Expert />
       <Faq />
       <ContactCta />
     </>

@@ -82,6 +82,22 @@ export const services: Service[] = [
     icon: "sparkles",
     features: ["キーワード・エンティティ設計", "構造化データ・llms.txt整備", "結論ファーストのAI最適化"],
   },
+  {
+    slug: "3dcg-webgl",
+    title: "3DCG制作・WebGL演出",
+    description:
+      "Three.js / WebGLによるインタラクティブな3D表現から、製品・空間の3DCGモデリング・ビジュアライズまで。ブランドの世界観を立体で構築し、記憶に残るサイト体験をつくります。",
+    icon: "cube",
+    features: ["Three.js / WebGL実装", "3DCGモデリング・レンダリング", "軽量化・表示速度と両立"],
+  },
+  {
+    slug: "video-motion",
+    title: "動画・モーショングラフィックス制作",
+    description:
+      "サイトと世界観を揃えたプロモーション動画・サービス紹介動画・モーショングラフィックスを制作。Webサイトとまとめてご依頼いただくことで、ブランドの一貫性と費用対効果を最大化します。",
+    icon: "film",
+    features: ["企画・構成・編集まで一括", "モーショングラフィックス", "SNS・広告用の展開も対応"],
+  },
 ];
 
 export type Strength = { title: string; description: string; icon: IconKey };
@@ -289,6 +305,11 @@ export const faqs: Faq[] = [
       "可能です。既存サイトの構造化データ・コンテンツ設計・llms.txt整備など、AEO / LLMOに絞ったご支援も承っています。",
   },
   {
+    question: "3DCGや動画の制作もまとめて依頼できますか？",
+    answer:
+      "はい。Three.js / WebGLによる3D演出、製品・空間の3DCGビジュアライズ、プロモーション動画・モーショングラフィックスまで、Webサイトとワンストップで制作できます。サイトと世界観を統一できるため、別々に発注するよりブランドの一貫性と費用対効果が高まります。",
+  },
+  {
     question: "今のサイトのリニューアルだけでも相談できますか？",
     answer:
       "もちろん可能です。現状を分析し、検索評価を落とさない移行（リダイレクト設計）を行いながら、課題を解消するリニューアルをご提案します。",
@@ -321,7 +342,7 @@ export const keyFacts: { q: string; a: string }[] = [
   },
   {
     q: "何が得意？",
-    a: "コーポレートサイト・LP・EC・Webアプリの制作と、SEO・AEO・LLMO（AI検索最適化）による集客です。",
+    a: "コーポレートサイト・LP・EC・Webアプリの制作と、SEO・AEO・LLMO（AI検索最適化）による集客です。3DCG・WebGL演出や動画制作もまとめて依頼できます。",
   },
   { q: "対応エリアは？", a: "全国にオンラインで対応しています。" },
   {
@@ -329,6 +350,71 @@ export const keyFacts: { q: string; a: string }[] = [
     a: "298,000円〜（小規模）／680,000円〜（標準）。初回のご相談・お見積もりは無料です。",
   },
 ];
+
+/**
+ * 代表・監修者プロフィール（E-E-A-T：経験・専門性・権威性・信頼性）。
+ * Person構造化データ（personJsonLd）と画面表示の双方で使用。★は差し替え必須。
+ */
+export const expert = {
+  name: "山田 太郎", // ★ 実名に差し替え
+  reading: "Taro Yamada", // ★
+  role: "代表 / Webディレクター・エンジニア",
+  bio: "Web制作歴12年。事業会社のマーケティング部門と制作会社の両方を経験し、通算300サイト以上の制作・改善に携わる。「作って終わり」のWeb制作への課題意識からEbisSoftを設立。戦略設計からSEO・AEO / LLMO・3DCG演出・実装までを一気通貫で監修する。", // ★
+  credentials: [
+    "上級ウェブ解析士", // ★ 実際の保有資格に差し替え
+    "Google アナリティクス認定資格（GAIQ）", // ★
+    "AWS認定ソリューションアーキテクト", // ★
+  ],
+  experienceYears: 12, // ★
+  totalProjects: 300, // ★
+} as const;
+
+/** 品質基準・制作体制（E-E-A-T：信頼性の担保を明文化） */
+export type QualityStandard = { title: string; description: string; icon: IconKey };
+export const qualityStandards: QualityStandard[] = [
+  {
+    title: "Lighthouse 90点以上を基準に",
+    description:
+      "全案件でGoogle Lighthouse（Performance / SEO / Accessibility / Best Practices）90点以上を品質基準とし、計測結果を納品時にご提示します。",
+    icon: "gauge",
+  },
+  {
+    title: "代表が全案件を直接監修",
+    description:
+      "分業で品質がぶれないよう、戦略設計からコード品質まで、経験12年の代表がすべての案件を直接レビュー・監修します。",
+    icon: "user",
+  },
+  {
+    title: "セキュリティ・法令への配慮",
+    description:
+      "常時SSL・セキュリティヘッダーの実装、プライバシーポリシー・特定商取引法表記の整備まで、公開に必要な信頼要件を標準対応します。",
+    icon: "shield",
+  },
+  {
+    title: "契約・進行の透明性",
+    description:
+      "お見積もりの内訳・スケジュール・追加費用の条件を事前に明文化。NDA（秘密保持契約）にも対応し、週次で進捗を共有します。",
+    icon: "check",
+  },
+];
+
+/** テックマーキー（技術スタック・専門領域のスクロール表示） */
+export const techStack = [
+  "Next.js",
+  "React",
+  "TypeScript",
+  "Three.js",
+  "WebGL",
+  "3DCG",
+  "Motion Graphics",
+  "SEO",
+  "AEO",
+  "LLMO",
+  "Core Web Vitals",
+  "Schema.org",
+  "Shopify",
+  "GA4",
+] as const;
 
 export type AeoTactic = { title: string; description: string; icon: IconKey };
 

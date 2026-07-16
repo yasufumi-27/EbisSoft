@@ -1,6 +1,8 @@
 import { Container } from "@/components/ui/Container";
 import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/icons";
+import { CountUp } from "@/components/fx/CountUp";
+import { Tilt } from "@/components/fx/Tilt";
 import { stats } from "@/lib/content";
 import { siteConfig } from "@/lib/site";
 
@@ -47,7 +49,7 @@ export function Hero() {
 
           <p className="speakable mt-6 max-w-xl text-lg leading-relaxed text-slate-300">
             「きれいなだけ」で終わらせません。集客・採用・売上といったゴールから逆算し、戦略設計・SEO・AEO / LLMO（AI検索最適化）・表示速度まで作り込む。
-            検索エンジンにも生成AIにも“選ばれる”Webサイトを、ワンストップでご提供します。
+            3DCG・WebGL演出や動画制作まで含めて、検索エンジンにも生成AIにも“選ばれる”Webサイトをワンストップでご提供します。
           </p>
 
           <div className="mt-10 flex flex-col gap-3 sm:flex-row">
@@ -66,6 +68,7 @@ export function Hero() {
 
         {/* HUD風ダッシュボードのモックアップ（CSSのみ・ゆっくり浮遊） */}
         <div className="relative" data-reveal style={{ "--reveal-delay": "0.15s" } as React.CSSProperties}>
+          <Tilt>
           <div className="animate-float">
             <div className="panel panel-corners overflow-hidden shadow-[0_30px_80px_-30px_rgba(34,211,238,0.25)]">
               {/* タイトルバー */}
@@ -102,6 +105,7 @@ export function Hero() {
               </div>
             </div>
           </div>
+          </Tilt>
 
           {/* 速度バッジ */}
           <div className="panel absolute -bottom-5 -left-5 hidden p-3 shadow-[0_0_30px_rgba(16,185,129,0.15)] sm:flex sm:items-center sm:gap-3">
@@ -128,7 +132,7 @@ export function Hero() {
               <dt className="sr-only">{s.label}</dt>
               <dd>
                 <span className="font-display block text-2xl font-bold tracking-tight text-white sm:text-3xl">
-                  <span className="text-gradient">{s.value}</span>
+                  <CountUp value={s.value} className="text-gradient" />
                 </span>
                 <span className="mt-2 block text-sm text-slate-400">{s.label}</span>
               </dd>

@@ -3,7 +3,12 @@ import { Icon } from "@/components/ui/icons";
 import { ContactForm } from "@/components/sections/ContactForm";
 import { siteConfig } from "@/lib/site";
 
-const benefits = ["初回相談・お見積もりは無料", "全国オンライン対応", "最短2週間で公開"];
+const benefits = [
+  "初回相談・お見積もりは無料",
+  "全国オンライン対応",
+  "最短2週間で公開",
+  "3DCG・動画制作までワンストップ",
+];
 
 /** お問い合わせ（最終CTA）。 */
 export function ContactCta() {

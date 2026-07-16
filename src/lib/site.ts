@@ -26,7 +26,7 @@ export const siteConfig = {
   titleTemplate: "%s｜EbisSoft",
   /** メタディスクリプション（120〜160字目安） */
   description:
-    "EbisSoftは「成果から逆算する」Web制作会社です。コーポレートサイト・LP・ECサイトの制作から、SEO・AEO・LLMO（AI検索最適化）・表示速度改善・公開後の運用までワンストップ。検索エンジンにも生成AI（ChatGPT・AI Overviews等）にも“選ばれる”ホームページ制作をご提案します。",
+    "EbisSoftは「成果から逆算する」Web制作会社です。コーポレートサイト・LP・ECの制作から、SEO・AEO・LLMO（AI検索最適化）、3DCG・WebGL演出、動画制作、公開後の運用までワンストップ。検索エンジンにも生成AI（ChatGPT・AI Overviews等）にも“選ばれる”ホームページ制作をご提案します。",
   /** 公開URL（末尾スラッシュなし） */
   url: normalizeUrl(process.env.NEXT_PUBLIC_SITE_URL ?? FALLBACK_URL),
   /** OGロケール */
@@ -54,6 +54,11 @@ export const siteConfig = {
     "ChatGPT 検索 対策",
     "Web集客",
     "Next.js 制作",
+    "3DCG制作",
+    "WebGL 制作",
+    "Three.js 制作",
+    "動画制作",
+    "モーショングラフィックス制作",
   ],
   /** 連絡先・NAP（ローカルSEOで重要。表記揺れを作らないこと） */
   contact: {
@@ -89,6 +94,9 @@ export const siteConfig = {
     "AI検索最適化",
     "Core Web Vitals 改善",
     "Web集客",
+    "3DCG制作",
+    "WebGL / Three.js 演出",
+    "動画・モーショングラフィックス制作",
   ],
   /** 設立年月日（ISO） */
   foundingDate: "2018-04-01", // ★

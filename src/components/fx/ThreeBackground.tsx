@@ -123,11 +123,13 @@ export default function ThreeBackground() {
 
     const renderFrame = () => {
       const t = clock.getElapsedTime();
-      stars.rotation.y = t * 0.014;
-      core.rotation.y = t * 0.12;
+      // スクロールに連動して星野が回り、多面体が沈む（スクロール駆動の奥行き演出）
+      const sy = window.scrollY;
+      stars.rotation.y = t * 0.014 + sy * 0.00012;
+      core.rotation.y = t * 0.12 + sy * 0.0005;
       core.rotation.x = Math.sin(t * 0.18) * 0.25;
       inner.rotation.y = -t * 0.3;
-      core.position.y = 2.5 + Math.sin(t * 0.5) * 0.5;
+      core.position.y = 2.5 + Math.sin(t * 0.5) * 0.5 - Math.min(sy * 0.0012, 4);
       // マウスに緩やかに追従するパララックス
       camera.position.x += (mouse.x * 1.6 - camera.position.x) * 0.03;
       camera.position.y += (1.2 - mouse.y * 1.0 - camera.position.y) * 0.03;
