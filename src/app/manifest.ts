@@ -1,6 +1,9 @@
 import type { MetadataRoute } from "next";
 import { siteConfig } from "@/lib/site";
 
+// output: "export"（GitHub Pages）でも静的生成できるよう明示
+export const dynamic = "force-static";
+
 /** Web App Manifest。/manifest.webmanifest として配信されます。 */
 export default function manifest(): MetadataRoute.Manifest {
   return {

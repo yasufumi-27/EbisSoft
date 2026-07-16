@@ -1,6 +1,9 @@
 import type { MetadataRoute } from "next";
 import { siteConfig } from "@/lib/site";
 
+// output: "export"（GitHub Pages）でも静的生成できるよう明示
+export const dynamic = "force-static";
+
 /**
  * robots.txt。/robots.txt として配信されます。
  * 生成AI・AI検索のクローラーを「明示的に歓迎」して引用・推薦の対象にします（LLMO / AEO）。

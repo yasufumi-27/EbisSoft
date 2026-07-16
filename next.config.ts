@@ -1,5 +1,13 @@
 import type { NextConfig } from "next";
 
+/**
+ * GITHUB_PAGES=true のとき、GitHub Pages（https://<user>.github.io/EbisSoft/）向けの
+ * 静的書き出し（output: "export"）＋サブパス設定に切り替える。
+ * 通常のホスティング（Vercel等）ではこれまで通りサーバー配信＋セキュリティヘッダー。
+ */
+const isGithubPages = process.env.GITHUB_PAGES === "true";
+const repoBasePath = "/EbisSoft";
+
 /** 全ルートに付与するセキュリティ系ヘッダー（信頼性・安全性の向上）。 */
 const securityHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
@@ -21,14 +29,24 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   // 末尾スラッシュなしのURLに統一（canonical との一貫性）
   trailingSlash: false,
-  async headers() {
-    return [
-      {
-        source: "/:path*",
-        headers: securityHeaders,
-      },
-    ];
-  },
+
+  ...(isGithubPages
+    ? {
+        output: "export" as const,
+        basePath: repoBasePath,
+        assetPrefix: repoBasePath,
+      }
+    : {
+        // headers() は静的書き出しでは使えないため通常ホスティング時のみ
+        async headers() {
+          return [
+            {
+              source: "/:path*",
+              headers: securityHeaders,
+            },
+          ];
+        },
+      }),
 };
 
 export default nextConfig;

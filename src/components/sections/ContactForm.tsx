@@ -1,18 +1,58 @@
 "use client";
 
-import { useActionState, useId } from "react";
+import { useId, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/Button";
-import { submitContact } from "@/app/actions";
-import { initialContactState } from "@/app/contact-state";
+import { siteConfig } from "@/lib/site";
 
 // 見た目の本体は globals.css の .field（ダークガラス＋フォーカスでシアン発光）
 
-/** お問い合わせフォーム（Server Action 連携）。 */
-export function ContactForm() {
-  const [state, formAction, pending] = useActionState(submitContact, initialContactState);
-  const uid = useId();
+type Errors = Partial<Record<"name" | "email" | "message", string>>;
 
-  if (state.status === "success") {
+/**
+ * お問い合わせフォーム。
+ * 静的書き出し（GitHub Pages）でも動くよう、クライアント側でバリデーションし、
+ * 送信内容を添えてメールソフトを起動する（mailto）方式。
+ * 実送信（Resend等のAPI連携）を実装する際は src/app/actions.ts の
+ * Server Action 版に差し替える（output: "export" では不可）。
+ */
+export function ContactForm() {
+  const uid = useId();
+  const [errors, setErrors] = useState<Errors>({});
+  const [done, setDone] = useState(false);
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const data = new FormData(form);
+    // ハニーポット：ボットが埋めたら黙って成功扱い
+    if (String(data.get("company_url") ?? "") !== "") {
+      setDone(true);
+      return;
+    }
+
+    const name = String(data.get("name") ?? "").trim();
+    const email = String(data.get("email") ?? "").trim();
+    const message = String(data.get("message") ?? "").trim();
+
+    const next: Errors = {};
+    if (!name) next.name = "お名前を入力してください。";
+    if (!email) next.email = "メールアドレスを入力してください。";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      next.email = "メールアドレスの形式が正しくありません。";
+    }
+    if (!message) next.message = "お問い合わせ内容を入力してください。";
+    setErrors(next);
+    if (Object.keys(next).length > 0) return;
+
+    const subject = `【お問い合わせ】${name} 様より`;
+    const body = `お名前: ${name}\nメールアドレス: ${email}\n\n${message}`;
+    window.location.href = `mailto:${siteConfig.contact.email}?subject=${encodeURIComponent(
+      subject
+    )}&body=${encodeURIComponent(body)}`;
+    setDone(true);
+  };
+
+  if (done) {
     return (
       <div
         role="status"
@@ -23,23 +63,18 @@ export function ContactForm() {
             <path d="m5 12 5 5L20 7" />
           </svg>
         </span>
-        <h3 className="mt-4 text-lg font-bold text-white">送信が完了しました</h3>
-        <p className="mt-2 text-sm text-slate-400">{state.message}</p>
+        <h3 className="mt-4 text-lg font-bold text-white">メールソフトを起動しました</h3>
+        <p className="mt-2 text-sm text-slate-400">
+          入力内容を添えたメールが作成されます。そのまま送信してください。
+          <br />
+          起動しない場合は {siteConfig.contact.email} へ直接ご連絡ください。
+        </p>
       </div>
     );
   }
 
   return (
-    <form action={formAction} className="panel panel-corners p-6 sm:p-8" noValidate>
-      {state.status === "error" && state.message ? (
-        <p
-          role="alert"
-          className="mb-5 rounded-lg border border-rose-500/40 bg-rose-500/10 px-4 py-3 text-sm font-medium text-rose-300"
-        >
-          {state.message}
-        </p>
-      ) : null}
-
+    <form onSubmit={handleSubmit} className="panel panel-corners p-6 sm:p-8" noValidate>
       <div className="space-y-5">
         <div>
           <label htmlFor={`${uid}-name`} className="text-sm font-semibold text-slate-200">
@@ -51,14 +86,14 @@ export function ContactForm() {
             type="text"
             autoComplete="name"
             required
-            aria-invalid={Boolean(state.errors?.name)}
-            aria-describedby={state.errors?.name ? `${uid}-name-error` : undefined}
+            aria-invalid={Boolean(errors.name)}
+            aria-describedby={errors.name ? `${uid}-name-error` : undefined}
             className="field"
             placeholder="山田 太郎"
           />
-          {state.errors?.name ? (
+          {errors.name ? (
             <p id={`${uid}-name-error`} className="mt-1 text-xs text-rose-400">
-              {state.errors.name}
+              {errors.name}
             </p>
           ) : null}
         </div>
@@ -73,14 +108,14 @@ export function ContactForm() {
             type="email"
             autoComplete="email"
             required
-            aria-invalid={Boolean(state.errors?.email)}
-            aria-describedby={state.errors?.email ? `${uid}-email-error` : undefined}
+            aria-invalid={Boolean(errors.email)}
+            aria-describedby={errors.email ? `${uid}-email-error` : undefined}
             className="field"
             placeholder="you@example.com"
           />
-          {state.errors?.email ? (
+          {errors.email ? (
             <p id={`${uid}-email-error`} className="mt-1 text-xs text-rose-400">
-              {state.errors.email}
+              {errors.email}
             </p>
           ) : null}
         </div>
@@ -94,14 +129,14 @@ export function ContactForm() {
             name="message"
             rows={4}
             required
-            aria-invalid={Boolean(state.errors?.message)}
-            aria-describedby={state.errors?.message ? `${uid}-message-error` : undefined}
+            aria-invalid={Boolean(errors.message)}
+            aria-describedby={errors.message ? `${uid}-message-error` : undefined}
             className="field"
             placeholder="制作のご相談内容・ご予算・希望納期などをご記入ください。"
           />
-          {state.errors?.message ? (
+          {errors.message ? (
             <p id={`${uid}-message-error`} className="mt-1 text-xs text-rose-400">
-              {state.errors.message}
+              {errors.message}
             </p>
           ) : null}
         </div>
@@ -112,8 +147,8 @@ export function ContactForm() {
           <input id={`${uid}-company-url`} name="company_url" type="text" tabIndex={-1} autoComplete="off" />
         </div>
 
-        <Button type="submit" size="lg" withArrow className="w-full" disabled={pending}>
-          {pending ? "送信中…" : "この内容で送信する"}
+        <Button type="submit" size="lg" withArrow className="w-full">
+          この内容で送信する
         </Button>
         <p className="text-center text-xs text-slate-500">
           送信いただいた情報は、お問い合わせ対応の目的にのみ利用します。

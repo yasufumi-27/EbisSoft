@@ -1,5 +1,8 @@
 import { ImageResponse } from "next/og";
 
+// output: "export"（GitHub Pages）でも静的生成できるよう明示
+export const dynamic = "force-static";
+
 // Apple Touch Icon（ホーム画面追加時のアイコン）
 export const size = { width: 180, height: 180 };
 export const contentType = "image/png";
