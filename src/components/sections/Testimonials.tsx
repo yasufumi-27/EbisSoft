@@ -13,7 +13,7 @@ function Stars({ rating }: { rating: number }) {
           fill={i < rating ? "currentColor" : "none"}
           stroke="currentColor"
           strokeWidth="1.5"
-          className="text-amber-400"
+          className="text-gold drop-shadow-[0_0_6px_rgba(226,192,120,0.6)]"
           aria-hidden="true"
         >
           <path d="m12 2 3 6.5 7 .9-5 4.8 1.2 7L12 18l-6.4 3.2L6.8 14l-5-4.8 7-.9L12 2Z" />
@@ -33,26 +33,31 @@ export function Testimonials() {
           title="お客様の声"
           description="制作後の成果や、伴走したプロセスについて多くの評価をいただいています。（サンプル）"
         />
-        <div className="inline-flex items-center gap-3 rounded-full bg-amber-50 px-5 py-2 ring-1 ring-amber-200">
+        <div
+          className="inline-flex items-center gap-3 rounded-full border border-gold/40 bg-gold/10 px-5 py-2 backdrop-blur"
+          data-reveal
+        >
           <Stars rating={5} />
-          <span className="text-sm font-semibold text-slate-700">
+          <span className="text-sm font-semibold text-gold-light">
             総合評価 {aggregateRating.ratingValue} / 5（{aggregateRating.reviewCount}件）
           </span>
         </div>
       </div>
 
       <div className="mt-14 grid gap-6 lg:grid-cols-3">
-        {testimonials.map((t) => (
+        {testimonials.map((t, i) => (
           <figure
             key={t.author}
-            className="flex flex-col rounded-2xl border border-slate-200 bg-white p-7"
+            className="panel panel-hover flex flex-col p-7"
+            data-reveal
+            style={{ "--reveal-delay": `${i * 0.1}s` } as React.CSSProperties}
           >
             <Stars rating={t.rating} />
-            <blockquote className="mt-4 flex-1 text-sm leading-relaxed text-slate-700">
+            <blockquote className="mt-4 flex-1 text-sm leading-relaxed text-slate-300">
               「{t.quote}」
             </blockquote>
-            <figcaption className="mt-6 border-t border-slate-100 pt-4">
-              <span className="block font-bold text-slate-900">{t.author}</span>
+            <figcaption className="mt-6 border-t border-white/10 pt-4">
+              <span className="block font-bold text-white">{t.author}</span>
               <span className="block text-sm text-slate-500">{t.role}</span>
             </figcaption>
           </figure>

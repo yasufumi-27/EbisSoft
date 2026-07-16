@@ -8,18 +8,21 @@ import { keyFacts } from "@/lib/content";
  */
 export function KeyFacts() {
   return (
-    <section className="scroll-mt-20 bg-white py-12 sm:py-16">
+    <section className="scroll-mt-20 py-12 sm:py-16">
       <Container>
-        <div className="mx-auto max-w-3xl rounded-3xl border border-slate-200 bg-slate-50 p-7 sm:p-9">
-          <p className="text-sm font-bold uppercase tracking-wider text-brand">Summary / 要点</p>
-          <h2 className="mt-2 text-2xl font-bold tracking-tight text-slate-900">
+        <div className="panel panel-corners mx-auto max-w-3xl p-7 sm:p-9" data-reveal>
+          <p className="eyebrow">Summary / 要点</p>
+          <h2 className="mt-3 text-2xl font-bold tracking-tight text-white">
             30秒でわかるEbisSoft
           </h2>
           <dl className="mt-6 space-y-5">
             {keyFacts.map((f) => (
-              <div key={f.q} className="border-l-2 border-brand/40 pl-4">
-                <dt className="font-semibold text-slate-900">{f.q}</dt>
-                <dd className="speakable mt-1 text-slate-600">{f.a}</dd>
+              <div
+                key={f.q}
+                className="border-l-2 border-brand/50 pl-4 transition-colors hover:border-gold"
+              >
+                <dt className="font-semibold text-white">{f.q}</dt>
+                <dd className="speakable mt-1 text-slate-400">{f.a}</dd>
               </div>
             ))}
           </dl>

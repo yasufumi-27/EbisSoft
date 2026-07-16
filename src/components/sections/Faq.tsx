@@ -7,16 +7,19 @@ import { faqs } from "@/lib/content";
  */
 export function Faq() {
   return (
-    <Section id="faq" bg="muted">
+    <Section id="faq">
       <SectionHeading
         eyebrow="FAQ"
         title="よくある質問"
         description="ご相談前によくいただく質問をまとめました。ここにない疑問もお気軽にお問い合わせください。"
       />
-      <div className="mx-auto mt-12 max-w-3xl divide-y divide-slate-200 overflow-hidden rounded-2xl border border-slate-200 bg-white">
+      <div className="panel mx-auto mt-12 max-w-3xl divide-y divide-white/10 overflow-hidden" data-reveal>
         {faqs.map((faq) => (
-          <details key={faq.question} className="group px-6 [&_summary::-webkit-details-marker]:hidden">
-            <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-5 font-semibold text-slate-900">
+          <details
+            key={faq.question}
+            className="group px-6 transition-colors open:bg-white/[0.03] [&_summary::-webkit-details-marker]:hidden"
+          >
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-5 font-semibold text-slate-100 transition-colors hover:text-brand-light">
               {faq.question}
               <svg
                 width="20"
@@ -26,13 +29,13 @@ export function Faq() {
                 stroke="currentColor"
                 strokeWidth="2"
                 strokeLinecap="round"
-                className="shrink-0 text-slate-400 transition-transform group-open:rotate-180"
+                className="shrink-0 text-brand transition-transform duration-300 group-open:rotate-180"
                 aria-hidden="true"
               >
                 <path d="m6 9 6 6 6-6" />
               </svg>
             </summary>
-            <p className="speakable pb-5 text-sm leading-relaxed text-slate-600">{faq.answer}</p>
+            <p className="speakable pb-5 text-sm leading-relaxed text-slate-400">{faq.answer}</p>
           </details>
         ))}
       </div>

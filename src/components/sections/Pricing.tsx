@@ -3,7 +3,7 @@ import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/icons";
 import { plans } from "@/lib/content";
 
-/** 料金プラン。 */
+/** 料金プラン。人気プランはゴールドの縁とグローで格上げ。 */
 export function Pricing() {
   return (
     <Section id="pricing">
@@ -13,51 +13,44 @@ export function Pricing() {
         description="目的と規模に合わせて選べる3プラン。すべて税別・初期費用の目安です。詳細はお見積もりにてご提案します。"
       />
       <div className="mt-14 grid items-start gap-6 lg:grid-cols-3">
-        {plans.map((plan) => {
+        {plans.map((plan, i) => {
           const featured = plan.featured ?? false;
           return (
             <div
               key={plan.name}
               className={
                 featured
-                  ? "relative rounded-3xl bg-slate-900 p-8 text-white shadow-2xl shadow-slate-900/20 ring-2 ring-brand lg:-mt-4 lg:pb-12"
-                  : "relative rounded-3xl border border-slate-200 bg-white p-8"
+                  ? "panel panel-corners relative border-gold/50 p-8 shadow-[0_0_60px_-15px_rgba(226,192,120,0.35)] lg:-mt-4 lg:pb-12"
+                  : "panel panel-hover relative p-8"
               }
+              data-reveal
+              style={{ "--reveal-delay": `${i * 0.12}s` } as React.CSSProperties}
             >
               {featured ? (
-                <span className="absolute right-6 top-6 rounded-full bg-brand px-3 py-1 text-xs font-bold text-white">
+                <span className="font-display absolute right-6 top-6 rounded-full bg-gradient-to-r from-gold-light to-gold px-3 py-1 text-xs font-bold tracking-wider text-ink">
                   人気No.1
                 </span>
               ) : null}
-              <h3 className={`text-lg font-bold ${featured ? "text-white" : "text-slate-900"}`}>
-                {plan.name}
-              </h3>
-              <p className={`mt-1 text-sm ${featured ? "text-slate-300" : "text-slate-500"}`}>
+              <h3 className="text-lg font-bold text-white">{plan.name}</h3>
+              <p className={`mt-1 text-sm ${featured ? "text-gold-light" : "text-slate-500"}`}>
                 {plan.priceNote}
               </p>
               <p className="mt-5">
-                <span
-                  className={`text-3xl font-bold tracking-tight ${
-                    featured ? "text-white" : "text-slate-900"
-                  }`}
-                >
-                  {plan.price}
+                <span className="font-display text-3xl font-bold tracking-tight">
+                  {featured ? (
+                    <span className="text-gold">{plan.price}</span>
+                  ) : (
+                    <span className="text-white">{plan.price}</span>
+                  )}
                 </span>
               </p>
-              <p className={`mt-3 text-sm leading-relaxed ${featured ? "text-slate-300" : "text-slate-600"}`}>
-                {plan.description}
-              </p>
+              <p className="mt-3 text-sm leading-relaxed text-slate-400">{plan.description}</p>
               <ul className="mt-6 space-y-3">
                 {plan.features.map((f) => (
-                  <li
-                    key={f}
-                    className={`flex items-start gap-2.5 text-sm ${
-                      featured ? "text-slate-200" : "text-slate-700"
-                    }`}
-                  >
+                  <li key={f} className="flex items-start gap-2.5 text-sm text-slate-300">
                     <Icon
                       name="check"
-                      className={`mt-0.5 size-4 shrink-0 ${featured ? "text-brand-light" : "text-brand"}`}
+                      className={`mt-0.5 size-4 shrink-0 ${featured ? "text-gold" : "text-brand"}`}
                     />
                     {f}
                   </li>

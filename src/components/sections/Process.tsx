@@ -1,10 +1,10 @@
 import { Section, SectionHeading } from "@/components/ui/Section";
 import { steps } from "@/lib/content";
 
-/** 制作の流れ。 */
+/** 制作の流れ。番号はディスプレイフォント＋グラデーションでHUD風に。 */
 export function Process() {
   return (
-    <Section id="process" bg="muted">
+    <Section id="process">
       <SectionHeading
         eyebrow="Process"
         title="制作の流れ"
@@ -14,15 +14,17 @@ export function Process() {
         {steps.map((step, i) => (
           <li
             key={step.title}
-            className="relative rounded-2xl border border-slate-200 bg-white p-6"
+            className="panel panel-hover relative p-6"
+            data-reveal
+            style={{ "--reveal-delay": `${(i % 3) * 0.1}s` } as React.CSSProperties}
           >
             <div className="flex items-center gap-4">
-              <span className="grid size-11 shrink-0 place-items-center rounded-full bg-gradient-to-br from-brand to-violet-500 text-base font-bold text-white">
+              <span className="font-display grid size-11 shrink-0 place-items-center rounded-full border border-brand/40 bg-brand/10 text-base font-bold text-brand-light shadow-[0_0_18px_rgba(34,211,238,0.25)]">
                 {String(i + 1).padStart(2, "0")}
               </span>
-              <h3 className="text-lg font-bold text-slate-900">{step.title}</h3>
+              <h3 className="text-lg font-bold text-white">{step.title}</h3>
             </div>
-            <p className="mt-3 text-sm leading-relaxed text-slate-600">{step.description}</p>
+            <p className="mt-3 text-sm leading-relaxed text-slate-400">{step.description}</p>
           </li>
         ))}
       </ol>

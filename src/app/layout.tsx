@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist } from "next/font/google";
+import { Geist, Orbitron } from "next/font/google";
 import "./globals.css";
 
 import { siteConfig } from "@/lib/site";
@@ -7,9 +7,18 @@ import { organizationJsonLd, websiteJsonLd } from "@/lib/jsonld";
 import { JsonLd } from "@/components/JsonLd";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
+import { BackgroundFx } from "@/components/fx/BackgroundFx";
+import { RevealInit } from "@/components/fx/RevealInit";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+// 見出し・数値・英字ラベル用の近未来ディスプレイフォント
+const orbitron = Orbitron({
+  variable: "--font-orbitron",
   subsets: ["latin"],
   display: "swap",
 });
@@ -83,8 +92,8 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  colorScheme: "light",
-  themeColor: "#4f46e5",
+  colorScheme: "dark",
+  themeColor: "#05070f",
 };
 
 export default function RootLayout({
@@ -93,10 +102,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang={siteConfig.lang} className={`${geistSans.variable} h-full antialiased`}>
-      <body className="flex min-h-full flex-col bg-white">
+    <html
+      lang={siteConfig.lang}
+      className={`${geistSans.variable} ${orbitron.variable} h-full antialiased`}
+    >
+      <body className="flex min-h-full flex-col">
+        {/* JS無効環境でもコンテンツが見えるようにリビール演出を打ち消す */}
+        <noscript>
+          <style>{`[data-reveal]{opacity:1 !important;transform:none !important;filter:none !important}`}</style>
+        </noscript>
         {/* サイト共通の構造化データ（事業者・サイト） */}
         <JsonLd data={[organizationJsonLd(), websiteJsonLd()]} />
+        {/* 3D背景（クライアントのみ・遅延読み込み）とスクロールリビール */}
+        <BackgroundFx />
+        <RevealInit />
         <SiteHeader />
         <main className="flex-1">{children}</main>
         <SiteFooter />

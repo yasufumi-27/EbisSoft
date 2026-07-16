@@ -5,21 +5,20 @@ import { Icon } from "@/components/ui/icons";
 type Variant = "primary" | "secondary" | "ghost";
 type Size = "md" | "lg";
 
+// 見た目の本体は globals.css の .btn / .btn-* （コーナーカット＋発光＋シーン掃引）
 const variants: Record<Variant, string> = {
-  primary:
-    "bg-brand text-white shadow-sm shadow-brand/30 hover:bg-brand-dark focus-visible:outline-brand",
-  secondary:
-    "bg-white text-slate-900 ring-1 ring-inset ring-slate-300 hover:bg-slate-50 focus-visible:outline-slate-400",
-  ghost: "bg-white/10 text-white ring-1 ring-inset ring-white/30 hover:bg-white/20",
+  primary: "btn-primary focus-visible:outline-brand",
+  secondary: "btn-secondary focus-visible:outline-gold",
+  ghost: "btn-ghost focus-visible:outline-slate-400",
 };
 
 const sizes: Record<Size, string> = {
-  md: "h-11 px-5 text-sm",
-  lg: "h-13 px-7 text-base",
+  md: "h-11 px-6 text-sm",
+  lg: "h-13 px-8 text-base",
 };
 
 const baseClass =
-  "inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-60 disabled:pointer-events-none";
+  "btn focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-60 disabled:pointer-events-none";
 
 type CommonProps = {
   variant?: Variant;
