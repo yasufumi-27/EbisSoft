@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { siteConfig } from "@/lib/site";
-import { nav } from "@/lib/content";
+import { nav, capabilities } from "@/lib/content";
 import { Logo } from "@/components/site/Logo";
 import { Icon } from "@/components/ui/icons";
 
@@ -21,7 +21,8 @@ export function SiteFooter() {
           <div className="lg:col-span-5">
             <Logo />
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-slate-400">
-              {siteConfig.legalName}は、成果から逆算するWeb制作会社です。集客・採用・売上につながるホームページ制作を、設計から運用までワンストップでご支援します。
+              {siteConfig.legalName}は、{siteConfig.contact.address.locality}
+              のAI活用型Web制作会社です。生成AIを制作フローに組み込み、最速で高性能なサイトを構築。3DCG・AIチャットボット・システム連携まで、実際に動くデモを公開しています。
             </p>
             <ul className="mt-6 flex gap-3">
               {siteConfig.sameAs.map((url) => (
@@ -57,10 +58,31 @@ export function SiteFooter() {
                 </li>
               ))}
               <li>
-                <Link href="#contact" className="text-slate-400 transition-colors hover:text-brand-light">
+                <Link href="/#contact" className="text-slate-400 transition-colors hover:text-brand-light">
                   お問い合わせ
                 </Link>
               </li>
+            </ul>
+
+            <h2 className="font-display mt-8 text-xs font-bold tracking-[0.3em] text-brand uppercase">
+              Demo
+            </h2>
+            <ul className="mt-4 space-y-3 text-sm">
+              <li>
+                <Link href="/demo" className="text-slate-400 transition-colors hover:text-brand-light">
+                  できること一覧
+                </Link>
+              </li>
+              {capabilities.map((c) => (
+                <li key={c.slug}>
+                  <Link
+                    href={`/demo/${c.slug}`}
+                    className="text-slate-400 transition-colors hover:text-brand-light"
+                  >
+                    {c.title}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </nav>
 
@@ -105,17 +127,25 @@ export function SiteFooter() {
           <p className="font-display tracking-widest">
             © {year} {siteConfig.legalName}
           </p>
-          <ul className="flex gap-6">
-            {/* TODO: プライバシーポリシー・特商法ページを作成したらリンク先を差し替え */}
+          <ul className="flex flex-wrap justify-center gap-6">
             <li>
-              <Link href="#" className="transition-colors hover:text-slate-300">
+              <Link href="/company" className="transition-colors hover:text-slate-300">
+                会社概要
+              </Link>
+            </li>
+            <li>
+              <Link href="/privacy" className="transition-colors hover:text-slate-300">
                 プライバシーポリシー
               </Link>
             </li>
             <li>
-              <Link href="#" className="transition-colors hover:text-slate-300">
-                会社概要
-              </Link>
+              {/* ページではなくテキストファイルのため、next/link を使わず basePath を明示的に付与 */}
+              <a
+                href={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/llms.txt`}
+                className="transition-colors hover:text-slate-300"
+              >
+                llms.txt
+              </a>
             </li>
           </ul>
         </div>

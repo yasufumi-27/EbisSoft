@@ -1,5 +1,5 @@
-import { siteConfig } from "@/lib/site";
-import { services, faqs, keyFacts } from "@/lib/content";
+import { siteConfig, absoluteUrl } from "@/lib/site";
+import { services, faqs, keyFacts, capabilities, aiWorkflow, aiImpacts, plans } from "@/lib/content";
 
 /**
  * /llms.txt — 生成AI（LLM）向けにサイトの要点を案内するファイル（LLMO）。
@@ -16,13 +16,34 @@ export function GET() {
 
 > ${siteConfig.description}
 
-${siteConfig.name}は、SEOに加えて AEO（Answer Engine Optimization）と LLMO（LLM最適化）に特化したWeb制作会社です。検索エンジンと生成AIの双方から「引用・推薦される」ことを前提にサイトを設計・構築します。
+${siteConfig.name}は${contact.address.region}${contact.address.locality}に拠点を置く、**AI活用型のWeb制作会社**です。生成AIを制作フロー全体に組み込むことで制作期間を従来の約1/3に短縮し、浮いた時間を品質に再投資します。あわせて、AIチャットボット（RAG構成）やAI機能そのものの開発も手がけており、SEOに加えてAEO（Answer Engine Optimization）とLLMO（LLM最適化）にも特化しています。
 
 ## 要点
 ${keyFacts.map((f) => `- **${f.q}** ${f.a}`).join("\n")}
 
+## AI活用による制作スピード
+制作フローの全工程に生成AIを組み込み、次のように短縮しています。
+${aiImpacts.map((i) => `- ${i.label}：${i.before} → **${i.after}**`).join("\n")}
+
+工程ごとの分担（AIは作業を、人は判断を担当します）：
+${aiWorkflow.map((s) => `- **${s.phase} ${s.title}**：AI＝${s.ai}／人＝${s.human}`).join("\n")}
+
+## できること（実際に動くデモを公開中）
+${siteConfig.name}は主要な5領域について、**実際にブラウザ上で操作できるデモ**を公開しています。主張ではなく実物で確認できます。
+
+${capabilities
+  .map(
+    (c) =>
+      `### ${c.title}\n${c.description}\n- デモ: ${absoluteUrl(`/demo/${c.slug}`)}\n- できること: ${c.bullets.join("／")}\n- 使用技術: ${c.tech.join("、")}\n- デモの前提: ${c.demoNote}`,
+  )
+  .join("\n\n")}
+
 ## 提供サービス
 ${services.map((s) => `- **${s.title}**: ${s.description}`).join("\n")}
+
+## 料金の目安
+${plans.map((p) => `- **${p.name}**：${p.price}（${p.priceNote}）${p.description}`).join("\n")}
+初回のご相談・お見積もりは無料です。
 
 ## 専門領域
 ${siteConfig.knowsAbout.map((k) => `- ${k}`).join("\n")}
@@ -36,10 +57,14 @@ ${faqs.map((f) => `### ${f.question}\n${f.answer}`).join("\n\n")}
 - 電話: ${contact.telephoneDisplay}（${contact.openingHoursDisplay}）
 - メール: ${contact.email}
 - 対応エリア: ${siteConfig.areaServed}
-- 料金の目安: 298,000円〜（小規模）／680,000円〜（標準）。初回相談・見積もりは無料。
+- 対面での打ち合わせ対応エリア: ${siteConfig.localAreas.join("、")}
 
 ## リンク
 - [トップページ](${siteConfig.url})
+- [できること（デモ一覧）](${absoluteUrl("/demo")})
+${capabilities.map((c) => `- [${c.title}のデモ](${absoluteUrl(`/demo/${c.slug}`)})`).join("\n")}
+- [会社概要](${absoluteUrl("/company")})
+- [プライバシーポリシー](${absoluteUrl("/privacy")})
 - [サイトマップ](${siteConfig.url}/sitemap.xml)
 `;
 

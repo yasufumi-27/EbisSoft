@@ -24,7 +24,13 @@ export type IconKey =
   | "cube"
   | "film"
   | "award"
-  | "user";
+  | "user"
+  | "chat"
+  | "share"
+  | "plug"
+  | "bolt"
+  | "play"
+  | "external";
 
 const base: SVGProps<SVGSVGElement> = {
   width: 24,
@@ -177,6 +183,45 @@ export const iconMap: Record<IconKey, (props: SVGProps<SVGSVGElement>) => React.
     <svg {...base} {...p}>
       <circle cx="12" cy="8" r="4" />
       <path d="M4.5 20.5a7.5 7.5 0 0 1 15 0" />
+    </svg>
+  ),
+  chat: (p) => (
+    <svg {...base} {...p}>
+      <path d="M21 12a8 8 0 0 1-8 8H8l-4 3v-5.5A8 8 0 0 1 8 4h5a8 8 0 0 1 8 8Z" />
+      <path d="M9 11h.01M12.5 11h.01M16 11h.01" />
+    </svg>
+  ),
+  share: (p) => (
+    <svg {...base} {...p}>
+      <circle cx="18" cy="5" r="2.6" />
+      <circle cx="6" cy="12" r="2.6" />
+      <circle cx="18" cy="19" r="2.6" />
+      <path d="m8.4 10.8 7.2-4.2M8.4 13.2l7.2 4.2" />
+    </svg>
+  ),
+  plug: (p) => (
+    <svg {...base} {...p}>
+      <path d="M9 3v6M15 3v6" />
+      <path d="M6.5 9h11v2.5a5.5 5.5 0 0 1-11 0V9Z" />
+      <path d="M12 17v4" />
+    </svg>
+  ),
+  bolt: (p) => (
+    <svg {...base} {...p}>
+      <path d="M13 2 4.5 13.5H11l-1 8.5 8.5-11.5H12l1-8.5Z" />
+    </svg>
+  ),
+  play: (p) => (
+    <svg {...base} {...p}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="m10 8.5 6 3.5-6 3.5v-7Z" />
+    </svg>
+  ),
+  external: (p) => (
+    <svg {...base} {...p}>
+      <path d="M14 4h6v6" />
+      <path d="M20 4 11 13" />
+      <path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4" />
     </svg>
   ),
 };

@@ -30,6 +30,11 @@ const nextConfig: NextConfig = {
   // 末尾スラッシュなしのURLに統一（canonical との一貫性）
   trailingSlash: false,
 
+  // next/link を通さない生の <a href="/..."> 用。basePath をクライアントからも参照できるようにする
+  env: {
+    NEXT_PUBLIC_BASE_PATH: isGithubPages ? repoBasePath : "",
+  },
+
   ...(isGithubPages
     ? {
         output: "export" as const,

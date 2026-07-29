@@ -1,0 +1,297 @@
+/**
+ * サイト内AIチャットボットの「知識源」と「検索エンジン」。
+ *
+ * 本サイトは静的配信のため、デモのチャットボットはブラウザ内で完結します。
+ * ここでは RAG（検索拡張生成）の前段にあたる **検索（Retrieval）** を実装しています。
+ *   1. content.ts / site.ts の情報を知識ドキュメント（chunk）に変換
+ *   2. 日本語向けに文字 N-gram（bi-gram）でトークン化
+ *   3. BM25 でクエリとの関連度をスコアリング
+ *   4. スコアが閾値未満なら「答えない」（＝ハルシネーション抑制）
+ *
+ * 実案件では 4 の後段に大規模言語モデル（Claude 等）を接続し、
+ * 検索で得た根拠だけを使って自然文を生成させます。設計思想はこのデモと同じです。
+ */
+
+import { faqs, keyFacts, services, capabilities, plans, aiImpacts } from "@/lib/content";
+import { siteConfig } from "@/lib/site";
+
+export type KbDoc = {
+  id: string;
+  /** 出典の表示名 */
+  source: string;
+  /** 出典のカテゴリ */
+  category: "FAQ" | "要点" | "サービス" | "できること" | "料金" | "会社情報" | "スピード";
+  /** 検索対象テキスト（質問文・見出しなど） */
+  key: string;
+  /** 回答本文 */
+  answer: string;
+  /** 関連ページへのリンク（あれば） */
+  href?: string;
+};
+
+/* ------------------------------------------------------------------
+ * 1. 知識ドキュメントの構築
+ * ---------------------------------------------------------------- */
+
+function buildDocs(): KbDoc[] {
+  const docs: KbDoc[] = [];
+
+  faqs.forEach((f, i) => {
+    docs.push({
+      id: `faq-${i}`,
+      source: f.question,
+      category: "FAQ",
+      key: f.question,
+      answer: f.answer,
+      href: "/#faq",
+    });
+  });
+
+  keyFacts.forEach((f, i) => {
+    docs.push({
+      id: `fact-${i}`,
+      source: `要点：${f.q}`,
+      category: "要点",
+      key: f.q,
+      answer: f.a,
+    });
+  });
+
+  services.forEach((s) => {
+    docs.push({
+      id: `service-${s.slug}`,
+      source: `サービス：${s.title}`,
+      category: "サービス",
+      key: `${s.title} ${s.features.join(" ")}`,
+      answer: `${s.description}（主な内容：${s.features.join("／")}）`,
+      href: "/#services",
+    });
+  });
+
+  capabilities.forEach((c) => {
+    docs.push({
+      id: `cap-${c.slug}`,
+      source: `できること：${c.title}`,
+      category: "できること",
+      key: `${c.title} ${c.tagline} ${c.bullets.join(" ")} ${c.tech.join(" ")}`,
+      answer: `${c.description}\n\n主にできること：${c.bullets.join("／")}\n実際に動くデモをご用意しています。`,
+      href: `/demo/${c.slug}`,
+    });
+  });
+
+  plans.forEach((p) => {
+    docs.push({
+      id: `plan-${p.name}`,
+      source: `料金：${p.name}プラン`,
+      category: "料金",
+      key: `${p.name}プラン 料金 価格 費用 いくら 見積もり ${p.priceNote}`,
+      answer: `${p.name}プランは ${p.price}（${p.priceNote}）です。${p.description} 含まれるもの：${p.features.join("／")}。初回のご相談・お見積もりは無料です。`,
+      href: "/#pricing",
+    });
+  });
+
+  docs.push({
+    id: "speed",
+    source: "AI活用による制作スピード",
+    category: "スピード",
+    key: "納期 期間 スピード 速い 早い どれくらい 何日 いつ 完成 公開まで AI 短縮",
+    answer: `AIを制作フロー全体に組み込むことで、制作期間は従来の約1/3になります。目安は次のとおりです。${aiImpacts
+      .map((i) => `${i.label}：${i.before} → ${i.after}`)
+      .join("／")}。`,
+    href: "/#ai-power",
+  });
+
+  docs.push({
+    id: "company",
+    source: "会社情報（所在地・連絡先）",
+    category: "会社情報",
+    key: "会社 所在地 住所 どこ 場所 京都 伏見 電話 連絡先 営業時間 アクセス エリア 対応地域",
+    answer: `${siteConfig.legalName}は${siteConfig.contact.address.region}${siteConfig.contact.address.locality}に拠点を置くWeb制作会社です。所在地は〒${siteConfig.contact.address.postalCode} ${siteConfig.contact.address.region}${siteConfig.contact.address.locality}${siteConfig.contact.address.street}、電話は${siteConfig.contact.telephoneDisplay}（${siteConfig.contact.openingHoursDisplay}）。対応エリアは${siteConfig.areaServed}です。`,
+    href: "/company",
+  });
+
+  docs.push({
+    id: "ai-strength",
+    source: "AIへの強み",
+    category: "要点",
+    key: "AI 強い 得意 生成AI ChatGPT Claude 活用 自動化 エージェント LLM 機械学習",
+    answer:
+      "EbisuSoftはAIを「使う側」と「作る側」の両方を手がけます。制作工程ではAIコーディングエージェントで実装を並列化して期間を約1/3に短縮し、納品物としてはRAG構成のAIチャットボットやAI機能の開発を行います。さらに、生成AIに引用・推薦されるためのAEO / LLMO最適化も内側から理解して実装します。",
+    href: "/#ai-power",
+  });
+
+  docs.push({
+    id: "contact",
+    source: "お問い合わせ方法",
+    category: "会社情報",
+    key: "問い合わせ 相談 依頼 発注 申し込み 無料 見積 連絡 したい",
+    answer:
+      "初回のご相談・お見積もりは無料です。ページ下部のお問い合わせフォーム、またはお電話・メールでご連絡ください。ご要望を伺ったうえで、構成案とお見積もりをご提示します。",
+    href: "/#contact",
+  });
+
+  return docs;
+}
+
+export const kbDocs: KbDoc[] = buildDocs();
+
+/* ------------------------------------------------------------------
+ * 2. 日本語向けトークナイザ（文字 bi-gram ＋ 英数字の単語分割）
+ * ---------------------------------------------------------------- */
+
+/**
+ * 表記ゆれを吸収する同義語展開（検索の再現率を上げる）。
+ * キーは NFKC 正規化・小文字化した後の形で書きます。
+ */
+const SYNONYMS: [string, string][] = [
+  ["値段", "料金 費用"],
+  ["価格", "料金 費用"],
+  ["費用", "料金"],
+  ["いくら", "料金 費用"],
+  ["コスト", "料金 費用"],
+  ["予算", "料金 費用"],
+  ["納期", "期間 スピード"],
+  ["どれくらい", "期間"],
+  ["どのくらい", "期間"],
+  ["何日", "期間 日数"],
+  ["速い", "期間 スピード"],
+  ["早い", "期間 スピード"],
+  ["3d", "3dcg 立体 webgl"],
+  ["スリーディー", "3d 3dcg webgl"],
+  ["ボット", "チャットボット ai"],
+  ["bot", "チャットボット ai"],
+  ["チャット", "チャットボット ai"],
+  ["インスタ", "sns instagram"],
+  ["ツイッター", "sns x twitter"],
+  ["場所", "所在地 住所 京都"],
+  ["どこ", "所在地 住所 京都"],
+  ["住所", "所在地 京都 伏見"],
+  ["連携", "連携 api システム"],
+  ["アニメ", "アニメーション 動き"],
+  ["動き", "アニメーション"],
+  ["生成ai", "ai 生成AI"],
+];
+
+function normalize(text: string): string {
+  const base = text.normalize("NFKC").toLowerCase();
+  // 展開語がさらに別の同義語を呼ぶ連鎖を避けるため、判定は常に元の文字列に対して行う
+  const expansions = SYNONYMS.filter(([from]) => base.includes(from)).map(([, to]) => to);
+  return expansions.length ? `${base} ${expansions.join(" ")}` : base;
+}
+
+/** 記号・助詞のみの並びを除くための簡易ストップ文字 */
+const STOP_CHARS = /[\s、。，．,.!?！？「」『』（）()【】・…ー~〜:：;；'"”“]/g;
+
+export function tokenize(text: string): string[] {
+  const norm = normalize(text).replace(STOP_CHARS, " ");
+  const tokens: string[] = [];
+
+  // 英数字は単語単位（3文字以上は前方一致の部分文字列も足して表記ゆれに強くする）
+  for (const w of norm.split(/\s+/)) {
+    if (!w) continue;
+    if (/^[a-z0-9./+#-]+$/.test(w)) {
+      tokens.push(w);
+      continue;
+    }
+    // 日本語混じりは文字 bi-gram（1文字語も拾えるよう uni-gram も少量加える）
+    const chars = Array.from(w);
+    if (chars.length === 1) {
+      tokens.push(chars[0]);
+      continue;
+    }
+    for (let i = 0; i < chars.length - 1; i += 1) {
+      tokens.push(chars[i] + chars[i + 1]);
+    }
+  }
+  return tokens;
+}
+
+/* ------------------------------------------------------------------
+ * 3. BM25 インデックス
+ * ---------------------------------------------------------------- */
+
+type IndexedDoc = {
+  doc: KbDoc;
+  tf: Map<string, number>;
+  length: number;
+};
+
+const K1 = 1.4;
+const B = 0.72;
+
+function buildIndex(docs: KbDoc[]) {
+  const indexed: IndexedDoc[] = docs.map((doc) => {
+    // 検索対象は「key（質問・見出し）」を重めに、本文も含める
+    const tokens = [...tokenize(doc.key), ...tokenize(doc.key), ...tokenize(doc.answer)];
+    const tf = new Map<string, number>();
+    tokens.forEach((t) => tf.set(t, (tf.get(t) ?? 0) + 1));
+    return { doc, tf, length: tokens.length };
+  });
+
+  const df = new Map<string, number>();
+  indexed.forEach(({ tf }) => {
+    tf.forEach((_, term) => df.set(term, (df.get(term) ?? 0) + 1));
+  });
+
+  const avgLength = indexed.reduce((sum, d) => sum + d.length, 0) / (indexed.length || 1);
+  return { indexed, df, avgLength, total: indexed.length };
+}
+
+const INDEX = buildIndex(kbDocs);
+
+export type SearchHit = {
+  doc: KbDoc;
+  score: number;
+  /** 0〜1 に正規化した関連度（UI表示用） */
+  relevance: number;
+};
+
+/**
+ * BM25 で知識ドキュメントを検索する。
+ * @param query ユーザーの質問
+ * @param topK 返す件数
+ */
+export function searchKb(query: string, topK = 3): SearchHit[] {
+  const terms = tokenize(query);
+  if (terms.length === 0) return [];
+
+  const scored = INDEX.indexed.map(({ doc, tf, length }) => {
+    let score = 0;
+    for (const term of terms) {
+      const f = tf.get(term);
+      if (!f) continue;
+      const n = INDEX.df.get(term) ?? 0;
+      const idf = Math.log(1 + (INDEX.total - n + 0.5) / (n + 0.5));
+      const denom = f + K1 * (1 - B + (B * length) / INDEX.avgLength);
+      score += idf * ((f * (K1 + 1)) / denom);
+    }
+    return { doc, score };
+  });
+
+  scored.sort((a, b) => b.score - a.score);
+  const best = scored[0]?.score ?? 0;
+
+  return scored
+    .filter((s) => s.score > 0)
+    .slice(0, topK)
+    .map((s) => ({
+      ...s,
+      relevance: best > 0 ? s.score / best : 0,
+    }));
+}
+
+/**
+ * 回答に足る関連度があるかの閾値。
+ * これを下回る場合は「わからない」と答え、問い合わせへ誘導します（誤答の抑制）。
+ */
+export const CONFIDENCE_THRESHOLD = 3.2;
+
+/** チャット欄に出すサジェスト質問 */
+export const suggestedQuestions = [
+  "AIを使うとどれくらい速いですか？",
+  "料金の目安を教えてください",
+  "3DCGでどんなことができますか？",
+  "AIチャットボットは作れますか？",
+  "会社はどこにありますか？",
+  "既存システムと連携できますか？",
+];

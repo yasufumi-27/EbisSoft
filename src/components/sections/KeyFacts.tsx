@@ -2,7 +2,7 @@ import { Container } from "@/components/ui/Container";
 import { keyFacts } from "@/lib/content";
 
 /**
- * 「30秒でわかるEbisSoft」要点ブロック。
+ * 「30秒でわかるEbisuSoft」要点ブロック。
  * 結論ファーストの短文Q&Aで、AI・検索エンジンがそのまま引用しやすくしています（AEO / LLMO）。
  * 回答には .speakable を付与し、Speakable構造化データの対象にしています。
  */
@@ -13,7 +13,7 @@ export function KeyFacts() {
         <div className="panel panel-corners mx-auto max-w-3xl p-7 sm:p-9" data-reveal>
           <p className="eyebrow">Summary / 要点</p>
           <h2 className="mt-3 text-2xl font-bold tracking-tight text-white">
-            30秒でわかるEbisSoft
+            30秒でわかるEbisuSoft
           </h2>
           <dl className="mt-6 space-y-5">
             {keyFacts.map((f) => (

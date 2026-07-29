@@ -36,28 +36,28 @@ export function Hero() {
             </p>
             <p className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-4 py-1.5 text-sm font-semibold text-gold-light backdrop-blur">
               <Icon name="sparkles" className="size-4 animate-pulse-glow" />
-              AI検索（AEO / LLMO）対応
+              AI活用 × AI検索（AEO / LLMO）対応
             </p>
           </div>
 
           <h1 className="mt-8 text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl lg:text-[3.6rem]">
-            <span className="text-gradient">成果</span>
-            から逆算する
+            <span className="text-gradient">AI</span>を駆使して、
             <br />
-            ホームページ制作・Web制作
+            <span className="text-gradient">最速</span>で、
+            <span className="text-gold">高性能</span>なサイトを。
           </h1>
 
           <p className="speakable mt-6 max-w-xl text-lg leading-relaxed text-slate-300">
-            「きれいなだけ」で終わらせません。集客・採用・売上といったゴールから逆算し、戦略設計・SEO・AEO / LLMO（AI検索最適化）・表示速度まで作り込む。
-            3DCG・WebGL演出や動画制作まで含めて、検索エンジンにも生成AIにも“選ばれる”Webサイトをワンストップでご提供します。
+            {siteConfig.contact.address.locality}のAI活用型Web制作会社です。生成AIを制作フロー全体に組み込み、制作期間を従来の約1/3へ。小規模サイトなら最短5日で公開できます。
+            3DCG・Webアニメーション・AIチャットボット・SNS連携・システム連携まで、できることは<strong className="font-bold text-white">すべて実際に動くデモ</strong>で確かめられます。
           </p>
 
           <div className="mt-10 flex flex-col gap-3 sm:flex-row">
             <ButtonLink href="#contact" size="lg" withArrow>
               無料で相談する
             </ButtonLink>
-            <ButtonLink href="#works" size="lg" variant="secondary">
-              制作実績を見る
+            <ButtonLink href="#capabilities" size="lg" variant="secondary">
+              デモを体験する
             </ButtonLink>
           </div>
 
@@ -77,7 +77,7 @@ export function Hero() {
                 <span className="size-3 rounded-full bg-amber-300/80" />
                 <span className="size-3 rounded-full bg-emerald-400/80" />
                 <span className="font-display ml-3 flex h-5 flex-1 items-center rounded-md bg-white/5 px-2 text-[10px] tracking-[0.25em] text-slate-500">
-                  EBISSOFT.ANALYTICS
+                  EBISUSOFT.ANALYTICS
                 </span>
               </div>
               <div className="space-y-4 p-5">
