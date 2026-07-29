@@ -26,10 +26,10 @@ export function Capabilities() {
           <>
             こんなことが、できます。
             <br />
-            <span className="text-gradient">しかも、数時間で。</span>
+            <span className="text-gradient">しかも、5つで1時間。</span>
           </>
         }
-        description="下のデモはすべて本物です。そして5つとも、AIを活用して1つあたり1〜2時間で実装しました。"
+        description="下のデモはすべて本物です。そしてこの5つは、AIを活用して合計約1時間で実装しました。"
       />
 
       {/* できること一覧：技術名ではなく「事業がどう変わるか」を主役にする */}
