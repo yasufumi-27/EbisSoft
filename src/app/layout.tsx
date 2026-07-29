@@ -25,6 +25,9 @@ const orbitron = Orbitron({
   display: "swap",
 });
 
+/** サブパス配信時のプレフィックス（GitHub Pages なら "/EbisSoft"、通常ホスティングでは ""）。 */
+const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
 /**
  * サイト全体のメタデータ。各ページはここを継承し、必要に応じて上書きします。
  * URL系フィールドは metadataBase を基準に絶対URL化されます。
@@ -79,6 +82,14 @@ export const metadata: Metadata = {
       "max-snippet": -1,
       "max-video-preview": -1,
     },
+  },
+  // apple-icon は動的生成ルートのため basePath が自動付与されない（Next.js 16 / output:export）。
+  // サブパス配信（GitHub Pages）で 404 にならないよう、アイコンをまとめて明示指定する。
+  // （metadata.icons を書くと file convention の自動出力は行われなくなるため、iconも併記）
+  icons: {
+    icon: [{ url: `${BASE_PATH}/icon.svg`, type: "image/svg+xml", sizes: "any" }],
+    shortcut: [{ url: `${BASE_PATH}/favicon.ico`, sizes: "48x48" }],
+    apple: [{ url: `${BASE_PATH}/apple-icon`, sizes: "180x180", type: "image/png" }],
   },
   appleWebApp: {
     capable: true,
