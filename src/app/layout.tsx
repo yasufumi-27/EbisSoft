@@ -1,3 +1,4 @@
+import { ViewTransition } from "react";
 import type { Metadata, Viewport } from "next";
 import { Geist, Orbitron } from "next/font/google";
 import "./globals.css";
@@ -11,6 +12,7 @@ import { BackgroundFx } from "@/components/fx/BackgroundFx";
 import { RevealInit } from "@/components/fx/RevealInit";
 import { PointerFx } from "@/components/fx/PointerFx";
 import { ScrollProgress } from "@/components/fx/ScrollProgress";
+import { PwaInit } from "@/components/fx/PwaInit";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -131,8 +133,20 @@ export default function RootLayout({
         <RevealInit />
         <PointerFx />
         <ScrollProgress />
+        <PwaInit />
+
+        {/* キーボード利用者が、毎回ナビを読み飛ばして本文へ行けるようにする */}
+        <a href="#main" className="skip-link">
+          本文へスキップ
+        </a>
+
         <SiteHeader />
-        <main className="flex-1">{children}</main>
+        {/* ページ遷移をクロスフェードさせる（非対応ブラウザでは通常の遷移になる） */}
+        <ViewTransition>
+          <main id="main" tabIndex={-1} className="flex-1">
+            {children}
+          </main>
+        </ViewTransition>
         <SiteFooter />
       </body>
     </html>

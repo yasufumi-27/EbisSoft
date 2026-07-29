@@ -30,7 +30,12 @@ export type IconKey =
   | "plug"
   | "bolt"
   | "play"
-  | "external";
+  | "external"
+  | "ar"
+  | "mic"
+  | "globe"
+  | "bot"
+  | "bell";
 
 const base: SVGProps<SVGSVGElement> = {
   width: 24,
@@ -215,6 +220,41 @@ export const iconMap: Record<IconKey, (props: SVGProps<SVGSVGElement>) => React.
     <svg {...base} {...p}>
       <circle cx="12" cy="12" r="9" />
       <path d="m10 8.5 6 3.5-6 3.5v-7Z" />
+    </svg>
+  ),
+  ar: (p) => (
+    <svg {...base} {...p}>
+      <path d="M3 8V5a2 2 0 0 1 2-2h3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M21 16v3a2 2 0 0 1-2 2h-3" />
+      <path d="M12 8.2 8 10.4v4.4l4 2.2 4-2.2v-4.4L12 8.2Z" />
+      <path d="M8 10.4 12 12.6l4-2.2M12 12.6V17" />
+    </svg>
+  ),
+  mic: (p) => (
+    <svg {...base} {...p}>
+      <rect x="9" y="2.5" width="6" height="11" rx="3" />
+      <path d="M5.5 11a6.5 6.5 0 0 0 13 0" />
+      <path d="M12 17.5V21M9 21h6" />
+    </svg>
+  ),
+  globe: (p) => (
+    <svg {...base} {...p}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M3 12h18" />
+      <path d="M12 3c2.5 2.6 3.8 5.6 3.8 9S14.5 18.4 12 21c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3Z" />
+    </svg>
+  ),
+  bot: (p) => (
+    <svg {...base} {...p}>
+      <rect x="4" y="8" width="16" height="11" rx="3" />
+      <path d="M12 4.5V8M9.5 13h.01M14.5 13h.01M9 16.5h6" />
+      <circle cx="12" cy="3.5" r="1.2" />
+      <path d="M2 12.5v3M22 12.5v3" />
+    </svg>
+  ),
+  bell: (p) => (
+    <svg {...base} {...p}>
+      <path d="M18 8.5a6 6 0 1 0-12 0c0 5-2 6.5-2 6.5h16s-2-1.5-2-6.5Z" />
+      <path d="M10.3 19a2 2 0 0 0 3.4 0" />
     </svg>
   ),
   external: (p) => (

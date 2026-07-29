@@ -57,6 +57,20 @@
     color: #05070f;
   }
 
+  /* ---------------------------------------------------------------
+   * アクセシビリティ：キーボード操作時のフォーカスを必ず見えるようにする。
+   * マウス操作では出さない（:focus-visible）ため、見た目を損なわない。
+   * ------------------------------------------------------------- */
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  /* main へスキップした直後に枠が出続けるのを防ぐ */
+  main:focus {
+    outline: none;
+  }
+
   /* スクロールバーも世界観に合わせる */
   * {
     scrollbar-width: thin;
@@ -75,6 +89,29 @@
 }
 
 @layer components {
+  /* ---------------------------------------------------------------
+   * スキップリンク：キーボード利用者がナビを読み飛ばして本文へ行くための導線。
+   * 普段は画面外に置き、フォーカスされたときだけ現れる。
+   * ------------------------------------------------------------- */
+  .skip-link {
+    position: fixed;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 100;
+    transform: translateY(-160%);
+    border-radius: 0.6rem;
+    background: linear-gradient(120deg, var(--color-brand), var(--color-accent));
+    padding: 0.6rem 1.1rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #041018;
+    box-shadow: 0 0 24px rgba(34, 211, 238, 0.5);
+    transition: transform 0.25s ease;
+  }
+  .skip-link:focus {
+    transform: translateY(0);
+  }
+
   /* ---------------------------------------------------------------
    * パネル（カード）：ガラス質感＋繊細な境界線。
    * .panel-hover を足すとホバーでシアンに発光しながら浮き上がる。
@@ -621,8 +658,35 @@
   }
 }
 
+/* ---------------------------------------------------------------
+ * ページ遷移のクロスフェード（View Transitions API）。
+ * 対応していないブラウザでは、単に通常の遷移になる。
+ * ------------------------------------------------------------- */
+::view-transition-old(root) {
+  animation: vt-out 0.22s cubic-bezier(0.4, 0, 1, 1) both;
+}
+::view-transition-new(root) {
+  animation: vt-in 0.32s cubic-bezier(0, 0, 0.2, 1) both;
+}
+@keyframes vt-out {
+  to {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+@keyframes vt-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
 /* 動きを抑えたい設定のユーザーにはアニメーションを無効化（アクセシビリティ） */
 @media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
   html {
     scroll-behavior: auto;
   }

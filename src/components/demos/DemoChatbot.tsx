@@ -15,6 +15,8 @@ import {
 /** 知識ドキュメント数（表示用）。モジュール読み込み時に確定します。 */
 const KB_DOC_COUNT = kbDocs.length;
 
+type Widget = "date" | "time" | "confirm" | "done";
+
 type Message = {
   id: number;
   role: "user" | "bot";
@@ -25,10 +27,29 @@ type Message = {
   streaming?: boolean;
   /** 知識源から答えられなかった場合 */
   unanswered?: boolean;
+  /** 会話の中に差し込む操作UI（予約フロー） */
+  widget?: Widget;
 };
 
+/* ------------------------------------------------------------------
+ * 会話内で予約まで完結させるフロー。
+ * 「質問に答えて終わり」ではなく、その場で日程を押さえるところまで運びます。
+ * 実案件では、この選択結果をカレンダーAPI（Google Calendar 等）や
+ * 予約システムに登録し、確認メールの送信までを自動化します。
+ * ---------------------------------------------------------------- */
+
+/** 予約意図の検出。曖昧な言い回しも拾えるようにしています。 */
+const BOOKING_RE = /(予約|相談したい|打ち合わせ|打合せ|日程|アポ|申し込み|申込|話を聞き|見積もりが欲しい)/;
+
+/** 直近の相談枠（デモ用の固定データ） */
+const BOOKING_DATES = [
+  { value: "11/17（火）", slots: ["10:00", "14:00", "16:30"] },
+  { value: "11/18（水）", slots: ["11:00", "15:00"] },
+  { value: "11/19（木）", slots: ["10:00", "13:30", "17:00"] },
+];
+
 const GREETING =
-  "こんにちは。EbisuSoftのサイト内AIアシスタントです。制作期間・料金・できること・会社情報などについてお答えします。下の質問例からも選べます。";
+  "こんにちは。EbisuSoftのサイト内AIアシスタントです。制作期間・料金・できること・会社情報などについてお答えします。この会話の中で、ご相談の予約まで完了できます。";
 
 let messageId = 0;
 const nextId = () => (messageId += 1);
@@ -56,6 +77,7 @@ export default function DemoChatbot() {
   const [lastHits, setLastHits] = useState<SearchHit[]>([]);
   const [lastQuery, setLastQuery] = useState("");
   const [latency, setLatency] = useState<number | null>(null);
+  const [booking, setBooking] = useState<{ date?: string; time?: string; code?: string }>({});
 
   const logRef = useRef<HTMLDivElement>(null);
   const timers = useRef<number[]>([]);
@@ -93,14 +115,79 @@ export default function DemoChatbot() {
     step();
   };
 
+  /** ボットの発言を追加して、必要なら操作UIを添える */
+  const say = (text: string, widget?: Widget) => {
+    const id = nextId();
+    setMessages((prev) => [...prev, { id, role: "bot", text: "", widget, streaming: true }]);
+    streamAnswer(id, text);
+  };
+
+  /** 日付を選んだ */
+  const pickDate = (date: string) => {
+    setBooking({ date });
+    setMessages((prev) => [...prev, { id: nextId(), role: "user", text: date }]);
+    later(() => say(`${date} ですね。ご希望のお時間を選んでください。`, "time"), 350);
+  };
+
+  /** 時間を選んだ */
+  const pickTime = (time: string) => {
+    setBooking((b) => ({ ...b, time }));
+    setMessages((prev) => [...prev, { id: nextId(), role: "user", text: time }]);
+    later(
+      () =>
+        say(
+          "オンライン（Google Meet）で30〜60分を予定しています。この内容で仮予約しますか？",
+          "confirm",
+        ),
+      350,
+    );
+  };
+
+  /** 確定した */
+  const confirmBooking = () => {
+    // 予約番号はデモ用に選択内容から組み立てる（実案件は予約システムが採番）
+    const code = `EB-${(BOOKING_DATES.findIndex((d) => d.value === booking.date) + 1)
+      .toString()
+      .padStart(2, "0")}${(booking.time ?? "").replace(":", "")}`;
+    setBooking((b) => ({ ...b, code }));
+    setMessages((prev) => [...prev, { id: nextId(), role: "user", text: "この内容で予約する" }]);
+    later(
+      () =>
+        say(
+          `仮予約を承りました。\n\n日時：${booking.date} ${booking.time}〜\n形式：オンライン（Google Meet）\n受付番号：${code}\n\n確認メールをお送りします。当日までにご希望を整理いただければ、そのまま構成案のご相談に入れます。`,
+          "done",
+        ),
+      450,
+    );
+  };
+
+  const startBooking = () => {
+    setBooking({});
+    later(
+      () =>
+        say(
+          "ご相談の日程を、この場でお取りできます。直近で空いている日は次のとおりです。",
+          "date",
+        ),
+      400,
+    );
+  };
+
   const ask = (question: string) => {
     const q = question.trim();
     if (!q || thinking) return;
 
     setInput("");
     setMessages((prev) => [...prev, { id: nextId(), role: "user", text: q }]);
-    setThinking(true);
     setLastQuery(q);
+
+    // 予約の意図があれば、検索ではなく予約フローへ分岐する
+    if (BOOKING_RE.test(q)) {
+      startBooking();
+      return;
+    }
+
+    setThinking(true);
 
     // 検索の実行時間を計測（ブラウザ内で完結するため通常1ms未満）
     const { value: hits, ms } = measure(() => searchKb(q, 3));
@@ -148,6 +235,7 @@ export default function DemoChatbot() {
     setLastQuery("");
     setLatency(null);
     setThinking(false);
+    setBooking({});
   };
 
   return (
@@ -218,6 +306,93 @@ export default function DemoChatbot() {
                     </div>
                   ) : null}
 
+                  {/* 会話に差し込む予約UI（読み上げが終わってから出す） */}
+                  {m.widget && !m.streaming ? (
+                    <div className="mt-2.5">
+                      {m.widget === "date" ? (
+                        <div className="flex flex-wrap gap-2">
+                          {BOOKING_DATES.map((d) => (
+                            <button
+                              key={d.value}
+                              type="button"
+                              onClick={() => pickDate(d.value)}
+                              className="rounded-lg border border-brand/40 bg-brand/10 px-3 py-2 text-xs font-semibold text-brand-light transition-colors hover:bg-brand/20"
+                            >
+                              {d.value}
+                              <span className="ml-1.5 text-[10px] text-slate-500">
+                                空き{d.slots.length}
+                              </span>
+                            </button>
+                          ))}
+                        </div>
+                      ) : null}
+
+                      {m.widget === "time" ? (
+                        <div className="flex flex-wrap gap-2">
+                          {(BOOKING_DATES.find((d) => d.value === booking.date)?.slots ?? []).map(
+                            (t) => (
+                              <button
+                                key={t}
+                                type="button"
+                                onClick={() => pickTime(t)}
+                                className="font-display rounded-lg border border-brand/40 bg-brand/10 px-3.5 py-2 text-xs font-bold text-brand-light transition-colors hover:bg-brand/20"
+                              >
+                                {t}
+                              </button>
+                            ),
+                          )}
+                        </div>
+                      ) : null}
+
+                      {m.widget === "confirm" ? (
+                        <div className="rounded-xl border border-white/10 bg-white/[0.04] p-3">
+                          <dl className="space-y-1 text-xs">
+                            <div className="flex gap-2">
+                              <dt className="w-12 shrink-0 text-slate-500">日時</dt>
+                              <dd className="font-bold text-white">
+                                {booking.date} {booking.time}〜
+                              </dd>
+                            </div>
+                            <div className="flex gap-2">
+                              <dt className="w-12 shrink-0 text-slate-500">形式</dt>
+                              <dd className="text-slate-300">オンライン（30〜60分）</dd>
+                            </div>
+                            <div className="flex gap-2">
+                              <dt className="w-12 shrink-0 text-slate-500">費用</dt>
+                              <dd className="text-slate-300">無料</dd>
+                            </div>
+                          </dl>
+                          <div className="mt-3 flex flex-wrap gap-2">
+                            <button
+                              type="button"
+                              onClick={confirmBooking}
+                              className="rounded-lg bg-gradient-to-r from-brand to-accent px-4 py-2 text-xs font-bold text-ink"
+                            >
+                              この内容で予約する
+                            </button>
+                            <button
+                              type="button"
+                              onClick={startBooking}
+                              className="rounded-lg border border-white/15 px-3 py-2 text-xs text-slate-400 transition-colors hover:text-white"
+                            >
+                              日時を選び直す
+                            </button>
+                          </div>
+                        </div>
+                      ) : null}
+
+                      {m.widget === "done" ? (
+                        <Link
+                          href="/contact"
+                          className="inline-flex items-center gap-1.5 rounded-md border border-gold/40 bg-gold/10 px-3 py-1.5 text-[11px] font-semibold text-gold-light transition-colors hover:bg-gold/20"
+                        >
+                          事前にご要望を送っておく
+                          <Icon name="arrowRight" className="size-3" />
+                        </Link>
+                      ) : null}
+                    </div>
+                  ) : null}
+
                   {m.unanswered && !m.streaming ? (
                     <Link
                       href="/contact"
@@ -252,6 +427,14 @@ export default function DemoChatbot() {
 
         {/* 質問例 */}
         <div className="flex flex-wrap gap-2 border-t border-white/10 px-4 py-3">
+          <button
+            type="button"
+            onClick={() => ask("相談を予約したい")}
+            disabled={thinking}
+            className="rounded-full border border-brand/40 bg-brand/10 px-3 py-1 text-[11px] font-semibold text-brand-light transition-colors hover:bg-brand/20 disabled:opacity-40"
+          >
+            相談を予約したい
+          </button>
           {suggestedQuestions.map((q) => (
             <button
               key={q}

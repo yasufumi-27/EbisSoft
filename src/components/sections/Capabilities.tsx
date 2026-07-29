@@ -26,14 +26,14 @@ export function Capabilities() {
           <>
             こんなことが、できます。
             <br />
-            <span className="text-gradient">しかも、5つで1時間。</span>
+            <span className="text-gradient">しかも、11個で2時間。</span>
           </>
         }
-        description="下のデモはすべて本物です。そしてこの5つは、AIを活用して合計約1時間で実装しました。"
+        description="下のデモはすべて本物です。そしてこの11個は、AIを活用して合計約2時間で実装しました。"
       />
 
       {/* できること一覧：技術名ではなく「事業がどう変わるか」を主役にする */}
-      <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
+      <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {capabilities.map((c, i) => {
           const isActive = c.slug === active;
           return (

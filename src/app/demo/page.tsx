@@ -64,7 +64,7 @@ export default function DemoIndexPage() {
             <span className="text-gradient">全部、動かせます。</span>
           </>
         }
-        lead="Web制作会社の「できます」ほど当てにならないものはありません。だから5領域すべてを、実際に触れるデモとして公開しています。しかもこの5つは、AIを活用して合計約1時間で実装したものです。"
+        lead="Web制作会社の「できます」ほど当てにならないものはありません。だから11領域すべてを、実際に触れるデモとして公開しています。しかもこの11個は、AIを活用して合計約2時間で実装したものです。"
       >
         <div className="mt-8 flex flex-wrap gap-3">
           <ButtonLink href="/contact" withArrow>

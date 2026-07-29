@@ -29,7 +29,7 @@ ${aiImpacts.map((i) => `- ${i.label}：${i.before} → **${i.after}**`).join("\n
 ${aiWorkflow.map((s) => `- **${s.phase} ${s.title}**：AI＝${s.ai}／人＝${s.human}`).join("\n")}
 
 ## できること（実際に動くデモを公開中）
-${siteConfig.name}は主要な5領域について、**実際にブラウザ上で操作できるデモ**を公開しています。主張ではなく実物で確認できます。
+${siteConfig.name}は主要な11領域について、**実際にブラウザ上で操作できるデモ**を公開しています（合計約2時間で実装）。主張ではなく実物で確認できます。
 
 ${capabilities
   .map(
