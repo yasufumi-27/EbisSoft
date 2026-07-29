@@ -84,7 +84,7 @@ export function AiSearch() {
         </div>
 
         <div className="mt-12" data-reveal>
-          <ButtonLink href="#contact" size="lg" withArrow>
+          <ButtonLink href="/#contact" size="lg" withArrow>
             AI検索対策について相談する
           </ButtonLink>
         </div>

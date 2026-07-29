@@ -53,10 +53,10 @@ export function Hero() {
           </p>
 
           <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-            <ButtonLink href="#contact" size="lg" withArrow>
+            <ButtonLink href="/#contact" size="lg" withArrow>
               無料で相談する
             </ButtonLink>
-            <ButtonLink href="#capabilities" size="lg" variant="secondary">
+            <ButtonLink href="/#capabilities" size="lg" variant="secondary">
               デモを体験する
             </ButtonLink>
           </div>

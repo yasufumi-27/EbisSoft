@@ -64,18 +64,18 @@ export const siteConfig = {
   ],
   /** 連絡先・NAP（ローカルSEOで重要。表記揺れを作らないこと） */
   contact: {
-    telephone: "+81-75-123-4567", // ★ 国際表記
-    telephoneDisplay: "075-123-4567", // ★ 表示用
-    email: "contact@ebisusoft.co.jp", // ★
+    telephone: "+81-90-8208-7295", // 国際表記
+    telephoneDisplay: "090-8208-7295", // 表示用
+    email: "yasufumi2707@icloud.com",
     address: {
-      postalCode: "612-8083", // ★
-      region: "京都府", // ★ 都道府県
-      locality: "京都市伏見区", // ★ 市区町村
-      street: "京町北8丁目1-2 EbisuSoftビル 3F", // ★ 番地・建物
+      postalCode: "612-8493", // ★ 久我石原町の郵便番号。公開前に日本郵便で要確認
+      region: "京都府", // 都道府県
+      locality: "京都市伏見区", // 市区町村
+      street: "久我石原町7-37", // 番地
       country: "JP",
     },
-    /** 緯度・経度（LocalBusiness の geo。★実際の所在地に差し替え） */
-    geo: { latitude: 34.9317, longitude: 135.7616 },
+    /** 緯度・経度（LocalBusiness の geo）。★おおよその座標のためGoogleマップで要確認 */
+    geo: { latitude: 34.9412, longitude: 135.7222 },
     /** 営業時間（schema.org openingHours 形式 / 表示用） */
     openingHoursDisplay: "平日 10:00〜19:00",
     openingHours: "Mo-Fr 10:00-19:00",

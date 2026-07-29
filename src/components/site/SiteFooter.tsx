@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SmartLink } from "@/components/ui/SmartLink";
 import { siteConfig } from "@/lib/site";
 import { nav, capabilities } from "@/lib/content";
 import { Logo } from "@/components/site/Logo";
@@ -49,18 +50,18 @@ export function SiteFooter() {
             <ul className="mt-4 space-y-3 text-sm">
               {nav.map((item) => (
                 <li key={item.href}>
-                  <Link
+                  <SmartLink
                     href={item.href}
                     className="text-slate-400 transition-colors hover:text-brand-light"
                   >
                     {item.label}
-                  </Link>
+                  </SmartLink>
                 </li>
               ))}
               <li>
-                <Link href="/#contact" className="text-slate-400 transition-colors hover:text-brand-light">
+                <SmartLink href="/#contact" className="text-slate-400 transition-colors hover:text-brand-light">
                   お問い合わせ
-                </Link>
+                </SmartLink>
               </li>
             </ul>
 

@@ -1,6 +1,8 @@
-import Link from "next/link";
+"use client";
+
 import type { ComponentProps, ReactNode } from "react";
 import { Icon } from "@/components/ui/icons";
+import { SmartLink } from "@/components/ui/SmartLink";
 
 type Variant = "primary" | "secondary" | "ghost";
 type Size = "md" | "lg";
@@ -28,7 +30,7 @@ type CommonProps = {
   className?: string;
 };
 
-/** リンクとして使う CTA ボタン（next/link）。 */
+/** リンクとして使う CTA ボタン。ページ内アンカーは SmartLink が正しく処理する。 */
 export function ButtonLink({
   href,
   variant = "primary",
@@ -37,16 +39,16 @@ export function ButtonLink({
   children,
   className = "",
   ...props
-}: CommonProps & { href: string } & Omit<ComponentProps<typeof Link>, "href" | "className">) {
+}: CommonProps & { href: string } & Omit<ComponentProps<typeof SmartLink>, "href" | "className" | "children">) {
   return (
-    <Link
+    <SmartLink
       href={href}
       className={`${baseClass} ${variants[variant]} ${sizes[size]} ${className}`}
       {...props}
     >
       {children}
       {withArrow ? <Icon name="arrowRight" className="size-4" /> : null}
-    </Link>
+    </SmartLink>
   );
 }
 

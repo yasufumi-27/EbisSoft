@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { nav } from "@/lib/content";
+import { SmartLink } from "@/components/ui/SmartLink";
 import { ButtonLink } from "@/components/ui/Button";
 import { Logo } from "@/components/site/Logo";
 
@@ -36,7 +36,7 @@ export function SiteHeader() {
         {/* デスクトップナビ：ホバーでシアンの下線が伸びる */}
         <nav className="hidden items-center gap-7 md:flex" aria-label="グローバルナビゲーション">
           {nav.map((item) => (
-            <Link
+            <SmartLink
               key={item.href}
               href={item.href}
               className="group relative py-1 text-sm font-medium text-slate-300 transition-colors hover:text-white"
@@ -46,12 +46,12 @@ export function SiteHeader() {
                 aria-hidden
                 className="absolute inset-x-0 -bottom-0.5 h-px origin-left scale-x-0 bg-gradient-to-r from-brand to-accent shadow-[0_0_8px_rgba(34,211,238,0.8)] transition-transform duration-300 group-hover:scale-x-100"
               />
-            </Link>
+            </SmartLink>
           ))}
         </nav>
 
         <div className="hidden md:block">
-          <ButtonLink href="#contact" withArrow>
+          <ButtonLink href="/#contact" withArrow>
             無料で相談する
           </ButtonLink>
         </div>
@@ -88,17 +88,17 @@ export function SiteHeader() {
             aria-label="モバイルナビゲーション"
           >
             {nav.map((item) => (
-              <Link
+              <SmartLink
                 key={item.href}
                 href={item.href}
                 className="rounded-lg px-2 py-3 text-base font-medium text-slate-200 transition-colors hover:bg-white/5 hover:text-brand-light"
                 onClick={() => setOpen(false)}
               >
                 {item.label}
-              </Link>
+              </SmartLink>
             ))}
             <ButtonLink
-              href="#contact"
+              href="/#contact"
               withArrow
               className="mt-3 w-full"
               onClick={() => setOpen(false)}
