@@ -61,6 +61,7 @@ ${faqs.map((f) => `### ${f.question}\n${f.answer}`).join("\n\n")}
 
 ## リンク
 - [トップページ](${siteConfig.url})
+- [お問い合わせ・無料相談](${absoluteUrl("/contact")})
 - [できること（デモ一覧）](${absoluteUrl("/demo")})
 ${capabilities.map((c) => `- [${c.title}のデモ](${absoluteUrl(`/demo/${c.slug}`)})`).join("\n")}
 - [会社概要](${absoluteUrl("/company")})

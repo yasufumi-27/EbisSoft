@@ -28,13 +28,17 @@ export function RevealInit() {
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          if (entry.isIntersecting) {
+          if (!entry.isIntersecting) continue;
+          // 画面より背の高い要素（長いフォーム等）は「12%見えるまで」を待つと
+          // いつまでも表示されず空白に見えるため、触れた時点で出す。
+          const isTall = entry.boundingClientRect.height > window.innerHeight * 0.85;
+          if (isTall || entry.intersectionRatio >= 0.12) {
             reveal(entry.target);
             observer.unobserve(entry.target);
           }
         }
       },
-      { threshold: 0.12, rootMargin: "0px 0px -6% 0px" },
+      { threshold: [0, 0.12], rootMargin: "0px 0px -6% 0px" },
     );
 
     const observeAll = (root: ParentNode) => {

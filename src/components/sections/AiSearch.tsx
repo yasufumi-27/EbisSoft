@@ -32,13 +32,9 @@ export function AiSearch() {
             <span className="text-gradient">最初から対応</span>します
           </h2>
           <p className="speakable mt-5 text-lg leading-relaxed text-slate-300">
-            これからの集客は、Google検索だけでなく
-            <strong className="font-semibold text-white">
-              AI Overviews・ChatGPT・Perplexity・Gemini
-            </strong>
-            などの「答えを返すAI」に
-            <strong className="font-semibold text-white">引用・推薦されること</strong>
-            が鍵になります。EbisuSoftは制作の最初からAEO / LLMOを設計に組み込みます。
+            これからの集客は、
+            <strong className="font-semibold text-white">「答えを返すAI」に引用・推薦されること</strong>
+            が鍵になります。制作の最初から、その設計を組み込みます。
           </p>
         </div>
 
@@ -84,7 +80,7 @@ export function AiSearch() {
         </div>
 
         <div className="mt-12" data-reveal>
-          <ButtonLink href="/#contact" size="lg" withArrow>
+          <ButtonLink href="/contact" size="lg" withArrow>
             AI検索対策について相談する
           </ButtonLink>
         </div>

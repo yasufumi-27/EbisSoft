@@ -64,10 +64,10 @@ export default function DemoIndexPage() {
             <span className="text-gradient">全部、動かせます。</span>
           </>
         }
-        lead="Web制作会社の「できます」ほど当てにならないものはありません。だからEbisuSoftは、主要な5領域すべてを実際に触れるデモとして公開しています。動くものを見てから、ご判断ください。"
+        lead="Web制作会社の「できます」ほど当てにならないものはありません。だから5領域すべてを、実際に触れるデモとして公開しています。しかもこの5つは、AIを活用して1つあたり1〜2時間で実装したものです。"
       >
         <div className="mt-8 flex flex-wrap gap-3">
-          <ButtonLink href="/#contact" withArrow>
+          <ButtonLink href="/contact" withArrow>
             無料で相談する
           </ButtonLink>
           <ButtonLink href="/#ai-power" variant="ghost">
@@ -91,21 +91,27 @@ export default function DemoIndexPage() {
                 >
                   <Icon name={c.icon} className="size-6" />
                 </span>
-                <div>
-                  <h2 className="text-xl font-bold text-white">{c.title}</h2>
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                    <h2 className="text-xl font-bold text-white">{c.title}</h2>
+                    <span className="font-display rounded-md border border-gold/30 bg-gold/10 px-2 py-0.5 text-[10px] font-bold tracking-wider text-gold-light">
+                      実装 {c.buildTime}
+                    </span>
+                  </div>
                   <p className="mt-1 text-sm text-brand-light">{c.tagline}</p>
                 </div>
               </div>
 
-              <p className="speakable mt-5 text-sm leading-relaxed text-slate-400">
-                {c.description}
+              {/* 事業インパクトを先に、技術の話は後に */}
+              <p className="speakable mt-5 text-base leading-relaxed font-medium text-slate-200">
+                {c.impact}
               </p>
 
               <ul className="mt-5 space-y-2">
-                {c.bullets.slice(0, 3).map((b) => (
-                  <li key={b} className="flex gap-2.5 text-sm text-slate-300">
+                {c.businessValue.map((v) => (
+                  <li key={v.title} className="flex gap-2.5 text-sm text-slate-300">
                     <Icon name="check" className="mt-0.5 size-4 shrink-0 text-brand" />
-                    {b}
+                    {v.title}
                   </li>
                 ))}
               </ul>
@@ -140,11 +146,12 @@ export default function DemoIndexPage() {
           <h2 className="text-2xl font-bold text-white sm:text-3xl">
             ここにないことも、たいていできます。
           </h2>
-          <p className="mt-4 text-sm leading-relaxed text-slate-400">
-            掲載しているのは代表的な5領域です。「こんなことはできますか？」というご相談は、実現方法・概算費用・期間まで含めて無料でお答えします。AIを活用した制作体制なので、検証用のプロトタイプを短期間でお出しすることも可能です。
+          <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-slate-400">
+            「こんなことはできますか？」のご相談は、実現方法・概算費用・期間まで無料でお答えします。
+            検証用のプロトタイプを数時間〜数日でお出しすることも可能です。
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <ButtonLink href="/#contact" size="lg" withArrow>
+            <ButtonLink href="/contact" size="lg" withArrow>
               できるか相談する
             </ButtonLink>
             <ButtonLink href="/company" size="lg" variant="secondary">

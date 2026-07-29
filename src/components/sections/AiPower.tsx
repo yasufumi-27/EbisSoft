@@ -21,7 +21,7 @@ export function AiPower() {
             浮いた時間は、すべて品質へ。
           </>
         }
-        description="EbisuSoftは制作フローの全工程に生成AIを組み込んでいます。AIは「量産できる仕事」を担い、人は「決める仕事」に集中する。この分担が、速さと品質を同時に成立させます。"
+        description="AIは「量産できる仕事」を、人は「決める仕事」を。この分担が、速さと品質を同時に成立させます。"
       />
 
       {/* 何がどれだけ速くなるか（結論ファースト） */}
@@ -83,17 +83,13 @@ export function AiPower() {
         ))}
       </div>
 
-      <p
-        className="speakable panel mt-10 p-6 text-sm leading-relaxed text-slate-300"
-        data-reveal
-      >
-        <span className="font-bold text-white">
-          「AIで作ると品質が落ちるのでは」というご心配について。
-        </span>
-        <br />
-        設計方針・ブランド表現の判断・コードレビュー・公開判断は、必ず人が行います。AIに任せるのは、判断ではなく作業です。むしろAIで浮いた時間を表示速度やアクセシビリティの作り込みに再投資できるため、仕上がりは深くなります。その証拠として、このサイト自体がAIを駆使して制作され、Lighthouse
-        の性能スコア100点で動作しています。
-      </p>
+      <details className="demo-note mt-10" data-reveal>
+        <summary>「AIで作ると品質が落ちるのでは？」というご心配について</summary>
+        <p className="speakable mt-3 text-sm leading-relaxed text-slate-400">
+          設計方針・ブランド表現の判断・コードレビュー・公開判断は、必ず人が行います。AIに任せるのは、判断ではなく作業です。むしろAIで浮いた時間を表示速度やアクセシビリティの作り込みに再投資できるため、仕上がりはむしろ深くなります。その証拠として、このサイト自体がAIを駆使して制作され、Lighthouse
+          の性能スコア100点で動作しています。
+        </p>
+      </details>
     </Section>
   );
 }

@@ -59,9 +59,9 @@ export function SiteFooter() {
                 </li>
               ))}
               <li>
-                <SmartLink href="/#contact" className="text-slate-400 transition-colors hover:text-brand-light">
+                <Link href="/contact" className="text-slate-400 transition-colors hover:text-brand-light">
                   お問い合わせ
-                </SmartLink>
+                </Link>
               </li>
             </ul>
 

@@ -57,7 +57,7 @@ export function Pricing() {
                 ))}
               </ul>
               <ButtonLink
-                href="/#contact"
+                href="/contact"
                 variant={featured ? "primary" : "secondary"}
                 className="mt-8 w-full"
                 withArrow

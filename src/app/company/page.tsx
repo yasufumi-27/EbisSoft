@@ -54,22 +54,22 @@ const principles = [
   {
     icon: "bolt" as const,
     title: "速さは、手段であって目的ではない",
-    body: "AIで制作期間を約1/3に短縮しますが、短縮した時間はそのまま利益にせず、表示速度・アクセシビリティ・文章の精度に再投資します。速いだけの安いサイトは作りません。",
+    body: "短縮した時間はそのまま利益にせず、表示速度・アクセシビリティ・文章の精度に再投資します。速いだけの安いサイトは作りません。",
   },
   {
     icon: "check" as const,
     title: "できること／できないことを、正直に言う",
-    body: "本サイトのデモにも、どこまでが実装で本番では何が変わるかを明記しています。受注のために「できます」と言って後から詰まる進め方はしません。",
+    body: "本サイトのデモにも、どこまでが実装かを明記しています。受注のために「できます」と言って後から詰まる進め方はしません。",
   },
   {
     icon: "gauge" as const,
     title: "品質は、計測できる形で示す",
-    body: "Lighthouse（Performance / SEO / Accessibility / Best Practices）の計測結果を納品時にお渡しします。主観ではなく数値で品質を確認いただけます。",
+    body: "Lighthouseの計測結果を納品時にお渡しします。主観ではなく数値で品質を確認いただけます。",
   },
   {
     icon: "shield" as const,
     title: "安全と法令への配慮を標準にする",
-    body: "常時SSL・セキュリティヘッダーの実装、プライバシーポリシー等の整備、NDA（秘密保持契約）への対応まで、公開に必要な要件を標準で満たします。",
+    body: "常時SSL・セキュリティヘッダー・プライバシーポリシーの整備、NDAへの対応まで標準で満たします。",
   },
 ];
 
@@ -100,10 +100,10 @@ export default function CompanyPage() {
             <span className="text-gradient">AI時代のWeb</span>をつくる。
           </>
         }
-        lead={`${siteConfig.legalName}は、${contact.address.region}${contact.address.locality}に拠点を置くWeb制作会社です。生成AIを制作フロー全体に組み込み、従来の約1/3の期間で高性能なWebサイトを構築します。AIを「使う側」であると同時に、AIチャットボットやAI機能を「作る側」でもあることが、私たちの特徴です。`}
+        lead={`${contact.address.region}${contact.address.locality}のWeb制作会社です。生成AIを制作フローに組み込み、従来の約1/3の期間で高性能なサイトを構築します。AIを「使う側」であると同時に「作る側」でもあることが、私たちの特徴です。`}
       >
         <div className="mt-8 flex flex-wrap gap-3">
-          <ButtonLink href="/#contact" withArrow>
+          <ButtonLink href="/contact" withArrow>
             お問い合わせ
           </ButtonLink>
           <ButtonLink href="/demo" variant="ghost">

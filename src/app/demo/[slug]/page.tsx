@@ -84,10 +84,16 @@ export default async function DemoDetailPage({
 
       <Breadcrumbs items={crumbs} />
 
-      <PageHeader eyebrow="Capability Demo" title={cap.title} lead={cap.tagline}>
-        <p className="mt-5 text-sm leading-relaxed text-slate-400">{cap.description}</p>
+      <PageHeader eyebrow="Capability Demo" title={cap.title} lead={cap.impact}>
+        <div className="mt-7 flex flex-wrap items-center gap-3">
+          <span className="font-display inline-flex items-center gap-2 rounded-lg border border-gold/40 bg-gold/10 px-3 py-1.5 text-xs font-bold tracking-wider text-gold-light">
+            <Icon name="bolt" className="size-3.5" />
+            このデモの実装時間 {cap.buildTime}
+          </span>
+          <span className="text-xs text-slate-500">AIを活用した制作体制で構築</span>
+        </div>
         <div className="mt-8 flex flex-wrap gap-3">
-          <ButtonLink href="/#contact" withArrow>
+          <ButtonLink href="/contact" withArrow>
             このデモについて相談する
           </ButtonLink>
           <ButtonLink href="/demo" variant="ghost">
@@ -101,29 +107,60 @@ export default async function DemoDetailPage({
         <Container>
           <DemoLoader slug={cap.slug} />
 
-          <p className="mt-5 rounded-xl border border-gold/25 bg-gold/[0.06] p-5 text-xs leading-relaxed text-slate-400">
-            <span className="font-display mr-2 text-[10px] font-bold tracking-[0.2em] text-gold uppercase">
-              Note
-            </span>
-            {cap.demoNote}
-          </p>
+          <div className="mt-5 grid gap-4 lg:grid-cols-2">
+            <div className="panel p-5" data-reveal>
+              <h2 className="flex items-center gap-2 text-sm font-bold text-white">
+                <Icon name="play" className="size-4 text-brand" />
+                デモの使い方
+              </h2>
+              <ul className="mt-3 space-y-1.5">
+                {cap.howToUse.map((h) => (
+                  <li key={h} className="flex gap-2 text-xs text-slate-400">
+                    <Icon name="arrowRight" className="mt-0.5 size-3 shrink-0 text-brand" />
+                    {h}
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-          <div className="panel mt-5 p-6" data-reveal>
-            <h2 className="flex items-center gap-2 text-sm font-bold text-white">
-              <Icon name="play" className="size-4 text-brand" />
-              デモの使い方
-            </h2>
-            <ul className="mt-4 space-y-2">
-              {cap.howToUse.map((h) => (
-                <li key={h} className="flex gap-2.5 text-sm text-slate-400">
-                  <Icon name="arrowRight" className="mt-1 size-3.5 shrink-0 text-brand" />
-                  {h}
-                </li>
-              ))}
-            </ul>
+            {/* 前提・制約は読みたい人だけが開く（本文はDOMに残るのでSEOに影響なし） */}
+            <details className="demo-note self-start" data-reveal>
+              <summary>
+                <span className="font-display mr-2 text-[10px] font-bold tracking-[0.2em] text-gold uppercase">
+                  Note
+                </span>
+                どこまでが実装で、本番では何が変わるか
+              </summary>
+              <p className="mt-3 text-xs leading-relaxed text-slate-400">{cap.demoNote}</p>
+            </details>
           </div>
         </Container>
       </section>
+
+      {/* ------------- 導入すると何が変わるか（ここが一番読ませたい） ------------- */}
+      <Section bg="deep">
+        <SectionHeading
+          eyebrow="Business Impact"
+          title="導入すると、何が変わるか"
+          description={cap.description}
+        />
+        <div className="mt-12 grid gap-5 md:grid-cols-3">
+          {cap.businessValue.map((v, i) => (
+            <article
+              key={v.title}
+              className="panel panel-corners flex flex-col p-6"
+              data-reveal
+              style={{ "--reveal-delay": `${i * 0.1}s` } as React.CSSProperties}
+            >
+              <span className="font-display text-3xl font-bold text-white/10">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <h3 className="mt-2 text-lg leading-snug font-bold text-white">{v.title}</h3>
+              <p className="speakable mt-3 text-sm leading-relaxed text-slate-400">{v.body}</p>
+            </article>
+          ))}
+        </div>
+      </Section>
 
       {/* ------------- できること・活用シーン・技術 ------------- */}
       <Section>
@@ -208,7 +245,7 @@ export default async function DemoDetailPage({
                 <Icon name={o.icon} className="size-5" />
               </span>
               <h3 className="mt-4 font-bold text-white">{o.title}</h3>
-              <p className="mt-2 flex-1 text-sm leading-relaxed text-slate-400">{o.tagline}</p>
+              <p className="mt-2 flex-1 text-sm leading-relaxed text-slate-400">{o.impact}</p>
               <span className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-brand-light">
                 デモを見る
                 <Icon name="arrowRight" className="size-3" />
@@ -224,11 +261,11 @@ export default async function DemoDetailPage({
           <h2 className="text-2xl font-bold text-white sm:text-3xl">
             {cap.title}を、自社サイトでも。
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-slate-400">
-            「どこまでできるか」「いくらかかるか」だけでもお気軽にご相談ください。初回のご相談・お見積もりは無料です。AIを活用した制作体制で、最短5日から公開できます。
+          <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-slate-400">
+            「どこまでできるか」「いくらかかるか」だけでも構いません。初回のご相談・お見積もりは無料です。
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <ButtonLink href="/#contact" size="lg" withArrow>
+            <ButtonLink href="/contact" size="lg" withArrow>
               無料で相談する
             </ButtonLink>
             <ButtonLink href="/#pricing" size="lg" variant="secondary">

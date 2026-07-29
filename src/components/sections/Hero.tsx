@@ -47,13 +47,19 @@ export function Hero() {
             <span className="text-gold">高性能</span>なサイトを。
           </h1>
 
-          <p className="speakable mt-6 max-w-xl text-lg leading-relaxed text-slate-300">
-            {siteConfig.contact.address.locality}のAI活用型Web制作会社です。生成AIを制作フロー全体に組み込み、制作期間を従来の約1/3へ。小規模サイトなら最短5日で公開できます。
-            3DCG・Webアニメーション・AIチャットボット・SNS連携・システム連携まで、できることは<strong className="font-bold text-white">すべて実際に動くデモ</strong>で確かめられます。
+          <p className="speakable mt-6 max-w-lg text-lg leading-relaxed text-slate-300">
+            {siteConfig.contact.address.locality}のAI活用型Web制作会社。
+            <strong className="font-bold text-white">制作期間は従来の約1/3、最短5日で公開</strong>
+            します。
+          </p>
+
+          {/* できることは文章で説明せず、実物への導線にする */}
+          <p className="mt-4 max-w-lg text-sm leading-relaxed text-slate-400">
+            3DCG・アニメーション・AIチャットボット・SNS連携・システム連携。できることは、すべて動くデモで確かめられます。
           </p>
 
           <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-            <ButtonLink href="/#contact" size="lg" withArrow>
+            <ButtonLink href="/contact" size="lg" withArrow>
               無料で相談する
             </ButtonLink>
             <ButtonLink href="/#capabilities" size="lg" variant="secondary">

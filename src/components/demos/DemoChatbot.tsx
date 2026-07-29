@@ -220,7 +220,7 @@ export default function DemoChatbot() {
 
                   {m.unanswered && !m.streaming ? (
                     <Link
-                      href="/#contact"
+                      href="/contact"
                       className="mt-2 inline-flex items-center gap-1.5 rounded-md border border-brand/40 bg-brand/10 px-3 py-1 text-[11px] font-semibold text-brand-light transition-colors hover:bg-brand/20"
                     >
                       お問い合わせフォームへ

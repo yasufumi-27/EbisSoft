@@ -372,6 +372,35 @@
  * 外部アニメーションライブラリを使わず、CSSのみで実装しています。
  * ============================================================= */
 
+/* --- 折りたたみの注記（デモの前提・補足）。読みたい人だけが開く --- */
+.demo-note {
+  border-radius: 0.75rem;
+  border: 1px solid rgba(226, 192, 120, 0.25);
+  background: rgba(226, 192, 120, 0.06);
+  padding: 0.9rem 1.1rem;
+}
+.demo-note > summary {
+  cursor: pointer;
+  list-style: none;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  transition: color 0.2s ease;
+}
+.demo-note > summary::-webkit-details-marker {
+  display: none;
+}
+.demo-note > summary::after {
+  content: "＋";
+  float: right;
+  color: var(--color-gold);
+}
+.demo-note[open] > summary::after {
+  content: "−";
+}
+.demo-note > summary:hover {
+  color: #e2e8f0;
+}
+
 /* --- スライダー（レンジ入力） --- */
 .demo-range {
   -webkit-appearance: none;

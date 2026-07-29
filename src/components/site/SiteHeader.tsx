@@ -51,7 +51,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="hidden md:block">
-          <ButtonLink href="/#contact" withArrow>
+          <ButtonLink href="/contact" withArrow>
             無料で相談する
           </ButtonLink>
         </div>
@@ -98,7 +98,7 @@ export function SiteHeader() {
               </SmartLink>
             ))}
             <ButtonLink
-              href="/#contact"
+              href="/contact"
               withArrow
               className="mt-3 w-full"
               onClick={() => setOpen(false)}
