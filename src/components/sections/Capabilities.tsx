@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import Link from "next/link";
 import { Section, SectionHeading } from "@/components/ui/Section";
 import { Icon } from "@/components/ui/icons";
@@ -17,6 +17,23 @@ import { capabilities } from "@/lib/content";
 export function Capabilities() {
   const [active, setActive] = useState(capabilities[0].slug);
   const current = capabilities.find((c) => c.slug === active) ?? capabilities[0];
+  const liveRef = useRef<HTMLDivElement>(null);
+
+  /**
+   * カードを選んだら、デモ本体が見える位置まで送る。
+   * カード一覧の下にデモがあるため、選んだだけでは画面外のままになり
+   * 「押しても何も起きない」ように見えてしまう。
+   */
+  const showDemo = useCallback((slug: string) => {
+    setActive(slug);
+    // 状態反映（＝デモの差し替え）を待ってからスクロールする
+    requestAnimationFrame(() => {
+      const el = liveRef.current;
+      if (!el) return;
+      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      el.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+    });
+  }, []);
 
   return (
     <Section id="capabilities">
@@ -47,8 +64,9 @@ export function Capabilities() {
             >
               <button
                 type="button"
-                onClick={() => setActive(c.slug)}
+                onClick={() => showDemo(c.slug)}
                 aria-pressed={isActive}
+                aria-controls="live-demo"
                 className="flex flex-1 flex-col text-left"
               >
                 <span className="flex items-center justify-between gap-2">
@@ -78,13 +96,14 @@ export function Capabilities() {
               <div className="mt-4 flex flex-col gap-2 border-t border-white/10 pt-4">
                 <button
                   type="button"
-                  onClick={() => setActive(c.slug)}
+                  onClick={() => showDemo(c.slug)}
+                  aria-controls="live-demo"
                   className={`inline-flex items-center gap-1.5 text-xs font-bold transition-colors ${
                     isActive ? "text-brand-light" : "text-slate-500 hover:text-brand-light"
                   }`}
                 >
                   <Icon name="play" className="size-3.5" />
-                  {isActive ? "下でデモを表示中" : "デモを見る"}
+                  {isActive ? "デモを表示中" : "デモを見る"}
                 </button>
                 <Link
                   href={`/demo/${c.slug}`}
@@ -100,7 +119,7 @@ export function Capabilities() {
       </div>
 
       {/* 選択中のデモ（その場で動きます） */}
-      <div className="mt-12" data-reveal>
+      <div ref={liveRef} id="live-demo" className="mt-12 scroll-mt-24" data-reveal>
         <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
           <div>
             <p className="eyebrow">Live Demo</p>

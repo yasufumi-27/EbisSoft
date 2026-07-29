@@ -19,8 +19,11 @@ const securityHeaders = [
     value: "max-age=63072000; includeSubDomains; preload",
   },
   {
+    // カメラ（ARの重ね合わせ）とマイク（音声AI）は自サイトのみ許可する。
+    // 空の () にすると自サイトでも使えず、デモが Permissions policy violation で止まる。
+    // 位置情報は使っていないため引き続き全面禁止。
     key: "Permissions-Policy",
-    value: "camera=(), microphone=(), geolocation=()",
+    value: "camera=(self), microphone=(self), geolocation=()",
   },
 ];
 

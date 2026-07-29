@@ -52,6 +52,7 @@ const SAMPLES = ["料金はいくらですか", "会社はどこにあります�
  */
 export default function DemoVoice() {
   const [supported, setSupported] = useState<boolean | null>(null);
+  const [micHint, setMicHint] = useState<string | null>(null);
   const [listening, setListening] = useState(false);
   const [interim, setInterim] = useState("");
   const [turns, setTurns] = useState<Turn[]>([]);
@@ -66,9 +67,47 @@ export default function DemoVoice() {
   const recRef = useRef<SpeechRecognitionLike | null>(null);
   const logRef = useRef<HTMLDivElement>(null);
   const levelTimer = useRef<number>(0);
+  /**
+   * iOS / macOS Safari は「ユーザー操作の中で一度 speak() を呼ぶ」までは
+   * 読み上げが再生されない。ボタンを押した瞬間に無音を1回流して解錠する。
+   */
+  const unlockedRef = useRef(false);
+  const unlockSpeech = () => {
+    if (unlockedRef.current) return;
+    const synth = window.speechSynthesis;
+    if (!synth) return;
+    const u = new SpeechSynthesisUtterance("");
+    u.volume = 0;
+    synth.speak(u);
+    unlockedRef.current = true;
+  };
+
+  /** 表示用の簡易な端末判定（対応状況の説明をわかりやすくするためだけに使う） */
+  const [uaLabel, setUaLabel] = useState("確認中…");
 
   /* ---- 対応状況と音声一覧 ---- */
   useEffect(() => {
+    const ua = navigator.userAgent;
+    const isApple = /iPhone|iPad|iPod|Macintosh/.test(ua);
+    const isSafari = /Safari/.test(ua) && !/Chrome|Chromium|Edg/.test(ua);
+    queueMicrotask(() =>
+      setUaLabel(
+        isApple && isSafari
+          ? "Apple / Safari"
+          : /Chrome|Chromium|Edg/.test(ua)
+            ? "Chrome系"
+            : /Firefox/.test(ua)
+              ? "Firefox"
+              : "その他",
+      ),
+    );
+    if (isApple && isSafari) {
+      queueMicrotask(() =>
+        setMicHint(
+          "iPhone / iPad / Mac の Safari でも動作します。初回はマイクと音声認識の許可を求められます。",
+        ),
+      );
+    }
     const Ctor = getRecognitionCtor();
     queueMicrotask(() => setSupported(Boolean(Ctor)));
 
@@ -100,6 +139,7 @@ export default function DemoVoice() {
       const synth = window.speechSynthesis;
       if (!synth) return;
       synth.cancel();
+      // Safari は cancel() の直後に speak() すると無音になることがあるため1フレーム待つ
       const u = new SpeechSynthesisUtterance(text);
       u.lang = "ja-JP";
       u.rate = rate;
@@ -108,7 +148,7 @@ export default function DemoVoice() {
       u.onstart = () => setSpeaking(true);
       u.onend = () => setSpeaking(false);
       u.onerror = () => setSpeaking(false);
-      synth.speak(u);
+      window.setTimeout(() => synth.speak(u), 60);
     },
     [rate, voiceName],
   );
@@ -118,6 +158,7 @@ export default function DemoVoice() {
     (question: string) => {
       const q = question.trim();
       if (!q) return;
+      unlockSpeech();
       turnId += 1;
       setTurns((prev) => [...prev, { id: turnId, role: "user", text: q }]);
 
@@ -140,6 +181,7 @@ export default function DemoVoice() {
 
   /* ---- 音声認識の開始／停止 ---- */
   const startListening = () => {
+    unlockSpeech();
     const Ctor = getRecognitionCtor();
     if (!Ctor) return;
     window.speechSynthesis?.cancel();
@@ -172,7 +214,9 @@ export default function DemoVoice() {
           ? "マイクの使用が許可されていません。ブラウザの設定をご確認ください。"
           : e.error === "no-speech"
             ? "音声が聞き取れませんでした。もう一度お試しください。"
-            : `音声認識でエラーが発生しました（${e.error}）。`,
+            : e.error === "service-not-allowed"
+              ? "音声認識の使用が許可されていません。Safariの場合は「設定 > Safari > マイク」もご確認ください。"
+              : `音声認識でエラーが発生しました（${e.error}）。`,
       );
     };
     rec.onend = () => {
@@ -269,6 +313,11 @@ export default function DemoVoice() {
               {error}
             </p>
           ) : null}
+          {micHint && !error ? (
+            <p className="mb-3 rounded-lg border border-brand/25 bg-brand/[0.07] px-3 py-2 text-xs leading-relaxed text-slate-300">
+              {micHint}
+            </p>
+          ) : null}
 
           <div className="flex items-center gap-4">
             <button
@@ -306,7 +355,7 @@ export default function DemoVoice() {
               </div>
               <p className="mt-1 text-xs text-slate-500">
                 {supported === false
-                  ? "このブラウザは音声認識に非対応です。下の入力欄からお試しください。"
+                  ? "このブラウザは音声認識に非対応です（Firefox等）。下の入力欄からお試しください。"
                   : listening
                     ? "話しかけてください…"
                     : "マイクボタンを押して話しかけてください"}
@@ -362,6 +411,10 @@ export default function DemoVoice() {
               <dd className={supported ? "text-emerald-300" : "text-amber-300"}>
                 {supported === null ? "確認中…" : supported ? "利用できます" : "非対応"}
               </dd>
+            </div>
+            <div className="flex items-center justify-between gap-2">
+              <dt className="text-slate-500">この端末</dt>
+              <dd className="text-slate-300">{uaLabel}</dd>
             </div>
             <div className="flex items-center justify-between gap-2">
               <dt className="text-slate-500">読み上げ</dt>

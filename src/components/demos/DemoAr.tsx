@@ -22,14 +22,12 @@ type Product = {
   build: (color: THREE.ColorRepresentation) => THREE.Group;
 };
 
-/** 木材と金属のマテリアルを使い分けて、質感の違いも見せる */
 function woodMat(color: THREE.ColorRepresentation) {
   return new THREE.MeshStandardMaterial({ color, roughness: 0.65, metalness: 0.05 });
 }
 function metalMat() {
   return new THREE.MeshStandardMaterial({ color: 0x3a4152, roughness: 0.35, metalness: 0.85 });
 }
-
 function boxAt(w: number, h: number, d: number, x: number, y: number, z: number, m: THREE.Material) {
   const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m);
   mesh.position.set(x, y, z);
@@ -46,11 +44,8 @@ const PRODUCTS: Product[] = [
       const g = new THREE.Group();
       const w = woodMat(color);
       const m = metalMat();
-      // 座面（高さ 430mm）
       g.add(boxAt(0.45, 0.04, 0.45, 0, 0.43, 0, w));
-      // 背もたれ
       g.add(boxAt(0.45, 0.36, 0.04, 0, 0.63, -0.2, w));
-      // 脚 4本
       for (const [x, z] of [
         [0.19, 0.19],
         [-0.19, 0.19],
@@ -122,10 +117,8 @@ const PRODUCTS: Product[] = [
     build: (color) => {
       const g = new THREE.Group();
       const w = woodMat(color);
-      // 側板
       g.add(boxAt(0.025, 1.8, 0.3, -0.39, 0.9, 0, w));
       g.add(boxAt(0.025, 1.8, 0.3, 0.39, 0.9, 0, w));
-      // 棚板 5枚
       for (let i = 0; i < 5; i += 1) {
         g.add(boxAt(0.78, 0.025, 0.3, 0, 0.05 + i * 0.43, 0, w));
       }
@@ -141,30 +134,71 @@ const COLORS = [
   { hex: 0x2c3140, label: "チャコール" },
 ];
 
+/** 表示モード */
+type Mode = "preview" | "xr" | "camera";
+
 type SceneApi = {
   setProduct: (k: ProductKey) => void;
   setColor: (hex: number) => void;
   setHuman: (v: boolean) => void;
   setDistance: (m: number) => void;
-  startAr: () => Promise<void>;
+  setMode: (m: Mode) => void;
+  startXr: () => Promise<void>;
+  spin: (deg: number) => void;
 };
+
+/* ------------------------------------------------------------------
+ * 端末の傾き → カメラの向き（three の DeviceOrientationControls と同じ変換）
+ * ---------------------------------------------------------------- */
+const ZEE = new THREE.Vector3(0, 0, 1);
+const EULER = new THREE.Euler();
+const Q0 = new THREE.Quaternion();
+const Q1 = new THREE.Quaternion(-Math.sqrt(0.5), 0, 0, Math.sqrt(0.5));
+
+function applyDeviceOrientation(
+  q: THREE.Quaternion,
+  alpha: number,
+  beta: number,
+  gamma: number,
+  screenOrient: number,
+) {
+  EULER.set(beta, alpha, -gamma, "YXZ");
+  q.setFromEuler(EULER);
+  q.multiply(Q1);
+  q.multiply(Q0.setFromAxisAngle(ZEE, -screenOrient));
+}
 
 /**
  * AR デモ。
- * - WebXR（immersive-ar）対応端末では、実際のカメラ映像に実物大で重ねられます。
- * - 非対応環境では、部屋を模した空間に実寸で配置するプレビューへ自動で切り替わります。
- *   どちらも同じ Three.js のシーンを使っており、寸法は実寸（メートル単位）です。
+ *
+ * 3つの表示モードを、端末の対応状況に応じて出し分けます。
+ * 1. WebXR（immersive-ar）… Android Chrome など。床を検出して置ける本来のAR
+ * 2. カメラ重ね合わせ      … iOS / macOS Safari 向け。カメラ映像に実物大で合成し、
+ *                            端末の傾き（ジャイロ）で見回せる。iOSでも動く
+ * 3. 実寸プレビュー        … カメラが使えない環境。部屋を模した空間に実寸で配置
+ *
+ * いずれも同じ Three.js シーンで、寸法は実寸（メートル単位）です。
  */
 export default function DemoAr() {
   const mountRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const apiRef = useRef<SceneApi | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+
+  /* ---- 最新の値をアニメーションループから読むための参照 ---- */
+  const humanRef = useRef(true);
+  const distanceRef = useRef(3);
+  const colorRef = useRef<number>(COLORS[0].hex);
+  const gyroRef = useRef<"unknown" | "active" | "unavailable">("unknown");
 
   const [product, setProduct] = useState<ProductKey>("chair");
   const [color, setColor] = useState(COLORS[0].hex);
   const [human, setHuman] = useState(true);
   const [distance, setDistance] = useState(3);
-  const [arSupported, setArSupported] = useState<boolean | null>(null);
-  const [inAr, setInAr] = useState(false);
+  const [mode, setMode] = useState<Mode>("preview");
+  const [xrSupported, setXrSupported] = useState<boolean | null>(null);
+  const [cameraSupported, setCameraSupported] = useState<boolean | null>(null);
+  const [gyro, setGyro] = useState<"unknown" | "active" | "unavailable">("unknown");
   const [ready, setReady] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
@@ -187,17 +221,19 @@ export default function DemoAr() {
     const height = mount.clientHeight || 420;
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(width, height);
+    renderer.setClearColor(0x000000, 0);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.xr.enabled = true;
     mount.appendChild(renderer.domElement);
     renderer.domElement.style.display = "block";
+    renderer.domElement.style.position = "relative";
     renderer.domElement.style.touchAction = "pan-y";
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(50, width / height, 0.05, 60);
     camera.position.set(0, 1.5, 3);
 
-    // ---- 部屋（AR非対応時のプレビュー用。AR中は隠す） ----
+    // ---- 部屋（実寸プレビュー用） ----
     const room = new THREE.Group();
     const floor = new THREE.Mesh(
       new THREE.PlaneGeometry(12, 12),
@@ -227,7 +263,7 @@ export default function DemoAr() {
     fill.position.set(-4, 2, 2);
     scene.add(fill);
 
-    // ---- 人物シルエット（170cm）：サイズ感の比較用 ----
+    // ---- 人物シルエット（170cm） ----
     const person = new THREE.Group();
     const silMat = new THREE.MeshBasicMaterial({
       color: 0x22d3ee,
@@ -243,11 +279,21 @@ export default function DemoAr() {
     person.position.set(0.95, 0, 0);
     scene.add(person);
 
+    // ---- 接地を分かりやすくする影の代わりの楕円 ----
+    const shadow = new THREE.Mesh(
+      new THREE.CircleGeometry(0.6, 32),
+      new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.35 }),
+    );
+    shadow.rotation.x = -Math.PI / 2;
+    shadow.position.y = 0.004;
+    shadow.visible = false;
+    scene.add(shadow);
+
     // ---- 商品 ----
     let productGroup = PRODUCTS[0].build(COLORS[0].hex);
     scene.add(productGroup);
 
-    const disposeGroup = (g: THREE.Group) => {
+    const disposeGroup = (g: THREE.Object3D) => {
       g.traverse((o) => {
         const mesh = o as THREE.Mesh;
         if (mesh.geometry) mesh.geometry.dispose();
@@ -257,31 +303,117 @@ export default function DemoAr() {
       });
     };
 
+    /* ---- モードごとのシーン状態 ---- */
+    let mode: Mode = "preview";
+    let spinY = 0;
+    // 見回し用（ジャイロが無い環境ではドラッグで操作する）
+    let yaw = 0;
+    let pitch = 0;
+
+    const applyMode = (next: Mode) => {
+      mode = next;
+      const overlay = next !== "preview";
+      room.visible = !overlay;
+      person.visible = !overlay && humanRef.current;
+      shadow.visible = overlay;
+      if (overlay) {
+        // カメラは原点＝目の高さ（床は 1.45m 下）。商品は少し先の床に置く
+        const z = -distanceRef.current;
+        productGroup.position.set(0, -1.45, z);
+        shadow.position.set(0, -1.446, z);
+        camera.position.set(0, 0, 0);
+        // ジャイロが無い環境でも商品が画面に入るよう、初期は少し下を向く
+        yaw = 0;
+        pitch = -0.3;
+        camera.quaternion.setFromEuler(new THREE.Euler(pitch, yaw, 0, "YXZ"));
+      } else {
+        productGroup.position.set(0, 0, 0);
+        camera.position.set(0, 1.45, distanceRef.current);
+        camera.lookAt(0, 0.55, 0);
+      }
+    };
+
+    /* ---- 端末の傾きでカメラを動かす ---- */
+    let orientation: { alpha: number; beta: number; gamma: number } | null = null;
+    const onOrientation = (e: DeviceOrientationEvent) => {
+      if (e.alpha === null && e.beta === null && e.gamma === null) return;
+      orientation = {
+        alpha: THREE.MathUtils.degToRad(e.alpha ?? 0),
+        beta: THREE.MathUtils.degToRad(e.beta ?? 0),
+        gamma: THREE.MathUtils.degToRad(e.gamma ?? 0),
+      };
+      if (gyroRef.current !== "active") setGyro("active");
+    };
+    window.addEventListener("deviceorientation", onOrientation);
+
+    /* ---- ジャイロが無い環境（macOS等）はドラッグで見回す ---- */
+    let dragging = false;
+    let last = { x: 0, y: 0 };
+    const el = renderer.domElement;
+    const onDown = (e: PointerEvent) => {
+      dragging = true;
+      last = { x: e.clientX, y: e.clientY };
+      el.setPointerCapture(e.pointerId);
+    };
+    const onMove = (e: PointerEvent) => {
+      if (!dragging) return;
+      const dx = e.clientX - last.x;
+      const dy = e.clientY - last.y;
+      last = { x: e.clientX, y: e.clientY };
+      if (mode === "preview") {
+        // プレビューでは商品を回す
+        spinY += dx * 0.008;
+      } else {
+        // 重ね合わせでは見回す
+        yaw -= dx * 0.004;
+        pitch = THREE.MathUtils.clamp(pitch - dy * 0.004, -1.2, 1.2);
+      }
+    };
+    const onUp = (e: PointerEvent) => {
+      dragging = false;
+      if (el.hasPointerCapture(e.pointerId)) el.releasePointerCapture(e.pointerId);
+    };
+    el.addEventListener("pointerdown", onDown);
+    el.addEventListener("pointermove", onMove);
+    el.addEventListener("pointerup", onUp);
+    el.addEventListener("pointercancel", onUp);
+
     apiRef.current = {
       setProduct: (k) => {
         const def = PRODUCTS.find((p) => p.key === k);
         if (!def) return;
         scene.remove(productGroup);
         disposeGroup(productGroup);
-        productGroup = def.build(color);
+        productGroup = def.build(colorRef.current);
+        productGroup.rotation.y = spinY;
         scene.add(productGroup);
+        applyMode(mode);
       },
       setColor: (hex) => {
         productGroup.traverse((o) => {
           const mesh = o as THREE.Mesh;
           const m = mesh.material as THREE.MeshStandardMaterial | undefined;
-          // 金属パーツ（脚など）は色を変えない
           if (m && "color" in m && m.metalness < 0.5) m.color.set(hex);
         });
       },
       setHuman: (v) => {
-        person.visible = v;
+        person.visible = v && mode === "preview";
       },
       setDistance: (m) => {
-        camera.position.set(0, 1.45, m);
-        camera.lookAt(0, 0.55, 0);
+        if (mode === "preview") {
+          camera.position.set(0, 1.45, m);
+          camera.lookAt(0, 0.55, 0);
+        } else {
+          // 重ね合わせでは「どれくらい先の床に置くか」を変える
+          productGroup.position.z = -m;
+          shadow.position.z = -m;
+        }
       },
-      startAr: async () => {
+      setMode: applyMode,
+      spin: (deg) => {
+        spinY += THREE.MathUtils.degToRad(deg);
+      },
+      startXr: async () => {
         const xr = navigator.xr;
         if (!xr) return;
         const session = await xr.requestSession("immersive-ar", {
@@ -290,24 +422,42 @@ export default function DemoAr() {
           domOverlay: { root: mount },
         });
         await renderer.xr.setSession(session);
-        room.visible = false;
-        person.visible = false;
-        // AR中は目の前 1.2m 先の床に置く
-        productGroup.position.set(0, 0, -1.2);
-        setInAr(true);
+        applyMode("xr");
+        // XRでは床が原点なので、y=0 に置き直す
+        productGroup.position.set(0, 0, -distanceRef.current);
+        shadow.position.set(0, 0.004, -distanceRef.current);
         session.addEventListener("end", () => {
-          room.visible = true;
-          person.visible = human;
-          productGroup.position.set(0, 0, 0);
-          setInAr(false);
+          applyMode("preview");
+          setMode("preview");
         });
       },
     };
 
     let firstFrame = false;
+    const screenOrient = () =>
+      THREE.MathUtils.degToRad(
+        (window.screen?.orientation?.angle ?? (window as { orientation?: number }).orientation ?? 0) as number,
+      );
+
     renderer.setAnimationLoop(() => {
       if (!renderer.xr.isPresenting) {
-        productGroup.rotation.y += 0.0035;
+        if (mode === "preview") {
+          if (!dragging) spinY += 0.0035;
+          productGroup.rotation.y = spinY;
+        } else {
+          productGroup.rotation.y = spinY;
+          if (orientation) {
+            applyDeviceOrientation(
+              camera.quaternion,
+              orientation.alpha,
+              orientation.beta,
+              orientation.gamma,
+              screenOrient(),
+            );
+          } else {
+            camera.quaternion.setFromEuler(new THREE.Euler(pitch, yaw, 0, "YXZ"));
+          }
+        }
       }
       renderer.render(scene, camera);
       if (!firstFrame) {
@@ -316,15 +466,18 @@ export default function DemoAr() {
       }
     });
 
-    // WebXR の対応状況を判定
+    // ---- 対応状況の判定 ----
     if (navigator.xr?.isSessionSupported) {
       navigator.xr
         .isSessionSupported("immersive-ar")
-        .then((ok) => setArSupported(ok))
-        .catch(() => setArSupported(false));
+        .then((ok) => setXrSupported(ok))
+        .catch(() => setXrSupported(false));
     } else {
-      queueMicrotask(() => setArSupported(false));
+      queueMicrotask(() => setXrSupported(false));
     }
+    queueMicrotask(() =>
+      setCameraSupported(Boolean(navigator.mediaDevices?.getUserMedia)),
+    );
 
     const ro = new ResizeObserver(() => {
       const w = mount.clientWidth;
@@ -338,17 +491,30 @@ export default function DemoAr() {
 
     return () => {
       renderer.setAnimationLoop(null);
+      window.removeEventListener("deviceorientation", onOrientation);
+      el.removeEventListener("pointerdown", onDown);
+      el.removeEventListener("pointermove", onMove);
+      el.removeEventListener("pointerup", onUp);
+      el.removeEventListener("pointercancel", onUp);
       ro.disconnect();
       disposeGroup(productGroup);
       disposeGroup(room);
       disposeGroup(person);
+      disposeGroup(shadow);
       renderer.dispose();
       if (renderer.domElement.parentNode === mount) mount.removeChild(renderer.domElement);
       apiRef.current = null;
     };
-    // color / human は API 経由で反映するため依存に含めない（シーンは1度だけ構築する）
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // シーンは1度だけ構築し、以降はAPI経由で更新する
   }, []);
+
+  // 最新の値をアニメーションループ／シーン構築側から読むための同期
+  useEffect(() => {
+    humanRef.current = human;
+    distanceRef.current = distance;
+    colorRef.current = color;
+    gyroRef.current = gyro;
+  }, [human, distance, color, gyro]);
 
   useEffect(() => {
     apiRef.current?.setProduct(product);
@@ -361,20 +527,102 @@ export default function DemoAr() {
     apiRef.current?.setDistance(distance);
   }, [distance]);
 
+  /* ---------------- カメラ重ね合わせ（iOS / macOS 対応） ---------------- */
+  const startCamera = async () => {
+    setMessage(null);
+    try {
+      // iOS はジャイロの利用に明示的な許可が必要（ユーザー操作の中で求める）
+      const DOE = window.DeviceOrientationEvent as unknown as {
+        requestPermission?: () => Promise<PermissionState | "granted" | "denied">;
+      };
+      if (typeof DOE?.requestPermission === "function") {
+        const res = await DOE.requestPermission();
+        setGyro(res === "granted" ? "active" : "unavailable");
+      }
+
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: "environment" } },
+        audio: false,
+      });
+      streamRef.current = stream;
+      const v = videoRef.current;
+      if (v) {
+        v.srcObject = stream;
+        await v.play().catch(() => {});
+      }
+      setDistance(2.5);
+      distanceRef.current = 2.5;
+      apiRef.current?.setMode("camera");
+      setMode("camera");
+    } catch (e) {
+      const name = e instanceof Error ? e.name : "";
+      setMessage(
+        name === "NotAllowedError"
+          ? "カメラの使用が許可されていません。ブラウザの設定から許可すると、実物大で重ねて表示できます。"
+          : "カメラを起動できませんでした。実寸プレビューでご確認ください。",
+      );
+    }
+  };
+
+  const stopCamera = () => {
+    streamRef.current?.getTracks().forEach((t) => t.stop());
+    streamRef.current = null;
+    const v = videoRef.current;
+    if (v) v.srcObject = null;
+    setDistance(3);
+    distanceRef.current = 3;
+    apiRef.current?.setMode("preview");
+    setMode("preview");
+  };
+
+  // 離脱時にカメラを必ず止める
+  useEffect(
+    () => () => {
+      streamRef.current?.getTracks().forEach((t) => t.stop());
+    },
+    [],
+  );
+
   const [w, d, h] = current.size;
+  const overlay = mode !== "preview";
 
   return (
     <div className="grid gap-5 lg:grid-cols-5">
       <DemoStage
         className="lg:col-span-3"
         label="EbisuSoft.AR_Viewer"
-        status={inAr ? "AR SESSION" : ready ? "REAL SCALE 1:1" : "LOADING…"}
+        status={
+          mode === "xr"
+            ? "AR SESSION"
+            : mode === "camera"
+              ? gyro === "active"
+                ? "CAMERA + GYRO"
+                : "CAMERA"
+              : ready
+                ? "REAL SCALE 1:1"
+                : "LOADING…"
+        }
       >
         <div className="relative">
+          {/* カメラ映像（重ね合わせモードのときだけ表示） */}
+          <video
+            ref={videoRef}
+            playsInline
+            muted
+            autoPlay
+            aria-hidden
+            className={`absolute inset-0 size-full object-cover ${overlay ? "" : "hidden"}`}
+          />
+
           <div
             ref={mountRef}
-            className="h-[320px] w-full bg-[radial-gradient(circle_at_50%_20%,rgba(34,211,238,0.10),transparent_60%)] sm:h-[440px]"
+            className={`relative h-[320px] w-full cursor-grab active:cursor-grabbing sm:h-[440px] ${
+              overlay
+                ? ""
+                : "bg-[radial-gradient(circle_at_50%_20%,rgba(34,211,238,0.10),transparent_60%)]"
+            }`}
           />
+
           {!ready && !message ? (
             <div className="absolute inset-0 grid place-items-center">
               <span className="font-display animate-pulse text-xs tracking-[0.3em] text-slate-500">
@@ -382,24 +630,36 @@ export default function DemoAr() {
               </span>
             </div>
           ) : null}
-          {message ? (
-            <div className="absolute inset-0 grid place-items-center p-6 text-center text-sm text-slate-400">
-              {message}
-            </div>
-          ) : null}
 
-          {/* 実寸の表示：ARの価値は「サイズが分かること」なので常に出す */}
+          {/* 実寸の表示 */}
           <div className="pointer-events-none absolute top-3 left-3 rounded-lg border border-white/10 bg-ink/75 px-3 py-2 backdrop-blur">
             <p className="text-xs font-bold text-white">{current.name}</p>
             <p className="font-display mt-0.5 text-[11px] text-brand-light tabular-nums">
               W{w} × D{d} × H{h} mm
             </p>
-            <p className="mt-0.5 text-[11px] text-gold-light">
-              ¥{current.price.toLocaleString()}
-            </p>
+            <p className="mt-0.5 text-[11px] text-gold-light">¥{current.price.toLocaleString()}</p>
           </div>
 
-          {human ? (
+          {/* モードごとの操作ヒント */}
+          <p className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full border border-white/10 bg-ink/70 px-3 py-1 text-center text-[11px] text-slate-300 backdrop-blur">
+            {mode === "camera"
+              ? gyro === "active"
+                ? "端末を動かすと見回せます／ドラッグで商品を回転"
+                : "ドラッグで見回す／下のボタンで商品を回転"
+              : mode === "xr"
+                ? "床に置かれています"
+                : "ドラッグで回転・スライダーで距離"}
+          </p>
+
+          {overlay ? (
+            <button
+              type="button"
+              onClick={stopCamera}
+              className="absolute top-3 right-3 rounded-lg border border-white/20 bg-ink/75 px-3 py-1.5 text-[11px] font-semibold text-white backdrop-blur"
+            >
+              終了
+            </button>
+          ) : human ? (
             <p className="pointer-events-none absolute right-3 bottom-3 rounded-full border border-brand/30 bg-ink/70 px-3 py-1 text-[11px] text-brand-light backdrop-blur">
               比較用シルエット：身長170cm
             </p>
@@ -408,34 +668,70 @@ export default function DemoAr() {
       </DemoStage>
 
       <div className="panel space-y-5 p-5 lg:col-span-2">
-        {/* AR起動 */}
+        {/* 起動方法：端末に合わせて出し分ける */}
         <div className="rounded-xl border border-brand/25 bg-brand/[0.07] p-4">
           <p className="font-display text-[10px] font-bold tracking-[0.25em] text-brand uppercase">
             Augmented Reality
           </p>
-          {arSupported === null ? (
+
+          {xrSupported === null || cameraSupported === null ? (
             <p className="mt-2 text-xs text-slate-500">対応状況を確認しています…</p>
-          ) : arSupported ? (
-            <>
-              <p className="mt-2 text-xs leading-relaxed text-slate-300">
-                この端末はWebXRに対応しています。カメラ映像に実物大で重ねて表示できます。
-              </p>
-              <button
-                type="button"
-                onClick={() => apiRef.current?.startAr().catch(() => setMessage("ARを開始できませんでした。"))}
-                className="btn btn-primary mt-3 inline-flex h-10 w-full items-center justify-center text-sm"
-              >
-                <Icon name="ar" className="size-4" />
-                ARで実物大表示
-              </button>
-            </>
           ) : (
-            <p className="mt-2 text-xs leading-relaxed text-slate-400">
-              この端末はWebXRに非対応のため、部屋を模した空間での
-              <strong className="font-bold text-white">実寸プレビュー</strong>
-              を表示しています。実案件では、iOSには AR Quick Look（USDZ）で同じ体験を提供します。
-            </p>
+            <>
+              {xrSupported ? (
+                <>
+                  <p className="mt-2 text-xs leading-relaxed text-slate-300">
+                    この端末はWebXRに対応しています。床を検出して、実物大で置けます。
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      apiRef.current?.startXr().catch(() => setMessage("ARを開始できませんでした。"))
+                    }
+                    className="btn btn-primary mt-3 inline-flex h-10 w-full items-center justify-center text-sm"
+                  >
+                    <Icon name="ar" className="size-4" />
+                    ARで実物大表示
+                  </button>
+                </>
+              ) : (
+                <p className="mt-2 text-xs leading-relaxed text-slate-300">
+                  この端末はWebXRに非対応ですが、
+                  <strong className="font-bold text-white">
+                    カメラ映像に重ねる方式でARを体験できます
+                  </strong>
+                  （iPhone / iPad / Mac の Safari でも動作します）。
+                </p>
+              )}
+
+              {cameraSupported && mode !== "camera" ? (
+                <button
+                  type="button"
+                  onClick={startCamera}
+                  className={`mt-3 inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg text-sm font-bold transition-colors ${
+                    xrSupported
+                      ? "border border-white/15 bg-white/5 text-slate-200 hover:border-brand/50"
+                      : "bg-gradient-to-r from-brand to-accent text-ink"
+                  }`}
+                >
+                  <Icon name="ar" className="size-4" />
+                  カメラに重ねて表示
+                </button>
+              ) : null}
+
+              {!cameraSupported && !xrSupported ? (
+                <p className="mt-2 text-xs text-slate-500">
+                  カメラも利用できないため、実寸プレビューのみ表示しています。
+                </p>
+              ) : null}
+            </>
           )}
+
+          {message ? (
+            <p className="mt-3 rounded-lg border border-amber-400/30 bg-amber-400/10 px-3 py-2 text-[11px] leading-relaxed text-amber-100">
+              {message}
+            </p>
+          ) : null}
         </div>
 
         <ControlGroup label="Product / 商品">
@@ -463,23 +759,34 @@ export default function DemoAr() {
         </ControlGroup>
 
         <RangeControl
-          label="View / 見る距離"
+          label={overlay ? "Distance / 置く距離" : "View / 見る距離"}
           value={distance}
-          min={1.5}
-          max={7}
+          min={overlay ? 1 : 1.5}
+          max={overlay ? 6 : 7}
           step={0.1}
           suffix="m"
           onChange={setDistance}
         />
 
-        <div className="flex flex-wrap gap-2 border-t border-white/10 pt-4">
-          <ChipButton active={human} onClick={() => setHuman(!human)}>
-            人物シルエットで比較
-          </ChipButton>
-        </div>
+        {overlay ? (
+          <ControlGroup label="Rotate / 向き">
+            <ChipButton active={false} onClick={() => apiRef.current?.spin(-30)}>
+              ← 30°
+            </ChipButton>
+            <ChipButton active={false} onClick={() => apiRef.current?.spin(30)}>
+              30° →
+            </ChipButton>
+          </ControlGroup>
+        ) : (
+          <div className="flex flex-wrap gap-2 border-t border-white/10 pt-4">
+            <ChipButton active={human} onClick={() => setHuman(!human)}>
+              人物シルエットで比較
+            </ChipButton>
+          </div>
+        )}
 
         <p className="text-xs leading-relaxed text-slate-500">
-          モデルはすべて実寸（mm）で構築しています。距離を変えても、身長170cmのシルエットとの比率は正確に保たれます。
+          モデルはすべて実寸（mm）で構築しています。カメラに重ねたときも、視野角から逆算した実寸で描画しています。
         </p>
       </div>
     </div>
