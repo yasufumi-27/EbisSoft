@@ -28,6 +28,13 @@ export function SectionHeading({
         </p>
       ) : null}
       <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">{title}</h2>
+      {/* 見出し下のライン。対応ブラウザではスクロールに合わせて引かれる（JS不使用） */}
+      <span
+        aria-hidden
+        className={`divider-glow scroll-line mt-6 block h-px w-24 ${
+          align === "center" ? "scroll-line-center mx-auto" : ""
+        }`}
+      />
       {description ? (
         <p className="mt-5 text-base leading-relaxed text-slate-400 sm:text-lg">{description}</p>
       ) : null}

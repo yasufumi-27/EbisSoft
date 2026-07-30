@@ -8,7 +8,7 @@ import { keyFacts } from "@/lib/content";
  */
 export function KeyFacts() {
   return (
-    <section className="scroll-mt-20 py-12 sm:py-16">
+    <section id="key-facts" className="scroll-mt-20 py-12 sm:py-16">
       <Container>
         <div className="panel panel-corners mx-auto max-w-3xl p-7 sm:p-9" data-reveal>
           <p className="eyebrow">Summary / 要点</p>

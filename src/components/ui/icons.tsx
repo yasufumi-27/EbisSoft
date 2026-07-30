@@ -35,7 +35,11 @@ export type IconKey =
   | "mic"
   | "globe"
   | "bot"
-  | "bell";
+  | "bell"
+  | "calc"
+  | "sliders"
+  | "flask"
+  | "heart";
 
 const base: SVGProps<SVGSVGElement> = {
   width: 24,
@@ -255,6 +259,32 @@ export const iconMap: Record<IconKey, (props: SVGProps<SVGSVGElement>) => React.
     <svg {...base} {...p}>
       <path d="M18 8.5a6 6 0 1 0-12 0c0 5-2 6.5-2 6.5h16s-2-1.5-2-6.5Z" />
       <path d="M10.3 19a2 2 0 0 0 3.4 0" />
+    </svg>
+  ),
+  calc: (p) => (
+    <svg {...base} {...p}>
+      <rect x="4" y="2.5" width="16" height="19" rx="2.5" />
+      <path d="M8 7h8" />
+      <path d="M8.5 12h.01M12 12h.01M15.5 12h.01M8.5 16.5h.01M12 16.5h.01M15.5 16.5h.01" />
+    </svg>
+  ),
+  sliders: (p) => (
+    <svg {...base} {...p}>
+      <path d="M4 7h10M18 7h2M4 12h4M12 12h8M4 17h12M20 17h0" />
+      <circle cx="16" cy="7" r="2" />
+      <circle cx="10" cy="12" r="2" />
+      <circle cx="18" cy="17" r="2" />
+    </svg>
+  ),
+  flask: (p) => (
+    <svg {...base} {...p}>
+      <path d="M9 3h6v5l4.5 9a2.5 2.5 0 0 1-2.2 3.7H6.7A2.5 2.5 0 0 1 4.5 17L9 8V3Z" />
+      <path d="M6.6 13h10.8" />
+    </svg>
+  ),
+  heart: (p) => (
+    <svg {...base} {...p}>
+      <path d="M12 20s-7-4.3-7-9.2A4 4 0 0 1 12 8a4 4 0 0 1 7 2.8C19 15.7 12 20 12 20Z" />
     </svg>
   ),
   external: (p) => (

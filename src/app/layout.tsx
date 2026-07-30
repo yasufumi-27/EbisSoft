@@ -13,6 +13,7 @@ import { RevealInit } from "@/components/fx/RevealInit";
 import { PointerFx } from "@/components/fx/PointerFx";
 import { ScrollProgress } from "@/components/fx/ScrollProgress";
 import { PwaInit } from "@/components/fx/PwaInit";
+import { CursorGlow } from "@/components/fx/CursorGlow";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -134,6 +135,8 @@ export default function RootLayout({
         <PointerFx />
         <ScrollProgress />
         <PwaInit />
+        {/* マウス位置に追従する薄い光（タッチ端末・reduced-motionでは出ません） */}
+        <CursorGlow />
 
         {/* キーボード利用者が、毎回ナビを読み飛ばして本文へ行けるようにする */}
         <a href="#main" className="skip-link">

@@ -23,6 +23,10 @@ const loading = () => <Skeleton />;
 
 const REGISTRY: Record<string, ComponentType> = {
   "3dcg": dynamic(() => import("./Demo3dcg"), { ssr: false, loading }),
+  configurator: dynamic(() => import("./DemoConfigurator"), { ssr: false, loading }),
+  simulator: dynamic(() => import("./DemoSimulator"), { ssr: false, loading }),
+  recommend: dynamic(() => import("./DemoRecommend"), { ssr: false, loading }),
+  insight: dynamic(() => import("./DemoInsight"), { ssr: false, loading }),
   ar: dynamic(() => import("./DemoAr"), { ssr: false, loading }),
   animation: dynamic(() => import("./DemoAnimation"), { ssr: false, loading }),
   "ai-chatbot": dynamic(() => import("./DemoChatbot"), { ssr: false, loading }),

@@ -57,6 +57,22 @@
     color: #05070f;
   }
 
+  /* 見出しは行末のバランスを整え、本文は孤立行（1語だけ残る行）を避ける。
+     組版の質感が上がるうえ、対応していないブラウザでは単に無視される。 */
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+
+  /* ディスプレイフォントの数値は等幅に（カウントアップや価格が横に揺れない） */
+  .font-display {
+    font-variant-numeric: tabular-nums;
+  }
+
   /* ---------------------------------------------------------------
    * アクセシビリティ：キーボード操作時のフォーカスを必ず見えるようにする。
    * マウス操作では出さない（:focus-visible）ため、見た目を損なわない。
@@ -126,6 +142,10 @@
       rgba(10, 14, 29, 0.55);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
+    /* 上辺に髪の毛一本ぶんの光を入れる（ガラスの厚みが出て安っぽさが消える） */
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.07),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.25);
     transition:
       border-color 0.4s ease,
       box-shadow 0.4s ease,
@@ -136,6 +156,7 @@
     transform: translateY(-4px);
     border-color: rgba(34, 211, 238, 0.45);
     box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.1),
       0 0 0 1px rgba(34, 211, 238, 0.12),
       0 18px 50px -18px rgba(34, 211, 238, 0.25),
       0 8px 30px -10px rgba(0, 0, 0, 0.6);
@@ -316,6 +337,156 @@
     animation: gradient-pan 7s ease-in-out infinite alternate;
   }
 
+  /* ---------------------------------------------------------------
+   * オーロラ（アンビエント光）：画面全体をごくゆっくり流れる色の層。
+   * 3D背景の上に重ねることで、暗い画面が「黒い板」に見えなくなる。
+   * 巨大なぼかしを毎フレーム再計算させないよう、transform だけを動かす。
+   * ------------------------------------------------------------- */
+  .aurora {
+    position: fixed;
+    inset: -25%;
+    z-index: -10;
+    pointer-events: none;
+    background:
+      radial-gradient(34% 30% at 20% 16%, rgba(34, 211, 238, 0.11), transparent 70%),
+      radial-gradient(32% 28% at 80% 10%, rgba(139, 92, 246, 0.11), transparent 70%),
+      radial-gradient(30% 26% at 62% 82%, rgba(226, 192, 120, 0.07), transparent 70%);
+    will-change: transform;
+    animation: aurora-drift 32s ease-in-out infinite alternate;
+  }
+  @keyframes aurora-drift {
+    from {
+      transform: translate3d(-2%, -1.5%, 0) scale(1);
+    }
+    to {
+      transform: translate3d(3%, 2%, 0) scale(1.09);
+    }
+  }
+
+  /* ---------------------------------------------------------------
+   * カーソルライト：マウス位置に薄い光を置く（座標は CursorGlow が設定）。
+   * タッチ端末と reduced-motion では出さない。
+   * ------------------------------------------------------------- */
+  .cursor-orb {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -5;
+    width: 34rem;
+    height: 34rem;
+    margin: -17rem 0 0 -17rem;
+    border-radius: 9999px;
+    pointer-events: none;
+    background: radial-gradient(
+      circle,
+      rgba(34, 211, 238, 0.1),
+      rgba(139, 92, 246, 0.05) 45%,
+      transparent 70%
+    );
+    transform: translate3d(var(--cursor-x, 50vw), var(--cursor-y, 50vh), 0);
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+  .cursor-orb[data-active] {
+    opacity: 1;
+  }
+  @media (hover: none), (prefers-reduced-motion: reduce) {
+    .cursor-orb {
+      display: none;
+    }
+  }
+
+  /* ---------------------------------------------------------------
+   * セクションナビ（右端のHUDインジケーター）。
+   * いま読んでいる位置が分かり、任意のセクションへ飛べる。
+   * 画面が広いときだけ表示する。
+   * ------------------------------------------------------------- */
+  .dotnav {
+    position: fixed;
+    top: 50%;
+    right: 1.1rem;
+    z-index: 40;
+    display: none;
+    flex-direction: column;
+    gap: 0.7rem;
+    transform: translateY(-50%);
+  }
+  @media (min-width: 1280px) {
+    .dotnav {
+      display: flex;
+    }
+  }
+  .dotnav-item {
+    position: relative;
+    display: block;
+    width: 9px;
+    height: 9px;
+    border-radius: 9999px;
+    background: rgba(148, 163, 184, 0.3);
+    transition:
+      height 0.35s cubic-bezier(0.2, 0.7, 0.3, 1),
+      background-color 0.35s ease,
+      box-shadow 0.35s ease;
+  }
+  .dotnav-item:hover {
+    background: var(--color-brand-light);
+  }
+  .dotnav-item[data-current] {
+    height: 26px;
+    background: linear-gradient(180deg, var(--color-brand), var(--color-accent));
+    box-shadow: 0 0 14px rgba(34, 211, 238, 0.8);
+  }
+  /* ラベルはホバー時だけ左に出す */
+  .dotnav-label {
+    position: absolute;
+    top: 50%;
+    right: 1.6rem;
+    transform: translateY(-50%) translateX(6px);
+    white-space: nowrap;
+    border-radius: 0.4rem;
+    border: 1px solid var(--color-line);
+    background: rgba(10, 14, 29, 0.9);
+    padding: 0.25rem 0.55rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    color: #cbd5e1;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+  .dotnav-item:hover .dotnav-label,
+  .dotnav-item:focus-visible .dotnav-label {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+  }
+
+  /* ---------------------------------------------------------------
+   * ヒーロー見出しの行送り。行ごとに下から立ち上げる（映画のタイトル的な出方）。
+   * 文字を span で分割していないため、折り返し・コピー・読み上げに影響しない。
+   * ------------------------------------------------------------- */
+  .hero-line {
+    display: block;
+    overflow: hidden;
+    /* 下端が切れないよう、はみ出しぶんの余白を確保して見た目上は打ち消す */
+    padding-bottom: 0.14em;
+    margin-bottom: -0.14em;
+  }
+  .hero-line > span {
+    display: inline-block;
+    animation: hero-line 1s cubic-bezier(0.2, 0.7, 0.25, 1) both;
+    animation-delay: var(--line-delay, 0s);
+  }
+  @keyframes hero-line {
+    from {
+      transform: translateY(104%);
+      opacity: 0;
+    }
+    to {
+      transform: none;
+      opacity: 1;
+    }
+  }
+
   /* ゴールドの静的グラデーション文字（高級感の差し色） */
   .text-gold {
     background: linear-gradient(120deg, var(--color-gold-light), var(--color-gold) 55%, #b78f45);
@@ -402,6 +573,37 @@
   opacity: 1;
   transform: none;
   filter: none;
+}
+
+/* ---------------------------------------------------------------
+ * スクロール駆動アニメーション（CSS Scroll-driven Animations）。
+ * JavaScriptを一切使わず、スクロール位置そのものをタイムラインにする。
+ * 対応ブラウザだけで動き、非対応環境では単に静止した状態で表示される。
+ * ------------------------------------------------------------- */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    /* 見出し下のラインが、スクロールに合わせて左から引かれる */
+    .scroll-line {
+      transform-origin: left center;
+      animation: scroll-line linear both;
+      animation-timeline: view();
+      animation-range: entry 8% cover 38%;
+    }
+    /* 中央寄せの見出しでは、中心から左右に広がるほうが自然に見える */
+    .scroll-line-center {
+      transform-origin: center;
+    }
+    @keyframes scroll-line {
+      from {
+        transform: scaleX(0);
+        opacity: 0.15;
+      }
+      to {
+        transform: scaleX(1);
+        opacity: 1;
+      }
+    }
+  }
 }
 
 /* ===============================================================
@@ -696,6 +898,8 @@
     filter: none;
     transition: none;
   }
+  .aurora,
+  .hero-line > span,
   .text-gradient,
   .animate-float,
   .animate-pulse-glow,

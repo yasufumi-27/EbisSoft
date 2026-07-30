@@ -1,4 +1,5 @@
 import { Container } from "@/components/ui/Container";
+import HeroConsole from "@/components/sections/HeroConsole";
 import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/icons";
 import { CountUp } from "@/components/fx/CountUp";
@@ -40,11 +41,27 @@ export function Hero() {
             </p>
           </div>
 
-          <h1 className="mt-8 text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl lg:text-[3.6rem]">
-            <span className="text-gradient">AI</span>を駆使して、
-            <br />
-            <span className="text-gradient">最速</span>で、
-            <span className="text-gold">高性能</span>なサイトを。
+          {/* 英字ラベル：見出しの上に置く一本の情報線（HUDの静けさ） */}
+          <p className="eyebrow mt-9 flex items-center gap-3 text-[0.62rem]">
+            <span aria-hidden className="size-1.5 rounded-full bg-brand shadow-[0_0_10px_rgba(34,211,238,0.9)]" />
+            AI × Web Production
+            <span aria-hidden className="h-px w-10 bg-gradient-to-r from-brand/70 to-transparent" />
+            Kyoto, Japan
+          </p>
+
+          {/* 行ごとに立ち上がる見出し（文字は分割していないので折り返し・読み上げに影響なし） */}
+          <h1 className="mt-4 text-4xl font-bold leading-[1.16] tracking-tight text-white [word-break:keep-all] sm:text-5xl lg:text-[3.5rem]">
+            <span className="hero-line">
+              <span style={{ "--line-delay": "0.08s" } as React.CSSProperties}>
+                <span className="text-gradient">AI</span>を駆使して、
+              </span>
+            </span>
+            <span className="hero-line">
+              <span style={{ "--line-delay": "0.26s" } as React.CSSProperties}>
+                <span className="text-gradient">最速</span>で、
+                <span className="text-gold">高性能</span>なサイトを。
+              </span>
+            </span>
           </h1>
 
           <p className="speakable mt-6 max-w-lg text-lg leading-relaxed text-slate-300">
@@ -55,7 +72,7 @@ export function Hero() {
 
           {/* できることは文章で説明せず、実物への導線にする */}
           <p className="mt-4 max-w-lg text-sm leading-relaxed text-slate-400">
-            3DCG・アニメーション・AIチャットボット・SNS連携・システム連携。できることは、すべて動くデモで確かめられます。
+            3DCG・AR・料金シミュレーター・商品カスタマイズ・AIレコメンド・AIチャットボット。できることは15領域すべて、動くデモで確かめられます。
           </p>
 
           <div className="mt-10 flex flex-col gap-3 sm:flex-row">
@@ -72,49 +89,16 @@ export function Hero() {
           </p>
         </div>
 
-        {/* HUD風ダッシュボードのモックアップ（CSSのみ・ゆっくり浮遊） */}
+        {/* AI制作パイプラインのコンソール（工程ごとのAI／人の分担を可視化） */}
         <div className="relative" data-reveal style={{ "--reveal-delay": "0.15s" } as React.CSSProperties}>
           <Tilt>
-          <div className="animate-float">
-            <div className="panel panel-corners overflow-hidden shadow-[0_30px_80px_-30px_rgba(34,211,238,0.25)]">
-              {/* タイトルバー */}
-              <div className="flex items-center gap-1.5 border-b border-white/10 px-4 py-3">
-                <span className="size-3 rounded-full bg-rose-400/80" />
-                <span className="size-3 rounded-full bg-amber-300/80" />
-                <span className="size-3 rounded-full bg-emerald-400/80" />
-                <span className="font-display ml-3 flex h-5 flex-1 items-center rounded-md bg-white/5 px-2 text-[10px] tracking-[0.25em] text-slate-500">
-                  EBISUSOFT.ANALYTICS
-                </span>
-              </div>
-              <div className="space-y-4 p-5">
-                {/* グラフエリア */}
-                <div className="relative flex h-40 items-end gap-2 overflow-hidden rounded-xl border border-brand/20 bg-gradient-to-br from-brand/15 via-accent/10 to-transparent p-4">
-                  <div aria-hidden className="bg-grid absolute inset-0 opacity-60" />
-                  <span className="relative h-1/2 w-1/4 rounded-sm bg-gradient-to-t from-brand/20 to-brand/60" />
-                  <span className="relative h-3/4 w-1/4 rounded-sm bg-gradient-to-t from-brand/25 to-brand/70" />
-                  <span className="relative h-2/5 w-1/4 rounded-sm bg-gradient-to-t from-accent/25 to-accent/60" />
-                  <span className="relative h-full w-1/4 rounded-sm bg-gradient-to-t from-gold/30 to-gold/80" />
-                </div>
-                <div className="space-y-2">
-                  <span className="block h-3 w-2/3 rounded-full bg-white/10" />
-                  <span className="block h-3 w-1/2 rounded-full bg-white/5" />
-                </div>
-                <div className="grid grid-cols-3 gap-3">
-                  {[0, 1, 2].map((i) => (
-                    <div key={i} className="rounded-lg border border-white/10 bg-white/[0.03] p-3">
-                      <span className="block size-6 rounded-md bg-brand/25 shadow-[0_0_10px_rgba(34,211,238,0.35)]" />
-                      <span className="mt-2 block h-2 w-full rounded-full bg-white/10" />
-                      <span className="mt-1.5 block h-2 w-2/3 rounded-full bg-white/5" />
-                    </div>
-                  ))}
-                </div>
-              </div>
+            <div className="animate-float">
+              <HeroConsole />
             </div>
-          </div>
           </Tilt>
 
           {/* 速度バッジ */}
-          <div className="panel absolute -bottom-5 -left-5 hidden p-3 shadow-[0_0_30px_rgba(16,185,129,0.15)] sm:flex sm:items-center sm:gap-3">
+          <div className="panel absolute -bottom-9 -left-6 hidden p-3 shadow-[0_0_30px_rgba(16,185,129,0.15)] sm:flex sm:items-center sm:gap-3">
             <span className="grid size-10 place-items-center rounded-lg border border-emerald-400/30 bg-emerald-400/10 text-emerald-300">
               <Icon name="gauge" className="size-5" />
             </span>

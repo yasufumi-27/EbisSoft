@@ -35,7 +35,15 @@ export default function ThreeBackground() {
     );
     camera.position.set(0, 1.2, 16);
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    // WebGLが使えない環境（GPU無効・古い端末・一部の企業ポリシー）では
+    // WebGLRenderer のコンストラクタが例外を投げる。背景は装飾なので、
+    // ここで捕まえて静かに諦める（捕まえないとページ全体が落ちる）。
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    } catch {
+      return;
+    }
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setClearColor(0x000000, 0); // 背景色はCSS側（--color-ink）に任せる

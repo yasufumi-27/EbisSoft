@@ -11,6 +11,8 @@ export function BackgroundFx() {
   return (
     <>
       <ThreeBackground />
+      {/* オーロラ（アンビエント光）：ごくゆっくり流れる色の層で、黒い画面の平坦さを消す */}
+      <div aria-hidden className="aurora" />
       {/* 本文の可読性を上げるビネット（中央上部を暗く落とす） */}
       <div
         aria-hidden
