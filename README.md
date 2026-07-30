@@ -65,8 +65,8 @@ src/
 ├ components/
 │  ├ site/               # Header / Footer / Logo / Breadcrumbs
 │  ├ sections/           # Hero, AiPower, Capabilities, Services, Pricing, FAQ ...
-│  ├ demos/              # ★実際に動くデモ5種＋共通UI＋遅延ローダー
-│  ├ fx/                 # 3D背景・スクロールリビール等の演出
+│  ├ demos/              # ★実際に動くデモ15種＋共通UI＋遅延ローダー
+│  ├ fx/                 # 3D背景・リビール・カーソル光・セクションナビ等の演出
 │  ├ ui/                 # Container / Section / Button / PageHeader / icons
 │  └ JsonLd.tsx          # 構造化データ描画
 └ lib/
@@ -78,14 +78,24 @@ src/
 
 ## 「できること」デモについて
 
-`src/components/demos/` に、5領域の**実際に動くデモ**を実装しています。
+`src/components/demos/` に、15領域の**実際に動くデモ**を実装しています（AIを活用して合計約3時間で実装）。
 すべてクライアントで遅延読み込みされ（`DemoLoader`）、初期表示（LCP）には影響しません。
 
 | デモ | 実装 | 本番との違い |
 | --- | --- | --- |
 | `Demo3dcg` | Three.js のリアルタイムWebGL描画。形状/素材/カラー/光量/自動回転を操作可 | 実案件では顧客の製品データ（glTF等）を読み込む |
+| `DemoConfigurator` | SVGをその場で組み立てて描画。仕様に応じて見た目・価格・納期・構成コードが変わる | 価格表・在庫・納期を基幹システム／Shopify等のAPIから取得 |
 | `DemoAnimation` | CSS Animations / Web Animations API のみで8パターン | ほぼ同等（案件によりGSAP等を選定） |
-| `DemoChatbot` | `lib/kb.ts` の日本語N-gram＋BM25検索で**根拠つき回答**。閾値未満は答えない | 検索の後段に Claude 等のLLMを接続して自然文生成に置換 |
+| `DemoChatbot` | `lib/kb.ts` の日本語N-gram＋BM25検索で**根拠つき回答**。閾値未満は答えない。会話内で予約まで完結 | 検索の後段に Claude 等のLLMを接続して自然文生成に置換 |
+| `DemoSimulator` | 選択条件から概算金額・内訳・期間・おすすめプラン・月額を実計算 | 料金ルールを顧客の価格表に差し替え、結果をフォーム／CRMへ連携 |
+| `DemoRecommend` | 特徴ベクトルのコサイン類似度＋共起行列で実際に並べ替え、推薦理由も提示 | サーバー側のベクトル検索と実際の行動ログに置換 |
+| `DemoAr` | WebXR／カメラ重ね合わせ／実寸プレビューを端末に応じて自動で出し分け | 顧客の製品モデルを読み込み、iOS向けUSDZも書き出す |
+| `DemoVoice` | Web Speech API で実際に聞き取り・読み上げ（Safari含む） | リアルタイム音声APIに置換してより自然な会話に |
+| `DemoMultilingual` | Intl API で通貨・日付・数値をロケール変換。hreflangも構成から生成 | 翻訳文をAI翻訳＋ネイティブレビューの本番運用に |
+| `DemoAiAgent` | **このサイトの実 llms.txt を fetch し、実 JSON-LD を解析** | エージェントの在庫照会・予約の実行をAPIに接続 |
+| `DemoPersonalize` | 属性の切り替えで見出し・課題・実績・CTAが実際に差し替わる（`?seg=` で自動判定） | 判定をリファラ・広告パラメータ・行動履歴から行う |
+| `DemoInsight` | クリック位置を実記録してCanvasにヒートマップ描画。A/Bテストは2標本Z検定で判定 | 記録を計測基盤に送り、実訪問者のデータで同じ画面を作る |
+| `DemoPwa` | Service Workerの登録状況・キャッシュ数・通知許可を**実測表示** | 通知をローカルから Web Push（サーバー配信）へ |
 | `DemoSns` | フィードはサンプルデータ。OGPカードプレビューは入力に即時追従する実装 | フィードを各SNSの公式APIへ接続 |
 | `DemoIntegration` | ブラウザ内モックAPI。遅延・失敗・指数バックオフのリトライ・Webhook通知が実際に動く | モック部分を顧客の実システムAPIに差し替え |
 
