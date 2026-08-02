@@ -27,7 +27,8 @@ export function Hero() {
       {/* HUD風の微細グリッド */}
       <div aria-hidden className="bg-grid pointer-events-none absolute inset-0 -z-10 opacity-40 [mask-image:radial-gradient(70%_60%_at_50%_30%,black,transparent)]" />
 
-      <Container className="grid items-center gap-14 py-24 sm:py-28 lg:grid-cols-2 lg:gap-10 lg:py-36">
+      {/* 上端はヘッダー直下から始める（トップだけの詰め方。下層ページは PageHeader の余白を維持） */}
+      <Container className="grid items-center gap-14 pt-6 pb-24 sm:pt-8 sm:pb-28 lg:grid-cols-2 lg:gap-10 lg:pt-10 lg:pb-36">
         {/* min-w-0：グリッド項目の既定（min-width:auto）だと中身の最小幅で列が広がり、
             狭い端末で右端がはみ出すため、必ず縮めるようにしておく */}
         <div className="min-w-0">
