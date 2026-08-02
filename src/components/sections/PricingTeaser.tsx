@@ -28,7 +28,7 @@ export function PricingTeaser() {
             <dt className="flex items-baseline justify-between gap-3">
               <span className="text-lg font-bold text-white">{ja(plan.name)}</span>
               <span className={`text-xs ${plan.featured ? "text-gold-light" : "text-slate-500"}`}>
-                {plan.priceNote}
+                {ja(plan.priceNote)}
               </span>
             </dt>
             <dd className="mt-4">
@@ -53,7 +53,7 @@ export function PricingTeaser() {
           href="/request#pricing"
           className="inline-flex items-center gap-2 text-sm font-bold text-brand-light transition-colors hover:text-white"
         >
-          料金の詳細とご依頼の流れを見る
+          {ja("料金の詳細とご依頼の流れを見る")}
           <Icon name="arrowRight" className="size-4" />
         </Link>
       </p>

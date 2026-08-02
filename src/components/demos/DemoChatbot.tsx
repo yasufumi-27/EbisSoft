@@ -13,6 +13,7 @@ import {
   suggestedQuestions,
   type SearchHit,
 } from "@/lib/kb";
+import { ja } from "@/lib/typography";
 
 /** 知識ドキュメント数（表示用）。モジュール読み込み時に確定します。 */
 const KB_DOC_COUNT = kbDocs.length;
@@ -259,7 +260,7 @@ export default function DemoChatbot() {
             m.role === "user" ? (
               <div key={m.id} className="flex justify-end">
                 <p className="max-w-[85%] rounded-2xl rounded-br-sm bg-brand/20 px-4 py-2.5 text-sm leading-relaxed text-white ring-1 ring-brand/30">
-                  {m.text}
+                  {ja(m.text)}
                 </p>
               </div>
             ) : (
@@ -275,7 +276,7 @@ export default function DemoChatbot() {
                         : "bg-white/[0.06] text-slate-200 ring-white/10"
                     }`}
                   >
-                    {m.text}
+                    {ja(m.text)}
                     {m.streaming ? (
                       <span className="ml-0.5 inline-block h-4 w-1.5 translate-y-0.5 animate-pulse bg-brand" />
                     ) : null}
@@ -438,7 +439,7 @@ export default function DemoChatbot() {
             disabled={thinking}
             className="rounded-full border border-brand/40 bg-brand/10 px-3 py-1 text-[11px] font-semibold text-brand-light transition-colors hover:bg-brand/20 disabled:opacity-40"
           >
-            相談を予約したい
+            {ja("相談を予約したい")}
           </button>
           {suggestedQuestions.map((q) => (
             <button
@@ -448,7 +449,7 @@ export default function DemoChatbot() {
               disabled={thinking}
               className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] text-slate-400 transition-colors hover:border-brand/40 hover:text-brand-light disabled:opacity-40"
             >
-              {q}
+              {ja(q)}
             </button>
           ))}
         </div>
@@ -494,7 +495,7 @@ export default function DemoChatbot() {
             Retrieval / 検索プロセス
           </p>
           <p className="mt-2 text-xs leading-relaxed text-slate-400">
-            AIが「どの情報を根拠に答えたか」をリアルタイムで表示しています。RAG構成では、この検索結果だけを材料にして回答を生成するため、知識源にないことは答えられません。
+            {ja("AIが「どの情報を根拠に答えたか」をリアルタイムで表示しています。RAG構成では、この検索結果だけを材料にして回答を生成するため、知識源にないことは答えられません。")}
           </p>
         </div>
 
@@ -567,7 +568,7 @@ export default function DemoChatbot() {
           </div>
         ) : (
           <p className="rounded-xl border border-dashed border-white/10 p-4 text-center text-xs text-slate-500">
-            質問を送ると、ここに検索結果とスコアが表示されます。
+            {ja("質問を送ると、ここに検索結果とスコアが表示されます。")}
           </p>
         )}
       </div>

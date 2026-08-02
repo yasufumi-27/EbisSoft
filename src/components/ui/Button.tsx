@@ -3,6 +3,7 @@
 import type { ComponentProps, ReactNode } from "react";
 import { Icon } from "@/components/ui/icons";
 import { SmartLink } from "@/components/ui/SmartLink";
+import { jaNode } from "@/lib/typography";
 
 type Variant = "primary" | "secondary" | "ghost";
 type Size = "md" | "lg";
@@ -46,7 +47,7 @@ export function ButtonLink({
       className={`${baseClass} ${variants[variant]} ${sizes[size]} ${className}`}
       {...props}
     >
-      {children}
+      {jaNode(children)}
       {withArrow ? <Icon name="arrowRight" className="size-4" /> : null}
     </SmartLink>
   );
@@ -63,7 +64,7 @@ export function Button({
 }: CommonProps & ComponentProps<"button">) {
   return (
     <button className={`${baseClass} ${variants[variant]} ${sizes[size]} ${className}`} {...props}>
-      {children}
+      {jaNode(children)}
       {withArrow ? <Icon name="arrowRight" className="size-4" /> : null}
     </button>
   );

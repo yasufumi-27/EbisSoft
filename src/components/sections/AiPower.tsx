@@ -82,7 +82,7 @@ export function AiPower() {
       </div>
 
       <details className="demo-note mt-10" data-reveal>
-        <summary>AIで作ると品質が落ちるのではないか、というご質問について</summary>
+        <summary>{ja("AIで作ると品質が落ちるのではないか、というご質問について")}</summary>
         <p className="speakable mt-3 text-sm leading-relaxed text-slate-400">
           {ja(
             "設計方針・ブランド表現の判断・コードレビュー・公開判断は、必ず人が行います。AIに任せるのは、判断ではなく作業です。むしろAIで浮いた時間を表示速度やアクセシビリティの作り込みに再投資できるため、仕上がりはむしろ深くなります。その証拠として、このサイト自体がAIを駆使して制作され、Lighthouse の性能スコア100点で動作しています。",

@@ -73,7 +73,7 @@ export function DemoShowcase({
           href="/demo"
           className="inline-flex items-center gap-2 rounded-lg border border-gold/40 bg-gold/10 px-5 py-3 text-sm font-semibold text-gold-light transition-colors hover:bg-gold/20"
         >
-          15領域すべてのデモを見る
+          {ja("15領域すべてのデモを見る")}
           <Icon name="arrowRight" className="size-4" />
         </Link>
       </p>

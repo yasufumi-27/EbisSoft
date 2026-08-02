@@ -210,7 +210,7 @@ export default function EmbeddedPage() {
           <Link prefetch={false} href="/ai" className="mx-1 text-brand-light underline-offset-4 hover:underline">
             AI活用のページ
           </Link>
-          をご覧ください。
+          {ja("をご覧ください。")}
         </p>
       </Section>
 

@@ -74,22 +74,26 @@ export function ChipButton({
   onClick,
   children,
   title,
+  disabled = false,
 }: {
   active: boolean;
   onClick: () => void;
   children: ReactNode;
   title?: string;
+  /** その状況では効かない選択肢（例：ロゴ表示中の素材切替）を無効化する */
+  disabled?: boolean;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
       title={title}
+      disabled={disabled}
       aria-pressed={active}
-      className={`rounded-lg border px-3 py-1.5 text-xs font-semibold transition-all ${
+      className={`rounded-lg border px-3 py-1.5 text-xs font-semibold transition-all disabled:cursor-not-allowed disabled:opacity-40 ${
         active
           ? "border-brand/60 bg-brand/15 text-brand-light shadow-[0_0_16px_rgba(34,211,238,0.28)]"
-          : "border-white/10 bg-white/5 text-slate-400 hover:border-white/25 hover:text-slate-200"
+          : "border-white/10 bg-white/5 text-slate-400 enabled:hover:border-white/25 enabled:hover:text-slate-200"
       }`}
     >
       {children}

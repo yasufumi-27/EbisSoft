@@ -131,8 +131,8 @@ export default function PrivacyPage() {
                 <p className="text-slate-200">{siteConfig.legalName}</p>
                 <p>
                   〒{contact.address.postalCode} {contact.address.region}
-                  {contact.address.locality}
-                  {contact.address.street}
+                  {ja(contact.address.locality)}
+                  {ja(contact.address.street)}
                 </p>
                 <p>
                   電話：

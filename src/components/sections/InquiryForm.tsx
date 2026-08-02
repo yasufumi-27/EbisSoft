@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/icons";
 import { siteConfig } from "@/lib/site";
 import { inquiryGroups, type InquiryGroup } from "@/lib/inquiry";
+import { ja } from "@/lib/typography";
 
 /**
  * お問い合わせフォーム（/contact 専用）。
@@ -25,13 +26,13 @@ function ChoiceGroup({ group, uid }: { group: InquiryGroup; uid: string }) {
   return (
     <fieldset className="border-t border-white/10 pt-6">
       <legend className="flex flex-wrap items-baseline gap-2 pb-1">
-        <span className="text-base font-bold text-white">{group.label}</span>
+        <span className="text-base font-bold text-white">{ja(group.label)}</span>
         <span className="text-[11px] text-slate-500">
           {isMulti ? "複数選択できます" : "1つ選択"}・任意
         </span>
       </legend>
       {group.help ? (
-        <p className="mt-1 mb-4 text-xs leading-relaxed text-slate-500">{group.help}</p>
+        <p className="mt-1 mb-4 text-xs leading-relaxed text-slate-500">{ja(group.help)}</p>
       ) : (
         <div className="mb-4" />
       )}
@@ -46,7 +47,7 @@ function ChoiceGroup({ group, uid }: { group: InquiryGroup; uid: string }) {
               className="peer sr-only"
             />
             <span className="inline-flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-slate-300 transition-all hover:border-white/30 peer-checked:border-brand/60 peer-checked:bg-brand/15 peer-checked:text-brand-light peer-checked:shadow-[0_0_16px_rgba(34,211,238,0.25)] peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-brand">
-              {o.value}
+              {ja(o.value)}
               {o.note ? (
                 <span className="rounded bg-gold/15 px-1.5 py-0.5 text-[10px] font-bold text-gold-light">
                   {o.note}
@@ -147,23 +148,23 @@ export function InquiryForm() {
         <span className="mx-auto grid size-14 place-items-center rounded-full border border-emerald-400/40 bg-emerald-400/10 text-emerald-300 shadow-[0_0_24px_rgba(16,185,129,0.35)]">
           <Icon name="check" className="size-7" />
         </span>
-        <h2 className="mt-5 text-xl font-bold text-white">メールソフトを起動しました</h2>
+        <h2 className="mt-5 text-xl font-bold text-white">{ja("メールソフトを起動しました")}</h2>
         <p className="mt-3 text-sm leading-relaxed text-slate-400">
-          入力内容を差し込んだメールが作成されます。そのまま送信してください。
+          {ja("入力内容を差し込んだメールが作成されます。そのまま送信してください。")}
           <br />
-          2営業日以内にご返信します。
+          {ja("2営業日以内にご返信します。")}
         </p>
 
         <div className="mt-8 rounded-xl border border-white/10 bg-ink/60 p-4 text-left">
           <p className="mb-2 text-xs text-slate-500">
-            メールソフトが起動しない場合は、下記をコピーして{" "}
+            {ja("メールソフトが起動しない場合は、下記をコピーして")}{" "}
             <a
               href={`mailto:${siteConfig.contact.email}`}
               className="text-brand-light underline"
             >
               {siteConfig.contact.email}
             </a>{" "}
-            へお送りください。
+            {ja("へお送りください。")}
           </p>
           <pre className="max-h-64 overflow-auto text-[11px] leading-relaxed whitespace-pre-wrap text-slate-400">
             {sent}
@@ -201,15 +202,13 @@ export function InquiryForm() {
         </div>
 
         <label htmlFor={`${uid}-goal`} className="mt-4 block text-xl font-bold text-white">
-          やりたいこと・実現したいことを教えてください
+          {ja("やりたいこと・実現したいことを教えてください")}
           <span className="ml-2 text-sm text-gold">必須</span>
         </label>
         <p className="mt-2 text-sm leading-relaxed text-slate-400">
-          きれいにまとまっていなくて構いません。「問い合わせを増やしたい」「今のサイトが古い」だけでも大丈夫です。
-          <strong className="font-bold text-white">
-            ご予算は後から一緒に調整できます
-          </strong>
-          ので、まずはやりたいことを優先して書いてください。
+          {ja("きれいにまとまっていなくて構いません。「問い合わせを増やしたい」「今のサイトが古い」だけでも大丈夫です。")}
+          <strong className="font-bold text-white">{ja("ご予算は後から一緒に調整できます")}</strong>
+          {ja("ので、まずはやりたいことを優先して書いてください。")}
         </p>
 
         <textarea
@@ -239,7 +238,7 @@ export function InquiryForm() {
         </div>
 
         <label htmlFor={`${uid}-reference`} className="mt-6 block text-sm font-semibold text-slate-200">
-          参考にしたいサイト（任意）
+          {ja("参考にしたいサイト（任意）")}
         </label>
         <input
           id={`${uid}-reference`}
@@ -261,11 +260,11 @@ export function InquiryForm() {
             <span className="text-xs text-slate-500">すべて任意・ざっくりでOK</span>
           </span>
           <h2 className="col-start-1 mt-4 text-xl font-bold text-white">
-            ご要望の目安をお聞かせください
+            {ja("ご要望の目安をお聞かせください")}
           </h2>
           <span className="col-start-1 mt-2 block text-sm leading-relaxed text-slate-400">
-            分かる範囲で選んでください。
-            <span className="text-slate-300">開かずに送信しても構いません。</span>
+            {ja("分かる範囲で選んでください。")}
+            <span className="text-slate-300">{ja("開かずに送信しても構いません。")}</span>
           </span>
           {/* 開閉マーク。開くと上向きに反転する */}
           <span
@@ -297,7 +296,7 @@ export function InquiryForm() {
         <div className="mt-6 grid gap-5 sm:grid-cols-2">
           <div>
             <label htmlFor={`${uid}-company`} className="text-sm font-semibold text-slate-200">
-              会社名・団体名
+              {ja("会社名・団体名")}
             </label>
             <input
               id={`${uid}-company`}
@@ -311,7 +310,7 @@ export function InquiryForm() {
 
           <div>
             <label htmlFor={`${uid}-name`} className="text-sm font-semibold text-slate-200">
-              お名前 <span className="text-gold">必須</span>
+              {ja("お名前")} <span className="text-gold">必須</span>
             </label>
             <input
               id={`${uid}-name`}
@@ -333,7 +332,7 @@ export function InquiryForm() {
 
           <div>
             <label htmlFor={`${uid}-email`} className="text-sm font-semibold text-slate-200">
-              メールアドレス <span className="text-gold">必須</span>
+              {ja("メールアドレス")} <span className="text-gold">必須</span>
             </label>
             <input
               id={`${uid}-email`}
@@ -355,7 +354,7 @@ export function InquiryForm() {
 
           <div>
             <label htmlFor={`${uid}-tel`} className="text-sm font-semibold text-slate-200">
-              電話番号（任意）
+              {ja("電話番号（任意）")}
             </label>
             <input
               id={`${uid}-tel`}
@@ -369,7 +368,7 @@ export function InquiryForm() {
 
           <div className="sm:col-span-2">
             <label htmlFor={`${uid}-current`} className="text-sm font-semibold text-slate-200">
-              現在のサイトURL（任意）
+              {ja("現在のサイトURL（任意）")}
             </label>
             <input
               id={`${uid}-current`}
@@ -398,9 +397,9 @@ export function InquiryForm() {
             この内容で相談する
           </Button>
           <p className="mt-3 text-center text-xs leading-relaxed text-slate-500">
-            送信するとメールソフトが起動し、入力内容が差し込まれた状態でメールが作成されます。
+            {ja("送信するとメールソフトが起動し、入力内容が差し込まれた状態でメールが作成されます。")}
             <br />
-            いただいた情報は、お問い合わせ対応の目的にのみ利用します。
+            {ja("いただいた情報は、お問い合わせ対応の目的にのみ利用します。")}
           </p>
         </div>
       </div>

@@ -62,7 +62,7 @@ export function Faq({
             href={moreHref}
             className="inline-flex items-center gap-2 text-sm font-bold text-brand-light transition-colors hover:text-white"
           >
-            すべての質問を見る
+            {ja("すべての質問を見る")}
             <Icon name="arrowRight" className="size-4" />
           </Link>
         </p>

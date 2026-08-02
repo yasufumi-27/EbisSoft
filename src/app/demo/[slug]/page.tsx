@@ -130,7 +130,7 @@ export default async function DemoDetailPage({
                 <span className="font-display mr-2 text-[10px] font-bold tracking-[0.2em] text-gold uppercase">
                   Note
                 </span>
-                どこまでが実装で、本番では何が変わるか
+                {ja("どこまでが実装で、本番では何が変わるか")}
               </summary>
               <p className="mt-3 text-xs leading-relaxed text-slate-400">{ja(cap.demoNote)}</p>
             </details>
@@ -215,7 +215,7 @@ export default async function DemoDetailPage({
                   key={t}
                   className="rounded-md border border-white/10 bg-white/5 px-2.5 py-1 text-xs font-medium text-slate-300"
                 >
-                  {t}
+                  {ja(t)}
                 </li>
               ))}
             </ul>
@@ -261,10 +261,11 @@ export default async function DemoDetailPage({
       <Section>
         <div className="panel panel-corners p-8 text-center sm:p-12" data-reveal>
           <h2 className="text-2xl font-bold text-white sm:text-3xl">
-            {ja(cap.title)}を、自社サイトでも。
+            {ja(cap.title)}
+            {ja("を、自社サイトでも。")}
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-slate-400">
-            「どこまでできるか」「いくらかかるか」だけでも構いません。初回のご相談・お見積もりは無料です。
+            {ja("「どこまでできるか」「いくらかかるか」だけでも構いません。初回のご相談・お見積もりは無料です。")}
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <ButtonLink href="/contact" size="lg" withArrow>

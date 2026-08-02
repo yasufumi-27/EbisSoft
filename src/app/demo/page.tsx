@@ -123,7 +123,7 @@ export default function DemoIndexPage() {
                     key={t}
                     className="rounded-md border border-white/10 bg-white/5 px-2 py-0.5 text-[11px] text-slate-400"
                   >
-                    {t}
+                    {ja(t)}
                   </li>
                 ))}
               </ul>
@@ -146,11 +146,11 @@ export default function DemoIndexPage() {
       <Section bg="deep">
         <div className="panel panel-corners mx-auto max-w-3xl p-8 text-center sm:p-12" data-reveal>
           <h2 className="text-2xl font-bold text-white sm:text-3xl">
-            ここにない機能もご相談ください
+            {ja("ここにない機能もご相談ください")}
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-slate-400">
-            「こんなことはできますか？」のご相談は、実現方法・概算費用・期間まで無料でお答えします。
-            検証用のプロトタイプを数時間〜数日でお出しすることも可能です。
+            {ja("「こんなことはできますか？」のご相談は、実現方法・概算費用・期間まで無料でお答えします。")}
+            {ja("検証用のプロトタイプを数時間〜数日でお出しすることも可能です。")}
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <ButtonLink href="/contact" size="lg" withArrow>

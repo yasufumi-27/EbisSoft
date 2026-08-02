@@ -31,13 +31,13 @@ export function AiSearch() {
             AEO / LLMO 特化
           </p>
           <h2 className="mt-5 text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            AI検索（AEO / LLMO）に
+            {ja("AI検索（AEO / LLMO）に")}
             <br className="hidden sm:block" />
-            <span className="text-gradient">最初から対応</span>します
+            <span className="text-gradient">{ja("最初から対応")}</span>{ja("します")}
           </h2>
           <p className="speakable mt-5 text-lg leading-relaxed text-slate-300">
-            これからの集客は、
-            <strong className="font-semibold text-white">「答えを返すAI」に引用・推薦されること</strong>
+            {ja("これからの集客は、")}
+            <strong className="font-semibold text-white">{ja("「答えを返すAI」に引用・推薦されること")}</strong>
             {ja("が鍵になります。制作の最初から、その設計を組み込みます。")}
           </p>
         </div>
@@ -64,7 +64,7 @@ export function AiSearch() {
 
         {/* 具体的な施策 */}
         <h3 className="mt-14 text-xl font-bold text-white" data-reveal>
-          エビスソフトが実装するAEO / LLMO施策
+          {ja("エビスソフトが実装するAEO / LLMO施策")}
         </h3>
         <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {aeo.tactics.map((t, i) => (
@@ -85,7 +85,7 @@ export function AiSearch() {
 
         {/* このサイト自体での実装状況（主張ではなく、その場で確認できる一次情報） */}
         <div className="panel panel-corners mt-12 p-6 sm:p-8" data-reveal>
-          <h3 className="text-lg font-bold text-white">このサイトでの実装状況</h3>
+          <h3 className="text-lg font-bold text-white">{ja("このサイトでの実装状況")}</h3>
           <p className="speakable mt-2 text-sm leading-relaxed text-slate-400">
             {ja("下記はすべて、いま見ているこのサイトで動いているものです。リンクから中身をそのまま確認できます。")}
           </p>

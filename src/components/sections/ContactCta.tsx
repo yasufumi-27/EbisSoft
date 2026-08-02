@@ -35,9 +35,9 @@ export function ContactCta() {
           <p className="eyebrow justify-center">Contact</p>
 
           <h2 className="mt-5 text-3xl leading-tight font-bold tracking-tight text-white sm:text-5xl">
-            まずは、やりたいことだけ
+            {ja("まずは、やりたいことだけ")}
             <br className="sm:hidden" />
-            お聞かせください
+            {ja("お聞かせください")}
           </h2>
 
           <p className="speakable mx-auto mt-6 max-w-xl leading-relaxed text-slate-300">
@@ -52,10 +52,10 @@ export function ContactCta() {
               href="/contact"
               className="btn btn-primary inline-flex h-14 items-center px-10 text-base"
             >
-              お問い合わせフォームへ
+              {ja("お問い合わせフォームへ")}
               <Icon name="arrowRight" className="size-5" />
             </Link>
-            <p className="mt-4 text-sm text-slate-500">入力は1〜2分ほどで終わります</p>
+            <p className="mt-4 text-sm text-slate-500">{ja("入力は1〜2分ほどで終わります")}</p>
           </div>
 
           <ul className="mt-10 flex flex-wrap justify-center gap-x-6 gap-y-3">

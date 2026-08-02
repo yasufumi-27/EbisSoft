@@ -1,87 +1,107 @@
-import { Fragment } from "react";
+import { Children, Fragment, cloneElement, isValidElement } from "react";
 
 /**
  * 日本語の組版ヘルパー。
  *
  * ブラウザは日本語を「どの文字の間でも折り返してよい」と扱うため、放っておくと
- * 「チャット／ボット」「従／来」「所／属」のように語の途中で切れます。
- * 読み手には誤字のように見えるので、語のまとまりを .nb で包んで
- * 語の内部で折り返さないようにします（CSSは globals.css の `.nb`）。
+ * 「チャット／ボット」「従／来」「いた／だけます」のように語の途中で切れます。
+ * 読み手には誤字のように見えるので、文章を語のまとまりに切り、
+ * それぞれを .nb で包んで内部で折り返さないようにします（CSSは globals.css）。
  *
  * CSS の `word-break: auto-phrase`（文節での折り返し）は当てにできません。
  * `CSS.supports()` は true を返すのに、実際の折り返し位置は何も変わらず、
- * カタカナすら途中で割れることを実測で確認しています（2026-08-03）。
- * そのため、守る語はここ（サーバー側）で決めます。
+ * カタカナすら「ソフトウェ／ア」と割れることを実測で確認しています（2026-08-03）。
+ * そのため、どこで切ってよいかはここ（サーバー側）で決めます。
  *
  * - サーバー側で組み立てるだけなので、クライアントJSは増えません。
  * - 文字は一切足さない（U+2060 等を挟まない）ため、コピー・読み上げ・
  *   検索エンジンの読み取りには影響しません。
- * - ひらがなは包みません。すべて包むと折り返せる場所がなくなって行が溢れるうえ、
- *   ひらがなの途中で折り返すのは日本語の組版として珍しくないためです。
  */
 
 /**
- * 折り返したくない語のパターン。左から順に試されるので、長いものを先に置くこと。
+ * 語のまとまり（おおよその文節）。左から順に試されるので、長いものを先に置くこと。
+ *
+ * 日本語は「自立語（漢字・カタカナ・英数字）＋付属語（ひらがな）」で1つの塊になるため、
+ * 自立語のうしろに続くひらがなを、その語に含めています。
+ * 「制作期間は」「開発しています」「お問い合わせください」のように、
+ * 読むときに息継ぎする単位でだけ改行されるようになります。
  *
  * 1. スラッシュで並べた略語（SEO / AEO / LLMO、BLE / Wi-Fi / MQTT）。
  *    区切りの前後で改行されると「（AEO /」で行が終わり「LLMO）」だけが次の行に残る。
  * 2. ハイフン・ドット・スラッシュでつながる英数字（Wi-Fi / N-gram / llms.txt / Three.js）。
- *    これらの記号の直後はブラウザが改行可能とみなすため、語が割れてしまう。
- * 3. カタカナ（小書き・ヴ含む）と長音記号の連なり。中黒（・）は区切りなので含めない。
- *    直前・直後に続く英数字も一続きの語として扱う（AIチャットボット・PWA対応の「AI」など。
- *    別々に包むと、その境目で改行できてしまい「AI／チャットボット」と割れる）。
+ * 3. カタカナ語（前後に続く英数字も一続き。AIチャットボット・PWA対応の「AI」など）。
  * 4. 数量と単位（298,000円／約1/3／最短5日／3〜4週間／15領域）。
- *    数字の直後の漢字は単位・助数詞とみなして一続きにする。
- * 5. 漢字の連なり（熟語）。「従来」「所属」「管理画面」「全体像」が割れるのを防ぐ。
+ * 5. 漢字（熟語・送り仮名つき）。
+ * 6. ひらがなだけの語（ください・いただけます・そのもの）。
+ * 7. 英数字（上のどれにも当てはまらないもの）。
  */
-const PROTECTED_WORD = new RegExp(
+const CHUNK = new RegExp(
   [
     "[A-Za-z][A-Za-z0-9+#]*(?: / [A-Za-z0-9+#]+)+",
     "[A-Za-z][A-Za-z0-9+#]*(?:[-./][A-Za-z0-9+#]+)+",
-    "[A-Za-z0-9]*[ァ-ヺー]{2,}[A-Za-z0-9]*",
-    "[0-9][0-9,./〜～-]*[一-鿿々]{0,3}",
-    "[一-鿿々]{2,}",
+    "[A-Za-z0-9]*[ァ-ヺー]+[A-Za-z0-9]*[ぁ-ゖ]*",
+    "[0-9][0-9,./〜～-]*[一-鿿々]{0,3}[ぁ-ゖ]*",
+    "[一-鿿々]+[ぁ-ゖ]*",
+    "[ぁ-ゖ]+",
+    "[A-Za-z0-9]+[ぁ-ゖ]*",
   ].join("|"),
   "g",
 );
 
 /**
- * これより長い語は、包むと狭い画面で行から溢れるため、そのままにする。
- * 全角（漢字・カタカナ）と半角（英数字）で見た目の幅が倍ちがうので、上限も分ける。
+ * ひとまとまりの上限（全角の文字数に換算）。
+ *
+ * これを超える長さを折り返し禁止にすると、狭い画面のカードで行から溢れます。
+ * 超えたぶんは次のまとまりへ送るので、長い語は「なるべく後ろで」割れます。
  */
-const MAX_KANJI = 6;
-const MAX_KATAKANA = 14;
-const MAX_LATIN = 20;
+const MAX_WIDTH = 9;
 
-/** 語の種類ごとの上限。長すぎる語は包まない（狭い画面での溢れを防ぐ）。 */
-function fitsInLine(word: string) {
-  if (/[ァ-ヺー]/.test(word)) return word.length <= MAX_KATAKANA;
-  // 数量（半角数字が主体）は全角より狭いので、漢字より少し余裕を持たせる
-  if (/^[0-9]/.test(word)) return word.length <= MAX_LATIN;
-  if (/[一-鿿々]/.test(word)) return word.length <= MAX_KANJI;
-  return word.length <= MAX_LATIN;
+/** 見た目の幅（全角＝1、半角＝0.5）。 */
+function widthOf(char: string) {
+  return /[\x20-\x7e]/.test(char) ? 0.5 : 1;
 }
 
-/** 文字列中の「割れると読みにくい語」を、折り返し禁止の span で包んで返します。 */
+/** 先頭から MAX_WIDTH に収まる文字数（最低1文字）。 */
+function takeFit(word: string) {
+  let width = 0;
+  for (let i = 0; i < word.length; i++) {
+    width += widthOf(word[i]);
+    if (width > MAX_WIDTH) return Math.max(1, i);
+  }
+  return word.length;
+}
+
+/** 文字列を「語のまとまり」に切り、折り返し禁止の span で包んで返します。 */
 export function ja(text: string): React.ReactNode {
   if (!text) return text;
 
   const parts: React.ReactNode[] = [];
   let last = 0;
   let match: RegExpExecArray | null;
-  PROTECTED_WORD.lastIndex = 0;
+  CHUNK.lastIndex = 0;
 
-  while ((match = PROTECTED_WORD.exec(text)) !== null) {
-    const word = match[0];
-    // 1文字だけの語（漢字1字＋助数詞なしなど）は割れようがないので包まない
-    if (word.length < 2 || !fitsInLine(word)) continue;
+  while ((match = CHUNK.exec(text)) !== null) {
     if (match.index > last) parts.push(text.slice(last, match.index));
-    parts.push(
-      <span key={`${match.index}-${word}`} className="nb">
-        {word}
-      </span>,
-    );
-    last = match.index + word.length;
+    // 長すぎるまとまりは、収まる分だけを固定して残りを次へ送る
+    let rest = match[0];
+    let offset = match.index;
+    while (rest.length > 0) {
+      const fit = takeFit(rest);
+      const word = rest.slice(0, fit);
+      // 1文字は割れようがないので、包まずそのまま置く（HTMLを無駄に増やさない）
+      parts.push(
+        word.length > 1 ? (
+          <span key={`${offset}-${word}`} className="nb">
+            {word}
+          </span>
+        ) : (
+          word
+        ),
+      );
+      rest = rest.slice(fit);
+      offset += fit;
+    }
+    last = match.index + match[0].length;
   }
 
   // 守る語が1つもなければ、余計なノードを作らずそのまま返す
@@ -92,9 +112,23 @@ export function ja(text: string): React.ReactNode {
 }
 
 /**
- * ReactNode 版。文字列なら語を保護し、要素ならそのまま返します。
- * 見出しなどに `<span>` 混じりの JSX を受け取る共通コンポーネントで使います。
+ * ReactNode 版。中に入っている文字列をすべて保護します。
+ *
+ * 見出しやボタンは `AI活用<span>の</span>Web制作` のように JSX が混ざるため、
+ * 文字列だけを見ていると保護し漏れます（実際「制作期間は従来の…」が
+ * `<strong>` の中にあり、「従／来」と割れていました）。
+ * ここでは子要素をたどって、行き着いた文字列を ja() に通します。
  */
 export function jaNode(node: React.ReactNode): React.ReactNode {
-  return typeof node === "string" ? ja(node) : node;
+  if (typeof node === "string") return ja(node);
+  if (Array.isArray(node)) {
+    return Children.map(node, (child) => jaNode(child));
+  }
+  if (isValidElement<{ children?: React.ReactNode }>(node)) {
+    const children = node.props.children;
+    // 子を持たない要素（<br /> や <Icon />）はそのまま
+    if (children === undefined || children === null) return node;
+    return cloneElement(node, undefined, jaNode(children));
+  }
+  return node;
 }

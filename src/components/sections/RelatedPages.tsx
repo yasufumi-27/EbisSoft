@@ -16,7 +16,7 @@ export function RelatedPages({ hrefs }: { hrefs: string[] }) {
     <section aria-labelledby="related-pages" className="py-16 sm:py-20">
       <Container>
         <h2 id="related-pages" className="eyebrow" data-reveal>
-          Next / 次に見るページ
+          {ja("Next / 次に見るページ")}
         </h2>
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((p, i) => (

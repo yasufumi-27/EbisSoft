@@ -10,10 +10,16 @@ import { ChipButton, ControlGroup, DemoStage, RangeControl, SwitchButton } from 
  * 選択肢の定義
  * ---------------------------------------------------------------- */
 
-type ShapeKey = "knot" | "icosa" | "box" | "sphere" | "torus";
+type ShapeKey = "knot" | "icosa" | "box" | "sphere" | "torus" | "logo";
 type MaterialKey = "metal" | "glass" | "matte" | "wire";
 
+/** 会社ロゴ（透過テクスチャ）。3D空間にパネルとして立てる。 */
+const LOGO_TEXTURE = `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/logo/ebisu-soft-logo-512.webp`;
+const LOGO_ASPECT = 512 / 410;
+const LOGO_WIDTH = 3.9;
+
 const SHAPES: { key: ShapeKey; label: string }[] = [
+  { key: "logo", label: "会社ロゴ" },
   { key: "knot", label: "トーラスノット" },
   { key: "icosa", label: "多面体" },
   { key: "box", label: "キューブ" },
@@ -48,6 +54,8 @@ function createGeometry(shape: ShapeKey): THREE.BufferGeometry {
       return new THREE.SphereGeometry(1.6, 96, 64);
     case "torus":
       return new THREE.TorusGeometry(1.35, 0.5, 64, 160);
+    case "logo":
+      return new THREE.PlaneGeometry(LOGO_WIDTH, LOGO_WIDTH / LOGO_ASPECT);
   }
 }
 
@@ -173,6 +181,61 @@ export default function Demo3dcg() {
     const mesh = new THREE.Mesh(geometry, mat);
     scene.add(mesh);
 
+    /* --- 会社ロゴのパネル（透過テクスチャ） ---
+       テクスチャは「会社ロゴ」を選んだときに初めて読み込む（初期表示を軽く保つ）。
+       ロゴは画像なので素材・カラーは適用せず、専用のマテリアルに差し替える。 */
+    let shapeKind: ShapeKey = "knot";
+    let matKind: MaterialKey = "metal";
+    let matColor = COLORS[0].hex;
+    let logoMat: THREE.MeshStandardMaterial | null = null;
+    let logoRequested = false;
+    let destroyed = false;
+
+    const applyMaterial = () => {
+      if (shapeKind === "logo") {
+        if (logoMat) mesh.material = logoMat;
+        return;
+      }
+      const next = createMaterial(matKind, matColor);
+      mesh.material = next;
+      mat.dispose();
+      mat = next;
+    };
+
+    const ensureLogoMaterial = () => {
+      if (logoRequested) return;
+      logoRequested = true;
+      new THREE.TextureLoader().load(
+        LOGO_TEXTURE,
+        (tex) => {
+          if (destroyed) {
+            tex.dispose();
+            return;
+          }
+          tex.colorSpace = THREE.SRGBColorSpace;
+          tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+          logoMat = new THREE.MeshStandardMaterial({
+            map: tex,
+            transparent: true,
+            side: THREE.DoubleSide,
+            metalness: 0.2,
+            roughness: 0.45,
+            // ロゴの発光部分（リング）が暗所でも沈まないよう、わずかに自己発光させる
+            emissiveMap: tex,
+            emissive: new THREE.Color(0xffffff),
+            emissiveIntensity: 0.35,
+            envMapIntensity: 0.8,
+          });
+          applyMaterial();
+        },
+        undefined,
+        () => {
+          // 読み込めなくても他の形状は使えるので、静かに諦める
+          logoRequested = false;
+        },
+      );
+    };
+
     // 足元のリフレクション代わりの発光リング（見栄えの底上げ）
     const glow = new THREE.Mesh(
       new THREE.RingGeometry(2.1, 3.4, 64),
@@ -210,13 +273,15 @@ export default function Demo3dcg() {
         mesh.geometry = next;
         geometry.dispose();
         geometry = next;
+        shapeKind = s;
+        if (s === "logo") ensureLogoMaterial();
+        applyMaterial();
         countTriangles();
       },
       setMaterial: (m, c) => {
-        const next = createMaterial(m, c);
-        mesh.material = next;
-        mat.dispose();
-        mat = next;
+        matKind = m;
+        matColor = c;
+        applyMaterial();
       },
       setLight: (v) => {
         const scale = v / 100;
@@ -290,6 +355,7 @@ export default function Demo3dcg() {
     ro.observe(mount);
 
     return () => {
+      destroyed = true;
       cancelAnimationFrame(raf);
       document.removeEventListener("visibilitychange", onVisibility);
       io.disconnect();
@@ -297,6 +363,8 @@ export default function Demo3dcg() {
       controls.dispose();
       geometry.dispose();
       mat.dispose();
+      logoMat?.map?.dispose();
+      logoMat?.dispose();
       glow.geometry.dispose();
       (glow.material as THREE.Material).dispose();
       envRT.dispose();
@@ -325,6 +393,9 @@ export default function Demo3dcg() {
   useEffect(() => {
     apiRef.current?.setAutoRotate(autoRotate);
   }, [autoRotate]);
+
+  /** 会社ロゴ（画像テクスチャ）表示中は、素材・カラーの切替が効かない */
+  const isLogo = shape === "logo";
 
   if (unsupported) {
     return (
@@ -379,6 +450,8 @@ export default function Demo3dcg() {
             <ChipButton
               key={m.key}
               active={material === m.key}
+              disabled={isLogo}
+              title={isLogo ? "会社ロゴは画像テクスチャのため素材は適用されません" : undefined}
               onClick={() => setMaterial(m.key)}
             >
               {m.label}
@@ -394,15 +467,22 @@ export default function Demo3dcg() {
               onClick={() => setColor(c.hex)}
               aria-label={c.label}
               aria-pressed={color === c.hex}
-              className={`size-8 rounded-lg border-2 transition-all ${
+              disabled={isLogo}
+              className={`size-8 rounded-lg border-2 transition-all disabled:cursor-not-allowed disabled:opacity-40 ${
                 color === c.hex
                   ? "scale-110 border-white shadow-[0_0_14px_rgba(255,255,255,0.4)]"
-                  : "border-white/20 hover:border-white/50"
+                  : "border-white/20 enabled:hover:border-white/50"
               }`}
               style={{ backgroundColor: c.hex }}
             />
           ))}
         </ControlGroup>
+
+        {isLogo ? (
+          <p className="rounded-lg border border-brand/25 bg-brand/[0.07] px-3 py-2 text-xs leading-relaxed text-brand-light">
+            会社ロゴは背景を透過した画像テクスチャを3Dパネルに貼っています。素材とカラーは適用されません（光量・回転・視点は操作できます）。
+          </p>
+        ) : null}
 
         <RangeControl
           label="Light / 光量"

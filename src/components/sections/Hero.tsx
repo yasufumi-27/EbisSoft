@@ -38,11 +38,11 @@ export function Hero() {
               <Icon name="pin" className="size-4" />
               {/* 語の途中で折れないよう、意味のまとまりごとに折り返す（改行＝空白になるため1行で書く） */}
               {/* prettier-ignore */}
-              <span>{siteConfig.contact.address.locality}の<span className="nb-strict">Web制作</span>・<span className="nb-strict">組み込み開発</span> <span className="nb-strict">{siteConfig.name}</span></span>
+              <span>{ja(siteConfig.contact.address.locality)}の<span className="nb-strict">Web制作</span>・<span className="nb-strict">組み込み開発</span> <span className="nb-strict">{siteConfig.name}</span></span>
             </p>
             <p className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-4 py-1.5 text-sm font-semibold text-gold-light backdrop-blur">
               <Icon name="sparkles" className="size-4 animate-pulse-glow" />
-              AI活用 × AI検索（AEO / LLMO）対応
+              {ja("AI活用 × AI検索（AEO / LLMO）対応")}
             </p>
           </div>
 
@@ -60,7 +60,7 @@ export function Hero() {
           <h1 className="mt-4 text-[clamp(1.6rem,7.6vw,2.25rem)] font-bold leading-[1.16] tracking-tight text-white [word-break:keep-all] sm:text-5xl lg:text-[3.5rem]">
             <span className="hero-line">
               <span style={{ "--line-delay": "0.08s" } as React.CSSProperties}>
-                <span className="text-gradient">AI活用</span>のWeb制作と
+                <span className="text-gradient">AI活用</span>の{ja("Web制作")}と
               </span>
             </span>
             <span className="hero-line">
@@ -71,9 +71,9 @@ export function Hero() {
           </h1>
 
           <p className="speakable mt-6 max-w-lg text-lg leading-relaxed text-slate-300">
-            {siteConfig.name}は、{siteConfig.contact.address.locality}
+            {ja(siteConfig.name)}は、{ja(siteConfig.contact.address.locality)}
             {ja("のソフトウェア開発事業者です。生成AIを制作フロー全体に組み込み、")}
-            <strong className="font-bold text-white">制作期間は従来の約1/3、最短5日で公開</strong>
+            <strong className="font-bold text-white">{ja("制作期間は従来の約1/3、最短5日で公開")}</strong>
             {ja("。マイコン・IoT機器の組み込みソフトウェア開発もお引き受けします。")}
           </p>
 
@@ -84,15 +84,15 @@ export function Hero() {
 
           <div className="mt-10 flex flex-col gap-3 sm:flex-row">
             <ButtonLink href="/contact" size="lg" withArrow>
-              無料で相談する
+              {ja("無料で相談する")}
             </ButtonLink>
             <ButtonLink href="/ai" size="lg" variant="secondary">
-              AI活用の中身を見る
+              {ja("AI活用の中身を見る")}
             </ButtonLink>
           </div>
 
           <p className="mt-5 text-sm text-slate-500">
-            初回のご相談・お見積もりは無料です。
+            {ja("初回のご相談・お見積もりは無料です。")}
           </p>
         </div>
 
@@ -110,7 +110,7 @@ export function Hero() {
               <Icon name="gauge" className="size-5" />
             </span>
             <span className="text-sm">
-              <span className="block font-bold text-white">表示速度 100点</span>
+              <span className="block font-bold text-white">{ja("表示速度 100点")}</span>
               <span className="block whitespace-nowrap text-slate-400">Core Web Vitals最適化</span>
             </span>
           </div>
@@ -126,7 +126,7 @@ export function Hero() {
               className="relative px-6 py-7 text-center"
               style={{ "--reveal-delay": `${i * 0.08}s` } as React.CSSProperties}
             >
-              <dt className="sr-only">{s.label}</dt>
+              <dt className="sr-only">{ja(s.label)}</dt>
               <dd>
                 <span className="font-display block text-2xl font-bold tracking-tight text-white sm:text-3xl">
                   <CountUp value={s.value} className="text-gradient" />
