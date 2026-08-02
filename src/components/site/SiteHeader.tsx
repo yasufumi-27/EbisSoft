@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { nav } from "@/lib/content";
+import { nav } from "@/lib/nav";
 import { SmartLink } from "@/components/ui/SmartLink";
 import { ButtonLink } from "@/components/ui/Button";
 import { Logo } from "@/components/site/Logo";

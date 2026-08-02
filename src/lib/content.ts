@@ -6,27 +6,9 @@
 
 import type { IconKey } from "@/components/ui/icons";
 
-export type NavItem = { label: string; href: string };
-
-/**
- * グローバルナビ。並び順は「遷移してほしい優先度」そのものです。
- * 1. AI活用（最も見せたい強み） 2. Web制作（主力サービス） 3. 組み込み開発（相談を増やしたい領域）
- */
-export const nav: NavItem[] = [
-  { label: "AI活用", href: "/ai" },
-  { label: "Web制作", href: "/web" },
-  { label: "組み込み開発", href: "/embedded" },
-  { label: "できること", href: "/demo" },
-  { label: "料金", href: "/web#pricing" },
-  { label: "会社概要", href: "/company" },
-];
-
-/** フッター用の補助リンク（グローバルナビに載せない下層ページ）。 */
-export const subNav: NavItem[] = [
-  { label: "よくある質問", href: "/faq" },
-  { label: "お問い合わせ", href: "/contact" },
-  { label: "プライバシーポリシー", href: "/privacy" },
-];
+/* ナビゲーション（nav / subNav）は src/lib/nav.ts に分離しています。
+   クライアントコンポーネントのヘッダーが読むため、このファイル全体を
+   初期JSに巻き込まないようにするのが目的です（詳細は nav.ts のコメント）。 */
 
 /* ------------------------------------------------------------------
  * トップページの3本柱。

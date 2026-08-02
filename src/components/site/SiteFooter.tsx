@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { SmartLink } from "@/components/ui/SmartLink";
 import { siteConfig } from "@/lib/site";
-import { nav, subNav, capabilities } from "@/lib/content";
+import { nav, subNav } from "@/lib/nav";
+import { capabilities } from "@/lib/content";
 import { Logo } from "@/components/site/Logo";
 import { Icon } from "@/components/ui/icons";
 
