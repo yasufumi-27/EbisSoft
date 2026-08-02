@@ -105,8 +105,8 @@ function buildDocs(): KbDoc[] {
     id: "company",
     source: "会社情報（所在地・連絡先）",
     category: "会社情報",
-    key: "会社 所在地 住所 どこ 場所 京都 伏見 電話 連絡先 営業時間 アクセス エリア 対応地域",
-    answer: `${siteConfig.legalName}は${siteConfig.contact.address.region}${siteConfig.contact.address.locality}に拠点を置くWeb制作会社です。所在地は〒${siteConfig.contact.address.postalCode} ${siteConfig.contact.address.region}${siteConfig.contact.address.locality}${siteConfig.contact.address.street}、電話は${siteConfig.contact.telephoneDisplay}（${siteConfig.contact.openingHoursDisplay}）。対応エリアは${siteConfig.areaServed}です。`,
+    key: "会社 会社名 名称 屋号 所在地 住所 どこ 場所 京都 伏見 電話 連絡先 営業時間 アクセス エリア 対応地域 商工会 所属団体 加盟",
+    answer: `${siteConfig.legalName}（${siteConfig.name}）は${siteConfig.contact.address.region}${siteConfig.contact.address.locality}に拠点を置き、Web制作と組み込みソフトウェア開発を手がけています。所在地は〒${siteConfig.contact.address.postalCode} ${siteConfig.contact.address.region}${siteConfig.contact.address.locality}${siteConfig.contact.address.street}、電話は${siteConfig.contact.telephoneDisplay}（${siteConfig.contact.openingHoursDisplay}）。${siteConfig.memberOf.map((m) => m.name).join("・")}に所属しています。対応エリアは${siteConfig.areaServed}です。`,
     href: "/company",
   });
 
@@ -118,6 +118,16 @@ function buildDocs(): KbDoc[] {
     answer:
       "EbisuSoftはAIを「使う側」と「作る側」の両方を手がけます。制作工程ではAIコーディングエージェントで実装を並列化して期間を約1/3に短縮し、納品物としてはRAG構成のAIチャットボットやAI機能の開発を行います。さらに、生成AIに引用・推薦されるためのAEO / LLMO最適化も内側から理解して実装します。",
     href: "/#ai-power",
+  });
+
+  docs.push({
+    id: "embedded",
+    source: "組み込み・IoT開発",
+    category: "サービス",
+    key: "組み込み 組込み 組込 ファームウェア firmware マイコン 基板 デバイス 機器 iot センサー 制御 c言語 c++ stm32 esp32 arm cortex rtos ble bluetooth wi-fi mqtt uart i2c spi ハードウェア 電子機器",
+    answer:
+      "Web制作だけでなく、組み込みソフトウェア開発にも対応しています。マイコン（ARM Cortex-M・STM32・ESP32など）のファームウェアをC / C++で開発し、BLE・Wi-Fi・MQTT・UART・I2C・SPIの通信実装、センサー制御、省電力設計まで行います。取得データを表示する管理画面やクラウド連携も同じ体制で担当できるため、装置側とWeb側を別々の会社に発注する必要がありません。",
+    href: "/#services",
   });
 
   docs.push({
@@ -294,4 +304,5 @@ export const suggestedQuestions = [
   "AIチャットボットは作れますか？",
   "会社はどこにありますか？",
   "既存システムと連携できますか？",
+  "組み込み・IoTの開発もできますか？",
 ];

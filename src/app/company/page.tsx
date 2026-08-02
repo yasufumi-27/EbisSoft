@@ -11,7 +11,7 @@ import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/icons";
 
 const title = "会社概要";
-const description = `${siteConfig.legalName}（${siteConfig.reading}）の会社概要です。所在地は${siteConfig.contact.address.region}${siteConfig.contact.address.locality}。AIを活用したWeb制作、AIチャットボット開発、3DCG・システム連携などを提供しています。`;
+const description = `${siteConfig.legalName}（${siteConfig.name}）の会社概要です。所在地は${siteConfig.contact.address.region}${siteConfig.contact.address.locality}、京都商工会所属。AIを活用したWeb制作、AIチャットボット開発、3DCG・システム連携に加え、組み込みソフトウェア・IoT開発も提供しています。`;
 
 export const metadata: Metadata = {
   title,
@@ -35,7 +35,7 @@ const fullAddress = `〒${contact.address.postalCode} ${contact.address.region}$
 
 /** 会社概要テーブルの項目（NAPは site.ts の単一情報源から生成し、表記ゆれを作らない） */
 const profile: { label: string; value: string }[] = [
-  { label: "会社名", value: `${siteConfig.legalName}（${siteConfig.name}／${siteConfig.reading}）` },
+  { label: "名称", value: `${siteConfig.legalName}（${siteConfig.name}）` },
   { label: "所在地", value: fullAddress },
   { label: "電話番号", value: `${contact.telephoneDisplay}（${contact.openingHoursDisplay}）` },
   { label: "メールアドレス", value: contact.email },
@@ -43,8 +43,9 @@ const profile: { label: string; value: string }[] = [
   {
     label: "事業内容",
     value:
-      "AIを活用したWebサイト制作／AIチャットボット・AI機能開発／3DCG・WebGL・Webアニメーション制作／SNS連携・業務システム連携／SEO・AEO・LLMO対策／Webサイトの運用・改善",
+      "AIを活用したWebサイト制作／AIチャットボット・AI機能開発／3DCG・WebGL・Webアニメーション制作／組み込みソフトウェア・IoT機器開発（ファームウェア・デバイス連携）／SNS連携・業務システム連携／SEO・AEO・LLMO対策／Webサイトの運用・改善",
   },
+  { label: "所属団体", value: siteConfig.memberOf.map((m) => m.name).join("／") },
   { label: "対応エリア", value: siteConfig.areaServed },
   { label: "営業時間", value: contact.openingHoursDisplay },
 ];
@@ -100,7 +101,7 @@ export default function CompanyPage() {
             <span className="text-gradient">AI時代のWeb</span>をつくる。
           </>
         }
-        lead={`${contact.address.region}${contact.address.locality}のWeb制作会社です。生成AIを制作フローに組み込み、従来の約1/3の期間で高性能なサイトを構築します。AIを「使う側」であると同時に「作る側」でもあることが、私たちの特徴です。`}
+        lead={`${contact.address.region}${contact.address.locality}を拠点に、Web制作と組み込みソフトウェア開発を手がけています（京都商工会所属）。生成AIを制作フローに組み込み、従来の約1/3の期間で高性能なサイトを構築します。AIを「使う側」であると同時に「作る側」でもあること、そして画面の中だけでなく機器のファームウェアまで扱えることが、私たちの特徴です。`}
       >
         <div className="mt-8 flex flex-wrap gap-3">
           <ButtonLink href="/contact" withArrow>

@@ -28,7 +28,7 @@ export function organizationJsonLd(): JsonLd {
     "@type": ["ProfessionalService", "Organization"],
     "@id": ORGANIZATION_ID,
     name: siteConfig.legalName,
-    alternateName: [siteConfig.name, siteConfig.reading],
+    alternateName: [...new Set([siteConfig.name, siteConfig.reading])],
     url: siteConfig.url,
     logo: {
       "@type": "ImageObject",
@@ -66,6 +66,12 @@ export function organizationJsonLd(): JsonLd {
       closes: "19:00",
     },
     sameAs: [...siteConfig.sameAs],
+    // 所属団体（商工団体への加入は事業者の実在性・信頼性のシグナルになる）
+    memberOf: siteConfig.memberOf.map((m) => ({
+      "@type": "Organization",
+      name: m.name,
+      description: m.description,
+    })),
     contactPoint: {
       "@type": "ContactPoint",
       contactType: "customer support",

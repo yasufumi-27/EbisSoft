@@ -39,7 +39,8 @@ export type IconKey =
   | "calc"
   | "sliders"
   | "flask"
-  | "heart";
+  | "heart"
+  | "cpu";
 
 const base: SVGProps<SVGSVGElement> = {
   width: 24,
@@ -206,6 +207,13 @@ export const iconMap: Record<IconKey, (props: SVGProps<SVGSVGElement>) => React.
       <circle cx="6" cy="12" r="2.6" />
       <circle cx="18" cy="19" r="2.6" />
       <path d="m8.4 10.8 7.2-4.2M8.4 13.2l7.2 4.2" />
+    </svg>
+  ),
+  cpu: (p) => (
+    <svg {...base} {...p}>
+      <rect x="6.5" y="6.5" width="11" height="11" rx="2" />
+      <rect x="10" y="10" width="4" height="4" rx="1" />
+      <path d="M9.5 3v3.5M14.5 3v3.5M9.5 17.5V21M14.5 17.5V21M3 9.5h3.5M3 14.5h3.5M17.5 9.5H21M17.5 14.5H21" />
     </svg>
   ),
   plug: (p) => (

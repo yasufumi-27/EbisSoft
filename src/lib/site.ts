@@ -16,9 +16,9 @@ function normalizeUrl(url: string): string {
 export const siteConfig = {
   /** 表示用ブランド名 */
   name: "EbisuSoft",
-  /** 法人格つき正式名称 */
-  legalName: "株式会社EbisuSoft", // ★
-  /** ふりがな・読み */
+  /** 正式名称。法人格（株式会社等）はつきません。表記は必ずこの形に統一すること */
+  legalName: "エビスソフト",
+  /** ふりがな・読み（表示名 name の英字表記に対する読み） */
   reading: "エビスソフト",
   /** サイトのデフォルトタイトル（トップ） */
   title: "EbisuSoft｜AIで最速・高性能なホームページ制作（京都市伏見区）",
@@ -26,7 +26,7 @@ export const siteConfig = {
   titleTemplate: "%s｜EbisuSoft",
   /** メタディスクリプション（120〜160字目安） */
   description:
-    "EbisuSoftは京都市伏見区のAI活用型Web制作会社です。生成AIを制作フロー全体に組み込み、通常の数分の一の期間で高性能なサイトを構築。3DCG・WebGL演出、Webアニメーション、AIチャットボット、SNS連携、業務システム連携まで対応し、実際に動くデモをサイト内で公開しています。SEO・AEO・LLMO（AI検索最適化）にも特化。",
+    "EbisuSoft（エビスソフト）は京都市伏見区のAI活用型Web制作・組み込みソフトウェア開発事業者です。生成AIを制作フロー全体に組み込み、通常の数分の一の期間で高性能なサイトを構築。3DCG・WebGL演出、AIチャットボット、業務システム連携に加え、マイコン・IoT機器のファームウェア開発とWeb連携まで一貫対応します。SEO・AEO・LLMO（AI検索最適化）にも特化。京都商工会所属。",
   /** 公開URL（末尾スラッシュなし） */
   url: normalizeUrl(process.env.NEXT_PUBLIC_SITE_URL ?? FALLBACK_URL),
   /** OGロケール */
@@ -61,6 +61,12 @@ export const siteConfig = {
     "Webアニメーション制作",
     "SNS連携",
     "システム連携 API",
+    "組み込みソフトウェア開発",
+    "組み込み開発 京都",
+    "ファームウェア開発",
+    "マイコン開発 受託",
+    "IoT開発 京都",
+    "IoT Web連携",
   ],
   /** 連絡先・NAP（ローカルSEOで重要。表記揺れを作らないこと） */
   contact: {
@@ -117,6 +123,19 @@ export const siteConfig = {
     "Webアニメーション実装",
     "SNS連携・API連携",
     "業務システム連携",
+    "組み込みソフトウェア開発",
+    "ファームウェア開発（C / C++）",
+    "マイコン制御（ARM Cortex-M / ESP32 / STM32）",
+    "IoTデバイスとクラウド・Webの連携",
+    "RTOS・ベアメタル開発",
+    "通信プロトコル実装（BLE / Wi-Fi / MQTT / UART / I2C / SPI）",
+  ],
+  /** 所属団体（構造化データ memberOf に使用。E-E-A-T の Trust） */
+  memberOf: [
+    {
+      name: "京都商工会",
+      description: "京都府内の中小・小規模事業者を支援する商工団体。",
+    },
   ],
   /** 設立年月日（ISO） */
   foundingDate: "2018-04-01", // ★

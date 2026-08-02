@@ -23,7 +23,9 @@ export function SiteFooter() {
             <Logo />
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-slate-400">
               {siteConfig.legalName}は、{siteConfig.contact.address.locality}
-              のAI活用型Web制作会社です。生成AIを制作フローに組み込み、最速で高性能なサイトを構築。3DCG・AIチャットボット・システム連携まで、実際に動くデモを公開しています。
+              のAI活用型Web制作・組み込みソフトウェア開発事業者です（
+              {siteConfig.memberOf.map((m) => m.name).join("・")}
+              所属）。生成AIを制作フローに組み込み、最速で高性能なサイトを構築。3DCG・AIチャットボット・システム連携から、マイコン・IoT機器の開発まで対応します。
             </p>
             <ul className="mt-6 flex gap-3">
               {siteConfig.sameAs.map((url) => (
@@ -119,6 +121,10 @@ export function SiteFooter() {
               <p className="flex items-center gap-2.5">
                 <Icon name="clock" className="size-4 shrink-0 text-gold" />
                 <span>{contact.openingHoursDisplay}</span>
+              </p>
+              <p className="flex items-center gap-2.5">
+                <Icon name="award" className="size-4 shrink-0 text-gold" />
+                <span>{siteConfig.memberOf.map((m) => m.name).join("・")}所属</span>
               </p>
             </address>
           </div>

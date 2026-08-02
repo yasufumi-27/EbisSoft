@@ -35,7 +35,7 @@ export function Hero() {
             <p className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-4 py-1.5 text-sm font-semibold text-brand-light shadow-[0_0_18px_rgba(34,211,238,0.18)] backdrop-blur">
               <Icon name="pin" className="size-4" />
               {siteConfig.contact.address.region}
-              {siteConfig.contact.address.locality}のWeb制作会社 {siteConfig.name}
+              {siteConfig.contact.address.locality}のWeb制作・組み込み開発 {siteConfig.name}
             </p>
             <p className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-4 py-1.5 text-sm font-semibold text-gold-light backdrop-blur">
               <Icon name="sparkles" className="size-4 animate-pulse-glow" />
@@ -69,7 +69,7 @@ export function Hero() {
           </h1>
 
           <p className="speakable mt-6 max-w-lg text-lg leading-relaxed text-slate-300">
-            {siteConfig.contact.address.locality}のAI活用型Web制作会社。
+            {siteConfig.contact.address.locality}のAI活用型Web制作・組み込みソフトウェア開発。
             <strong className="font-bold text-white">制作期間は従来の約1/3、最短5日で公開</strong>
             します。
           </p>

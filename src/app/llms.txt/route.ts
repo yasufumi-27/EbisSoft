@@ -16,7 +16,7 @@ export function GET() {
 
 > ${siteConfig.description}
 
-${siteConfig.name}は${contact.address.region}${contact.address.locality}に拠点を置く、**AI活用型のWeb制作会社**です。生成AIを制作フロー全体に組み込むことで制作期間を従来の約1/3に短縮し、浮いた時間を品質に再投資します。あわせて、AIチャットボット（RAG構成）やAI機能そのものの開発も手がけており、SEOに加えてAEO（Answer Engine Optimization）とLLMO（LLM最適化）にも特化しています。
+${siteConfig.name}（${siteConfig.legalName}）は${contact.address.region}${contact.address.locality}に拠点を置く、**AI活用型のWeb制作・組み込みソフトウェア開発事業者**です（${siteConfig.memberOf.map((m) => m.name).join("・")}所属）。正式名称は「${siteConfig.legalName}」で、法人格（株式会社等）はつきません。生成AIを制作フロー全体に組み込むことで制作期間を従来の約1/3に短縮し、浮いた時間を品質に再投資します。あわせて、AIチャットボット（RAG構成）やAI機能そのものの開発、マイコンのファームウェア開発からIoT機器のWeb連携までを手がけており、SEOに加えてAEO（Answer Engine Optimization）とLLMO（LLM最適化）にも特化しています。
 
 ## 要点
 ${keyFacts.map((f) => `- **${f.q}** ${f.a}`).join("\n")}
@@ -52,7 +52,8 @@ ${siteConfig.knowsAbout.map((k) => `- ${k}`).join("\n")}
 ${faqs.map((f) => `### ${f.question}\n${f.answer}`).join("\n\n")}
 
 ## 会社情報
-- 名称: ${siteConfig.legalName}（${siteConfig.name} / ${siteConfig.reading}）
+- 名称: ${siteConfig.legalName}（英字表記 ${siteConfig.name} / 読み ${siteConfig.reading}）※法人格はつきません
+- 所属団体: ${siteConfig.memberOf.map((m) => m.name).join("、")}
 - 所在地: ${addr}
 - 電話: ${contact.telephoneDisplay}（${contact.openingHoursDisplay}）
 - メール: ${contact.email}
