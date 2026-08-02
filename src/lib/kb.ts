@@ -12,7 +12,7 @@
  * 検索で得た根拠だけを使って自然文を生成させます。設計思想はこのデモと同じです。
  */
 
-import { faqs, keyFacts, services, capabilities, plans, aiImpacts } from "@/lib/content";
+import { faqs, keyFacts, services, capabilities, plans, aiImpacts, businessLines } from "@/lib/content";
 import { siteConfig } from "@/lib/site";
 
 export type KbDoc = {
@@ -65,6 +65,17 @@ function buildDocs(): KbDoc[] {
       key: `${s.title} ${s.features.join(" ")}`,
       answer: `${s.description}（主な内容：${s.features.join("／")}）`,
       href: "/web#services",
+    });
+  });
+
+  businessLines.forEach((b, i) => {
+    docs.push({
+      id: `business-${i}`,
+      source: `事業内容：${b.title}`,
+      category: "サービス",
+      key: `${b.title} 事業内容`,
+      answer: b.description,
+      href: b.category === "embedded" ? "/embedded#business" : "/web#business",
     });
   });
 

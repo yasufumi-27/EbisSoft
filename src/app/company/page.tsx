@@ -5,12 +5,13 @@ import { ja } from "@/lib/typography";
 import { JsonLd } from "@/components/JsonLd";
 import { breadcrumbJsonLd, webPageJsonLd } from "@/lib/jsonld";
 import { siteConfig } from "@/lib/site";
-import { services, techStack } from "@/lib/content";
+import { businessLines, services, techStack } from "@/lib/content";
 import { Section, SectionHeading } from "@/components/ui/Section";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/icons";
+import { BusinessLines } from "@/components/sections/BusinessLines";
 import { RelatedPages } from "@/components/sections/RelatedPages";
 import { ContactCta } from "@/components/sections/ContactCta";
 
@@ -43,9 +44,9 @@ const profile: { label: string; value: string }[] = [
   { label: "所在地", value: fullAddress },
   { label: "設立", value: "2001年4月" },
   {
+    // 名刺記載の事業内容（businessLines）を正とし、表記ゆれを作らない
     label: "事業内容",
-    value:
-      "生成AIを活用したソフトウェア開発（開発プロセスへのAI導入）／AI機能の受託開発（RAGチャットボット・音声AI・レコメンド・異常検知）／Webサイト制作・Webアプリ開発／組み込みソフトウェア開発（ファームウェア・通信・IoT連携）／SEO・AEO・LLMO対策／公開後の運用・改善",
+    value: businessLines.map((b) => b.title).join("／"),
   },
   { label: "所属団体", value: siteConfig.memberOf.map((m) => m.name).join("／") },
   { label: "対応エリア", value: siteConfig.areaServed },
@@ -187,6 +188,12 @@ export default function CompanyPage() {
         </p>
 
       </Section>
+
+      {/* ------------- 事業内容（名刺記載の8項目） ------------- */}
+      <BusinessLines
+        bg="deep"
+        description="組み込みソフトウェア開発を中心に、Webの制作・業務アプリケーションまで手がけています。"
+      />
 
       {/* ------------- 事業の軸（AI活用） ------------- */}
       <Section id="ai-identity">

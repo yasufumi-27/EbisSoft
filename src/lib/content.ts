@@ -1011,6 +1011,95 @@ export const services: Service[] = [
 ];
 
 /* ------------------------------------------------------------------
+ * 事業内容（名刺記載の正式な事業内容）
+ * ---------------------------------------------------------------- */
+
+/**
+ * 事業内容の掲載先。
+ * "embedded" は組み込み開発ページ、"web" はWeb制作ページの「主な事業内容」に出ます。
+ * 会社概要ページには全件を掲載します。
+ */
+export type BusinessLineCategory = "embedded" | "web";
+
+export type BusinessLine = {
+  /** 名刺に記載している事業名。**表記はここが正**（勝手に言い換えないこと） */
+  title: string;
+  /** サイト来訪者向けの補足説明（名刺だけでは伝わらない中身を書く） */
+  description: string;
+  category: BusinessLineCategory;
+  icon: IconKey;
+};
+
+/**
+ * 名刺に記載している事業内容（8項目）。
+ * 会社概要の「事業内容」欄・組み込み開発ページ・Web制作ページの三箇所が
+ * ここを参照するため、**追記・修正はこの配列だけ**を直すこと。
+ */
+export const businessLines: BusinessLine[] = [
+  {
+    title: "組み込みプログラミング講師",
+    description:
+      "企業の技術者研修・新人教育として、C / C++による組み込みプログラミング、マイコン制御、RTOSの使い方を実機演習つきで指導します。",
+    category: "embedded",
+    icon: "user",
+  },
+  {
+    title: "ターゲット用組み込みソフト作成",
+    description:
+      "実機（ターゲット）上で動作する組み込みソフトウェアを、要件の整理から実装・実機デバッグ・動作検証まで一貫して作成します。",
+    category: "embedded",
+    icon: "cpu",
+  },
+  {
+    title: "BSW・各種RTOSポーティング開発",
+    description:
+      "BSW（基本ソフトウェア）の開発と、各種RTOSの新しいターゲットへの移植を行います。起動処理・割り込み・タイマ・ドライバ層の載せ替えまで対応します。",
+    category: "embedded",
+    icon: "layout",
+  },
+  {
+    title: "I/Oドライバーソフト開発",
+    description:
+      "UART / I2C / SPI / CAN / GPIO / A-D変換など、周辺デバイスのドライバを回路図とデータシートをもとに開発します。",
+    category: "embedded",
+    icon: "plug",
+  },
+  {
+    title: "監視制御アプリケーションソフト作成",
+    description:
+      "設備・装置の状態監視と制御を行うアプリケーションを作成します。異常の検知と通知、ログの収集、操作画面までを含めて構築できます。",
+    category: "embedded",
+    icon: "gauge",
+  },
+  {
+    title: "各種通信プロトコルスタック作成",
+    description:
+      "標準プロトコルから装置固有の独自プロトコルまで、通信スタックを設計・実装します。仕様書のない既存装置のプロトコル解析からでもご相談いただけます。",
+    category: "embedded",
+    icon: "share",
+  },
+  {
+    title: "ホームページのデザインおよび作成",
+    description:
+      "コーポレートサイト・ランディングページ・ECサイトを、デザインから実装・公開まで手がけます。SEO・AEO・LLMOと表示速度は標準で作り込みます。",
+    category: "web",
+    icon: "palette",
+  },
+  {
+    title: "EOSアプリケーションソフト作成",
+    description:
+      "受発注業務を電子化するEOS（電子発注システム）のアプリケーションを作成します。既存の基幹システムや在庫データとの連携にも対応します。",
+    category: "web",
+    icon: "cart",
+  },
+];
+
+/** 掲載先ページごとの事業内容を取り出す。 */
+export function businessLinesFor(category: BusinessLineCategory): BusinessLine[] {
+  return businessLines.filter((b) => b.category === category);
+}
+
+/* ------------------------------------------------------------------
  * AIをどう使っているか（一次情報＝E-E-A-Tの Expertise）
  * ---------------------------------------------------------------- */
 

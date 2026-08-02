@@ -1,5 +1,6 @@
 import { siteConfig, absoluteUrl } from "@/lib/site";
 import {
+  businessLines,
   services,
   faqs,
   keyFacts,
@@ -81,6 +82,14 @@ ${capabilities
       `### ${c.title}\n${c.description}\n- デモ: ${absoluteUrl(`/demo/${c.slug}`)}\n- できること: ${c.bullets.join("／")}\n- 使用技術: ${c.tech.join("、")}\n- デモの前提: ${c.demoNote}`,
   )
   .join("\n\n")}
+
+## 事業内容（正式な事業内容）
+${businessLines
+  .map(
+    (b) =>
+      `- **${b.title}**（掲載ページ: ${SERVICE_PAGE[b.category]}）: ${b.description}`,
+  )
+  .join("\n")}
 
 ## 提供サービス
 ${services

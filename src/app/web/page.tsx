@@ -17,6 +17,7 @@ import { ButtonLink } from "@/components/ui/Button";
 import { Section, SectionHeading } from "@/components/ui/Section";
 import { Icon } from "@/components/ui/icons";
 import { PageSummary } from "@/components/sections/PageSummary";
+import { BusinessLines } from "@/components/sections/BusinessLines";
 import { Services } from "@/components/sections/Services";
 import { Process } from "@/components/sections/Process";
 import { DemoShowcase } from "@/components/sections/DemoShowcase";
@@ -65,6 +66,7 @@ const webFaqs = faqs.filter((f) => f.category === "web");
 
 /** ページ内メニュー（ヘッダー直下に貼り付く）。 */
 const SECTIONS = [
+  { id: "business", label: "事業内容" },
   { id: "ai-process", label: "進め方" },
   { id: "services", label: "サービス" },
   { id: "demos", label: "実装できる機能" },
@@ -140,6 +142,13 @@ export default function WebPage() {
       <PageNav items={SECTIONS} />
 
       <PageSummary items={pageSummaries.web} />
+
+      {/* 主な事業内容（名刺記載のうちWeb・アプリケーション分野） */}
+      <BusinessLines
+        category="web"
+        bg="deep"
+        description="Web・業務アプリケーションの分野でお引き受けしている事業です。"
+      />
 
       {/* AI開発プロセスの中身 */}
       <Section id="ai-process">

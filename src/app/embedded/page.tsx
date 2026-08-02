@@ -19,6 +19,7 @@ import { ButtonLink } from "@/components/ui/Button";
 import { Section, SectionHeading } from "@/components/ui/Section";
 import { Icon } from "@/components/ui/icons";
 import { PageSummary } from "@/components/sections/PageSummary";
+import { BusinessLines } from "@/components/sections/BusinessLines";
 import { Faq } from "@/components/sections/Faq";
 import { RelatedPages } from "@/components/sections/RelatedPages";
 import { ContactCta } from "@/components/sections/ContactCta";
@@ -67,6 +68,7 @@ const embeddedFaqs = faqs.filter((f) => f.category === "embedded");
 
 /** ページ内メニュー（ヘッダー直下に貼り付く）。 */
 const SECTIONS = [
+  { id: "business", label: "事業内容" },
   { id: "domains", label: "対応領域" },
   { id: "options", label: "任意で追加" },
   { id: "entry-points", label: "相談の例" },
@@ -129,8 +131,14 @@ export default function EmbeddedPage() {
 
       <PageSummary items={pageSummaries.embedded} />
 
+      {/* 主な事業内容（名刺記載のうち組み込み分野） */}
+      <BusinessLines
+        category="embedded"
+        description="組み込み分野でお引き受けしている事業です。開発だけでなく、技術者向けの講習もお受けしています。"
+      />
+
       {/* 対応領域 */}
-      <Section id="domains">
+      <Section id="domains" bg="deep">
         <SectionHeading
           eyebrow="Scope"
           title="お引き受けできる領域"
