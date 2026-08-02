@@ -13,6 +13,7 @@ import {
 } from "@/lib/content";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
+import { PageNav } from "@/components/site/PageNav";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { ButtonLink } from "@/components/ui/Button";
 import { Section, SectionHeading } from "@/components/ui/Section";
@@ -64,6 +65,17 @@ const crumbs = [
 
 const embeddedFaqs = faqs.filter((f) => f.category === "embedded");
 
+/** ページ内メニュー（ヘッダー直下に貼り付く）。 */
+const SECTIONS = [
+  { id: "domains", label: "対応領域" },
+  { id: "options", label: "任意で追加" },
+  { id: "entry-points", label: "相談の例" },
+  { id: "strengths", label: "強み" },
+  { id: "process", label: "進め方" },
+  { id: "faq", label: "よくある質問" },
+  { id: "contact", label: "お問い合わせ" },
+];
+
 /** 「こんな相談から始められます」の具体例。依頼のハードルを下げるための一次情報。 */
 const entryPoints = [
   "前任者が辞めてしまい、既存ファームウェアの改修ができず困っている",
@@ -112,6 +124,8 @@ export default function EmbeddedPage() {
           </ButtonLink>
         </div>
       </PageHeader>
+
+      <PageNav items={SECTIONS} />
 
       <PageSummary items={pageSummaries.embedded} />
 
@@ -283,7 +297,7 @@ export default function EmbeddedPage() {
         moreHref="/faq"
       />
 
-      <RelatedPages hrefs={["/ai", "/web", "/company"]} />
+      <RelatedPages hrefs={["/request", "/ai", "/web"]} />
       <ContactCta />
     </>
   );

@@ -11,6 +11,7 @@ import {
 import { siteConfig } from "@/lib/site";
 import { aiDemoSlugs, faqs, aiImpacts, pageSummaries } from "@/lib/content";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
+import { PageNav } from "@/components/site/PageNav";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { ButtonLink } from "@/components/ui/Button";
 import { Section, SectionHeading } from "@/components/ui/Section";
@@ -62,6 +63,17 @@ const crumbs = [
 ];
 
 const aiFaqs = faqs.filter((f) => f.category === "ai");
+
+/** ページ内メニュー（ヘッダー直下に貼り付く）。 */
+const SECTIONS = [
+  { id: "two-sides", label: "2つの側面" },
+  { id: "ai-power", label: "AIと人の分担" },
+  { id: "demos", label: "AI機能のデモ" },
+  { id: "ai-services", label: "サービス" },
+  { id: "ai-search", label: "AI検索対策" },
+  { id: "faq", label: "よくある質問" },
+  { id: "contact", label: "お問い合わせ" },
+];
 
 /** AIを「使う側」と「作る側」の両面を、結論ファーストで示す要点。 */
 const twoSides = [
@@ -124,6 +136,8 @@ export default function AiPage() {
           </ButtonLink>
         </div>
       </PageHeader>
+
+      <PageNav items={SECTIONS} />
 
       <PageSummary items={pageSummaries.ai} />
 
@@ -198,7 +212,7 @@ export default function AiPage() {
         moreHref="/faq"
       />
 
-      <RelatedPages hrefs={["/web", "/embedded", "/demo"]} />
+      <RelatedPages hrefs={["/web", "/embedded", "/demo", "/request"]} />
       <ContactCta />
     </>
   );

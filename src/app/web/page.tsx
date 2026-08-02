@@ -11,6 +11,7 @@ import {
 import { siteConfig } from "@/lib/site";
 import { faqs, webDemoSlugs, pageSummaries } from "@/lib/content";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
+import { PageNav } from "@/components/site/PageNav";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { ButtonLink } from "@/components/ui/Button";
 import { Section, SectionHeading } from "@/components/ui/Section";
@@ -18,7 +19,6 @@ import { Icon } from "@/components/ui/icons";
 import { PageSummary } from "@/components/sections/PageSummary";
 import { Services } from "@/components/sections/Services";
 import { Process } from "@/components/sections/Process";
-import { Pricing } from "@/components/sections/Pricing";
 import { DemoShowcase } from "@/components/sections/DemoShowcase";
 import { Faq } from "@/components/sections/Faq";
 import { RelatedPages } from "@/components/sections/RelatedPages";
@@ -61,7 +61,17 @@ const crumbs = [
   { name: "Web制作", path: "/web" },
 ];
 
-const webFaqs = faqs.filter((f) => f.category === "web" || f.category === "price");
+const webFaqs = faqs.filter((f) => f.category === "web");
+
+/** ページ内メニュー（ヘッダー直下に貼り付く）。 */
+const SECTIONS = [
+  { id: "ai-process", label: "進め方" },
+  { id: "services", label: "サービス" },
+  { id: "demos", label: "実装できる機能" },
+  { id: "process", label: "制作の流れ" },
+  { id: "faq", label: "よくある質問" },
+  { id: "contact", label: "お問い合わせ" },
+];
 
 /** 「AI開発プロセスで進める」とは具体的に何か（一次情報として明記）。 */
 const processPoints = [
@@ -121,11 +131,13 @@ export default function WebPage() {
           <ButtonLink href="/contact" withArrow>
             無料で見積もりを依頼する
           </ButtonLink>
-          <ButtonLink href="/web#pricing" variant="ghost">
-            料金プランを見る
+          <ButtonLink href="/request#pricing" variant="ghost">
+            料金の目安を見る
           </ButtonLink>
         </div>
       </PageHeader>
+
+      <PageNav items={SECTIONS} />
 
       <PageSummary items={pageSummaries.web} />
 
@@ -174,9 +186,6 @@ export default function WebPage() {
       {/* 制作の流れ */}
       <Process />
 
-      {/* 料金 */}
-      <Pricing />
-
       <Faq
         items={webFaqs}
         title="Web制作についてのよくある質問"
@@ -184,7 +193,7 @@ export default function WebPage() {
         moreHref="/faq"
       />
 
-      <RelatedPages hrefs={["/ai", "/demo", "/embedded"]} />
+      <RelatedPages hrefs={["/request", "/ai", "/demo", "/embedded"]} />
       <ContactCta />
     </>
   );

@@ -159,7 +159,7 @@ export default function FaqPage() {
         );
       })}
 
-      <RelatedPages hrefs={["/ai", "/web", "/embedded", "/company"]} />
+      <RelatedPages hrefs={["/request", "/ai", "/web", "/embedded"]} />
       <ContactCta />
     </>
   );

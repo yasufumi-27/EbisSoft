@@ -311,7 +311,7 @@ export default function CompanyPage() {
         </div>
       </Section>
 
-      <RelatedPages hrefs={["/ai", "/web", "/embedded", "/demo", "/faq"]} />
+      <RelatedPages hrefs={["/ai", "/web", "/embedded", "/demo", "/request", "/faq"]} />
       <ContactCta />
     </>
   );

@@ -20,7 +20,7 @@ export const nav: NavItem[] = [
   { label: "Web制作", href: "/web" },
   { label: "組み込み開発", href: "/embedded" },
   { label: "できること", href: "/demo" },
-  { label: "料金", href: "/web#pricing" },
+  { label: "ご依頼・ご相談", href: "/request" },
   { label: "会社概要", href: "/company" },
 ];
 

@@ -7,6 +7,9 @@ import {
   aiWorkflow,
   aiImpacts,
   plans,
+  pricingNotes,
+  consultTopics,
+  requestSteps,
   embeddedDomains,
   pageSummaries,
   type ServiceCategory,
@@ -46,6 +49,7 @@ ${siteConfig.name}は${contact.address.region}${contact.address.locality}に拠�
 - **Web制作**（${absoluteUrl("/web")}）：AI開発プロセスで進めるサイト制作。対応範囲・進め方・料金。
 - **組み込み開発**（${absoluteUrl("/embedded")}）：マイコンのファームウェア受託開発、IoTのクラウド・Web連携。
 - **できること**（${absoluteUrl("/demo")}）：15領域の実際に動くデモ。
+- **ご依頼・ご相談**（${absoluteUrl("/request")}）：相談できる範囲、料金の目安、ご相談から着手までの流れ。
 - **よくある質問**（${absoluteUrl("/faq")}）／**会社概要**（${absoluteUrl("/company")}）／**お問い合わせ**（${absoluteUrl("/contact")}）
 
 ## 要点
@@ -89,9 +93,16 @@ ${services
 ## 組み込みソフトウェア開発の対応領域
 ${embeddedDomains.map((d) => `### ${d.title}\n${d.description}\n${d.items.map((i) => `- ${i}`).join("\n")}`).join("\n\n")}
 
-## 料金の目安
+## 料金の目安（詳細は ${absoluteUrl("/request")}）
 ${plans.map((p) => `- **${p.name}**：${p.price}（${p.priceNote}）${p.description}`).join("\n")}
-初回のご相談・お見積もりは無料です。
+${pricingNotes.map((n) => `- **${n.title}**：${n.body}`).join("\n")}
+組み込みソフトウェア開発は内容によって工数が変わるため、個別にお見積もりします。初回のご相談・お見積もりは無料です。
+
+## 相談できること（${absoluteUrl("/request")}）
+${consultTopics.map((t) => `- **${t.title}**：${t.body}（${t.items.join("／")}）`).join("\n")}
+
+## ご相談から着手までの流れ
+${requestSteps.map((s, i) => `${i + 1}. **${s.title}**：${s.description}`).join("\n")}
 
 ## 専門領域
 ${siteConfig.knowsAbout.map((k) => `- ${k}`).join("\n")}
@@ -114,6 +125,7 @@ ${faqs.map((f) => `### ${f.question}\n${f.answer}`).join("\n\n")}
 - [Web制作](${absoluteUrl("/web")})
 - [組み込み開発](${absoluteUrl("/embedded")})
 - [よくある質問](${absoluteUrl("/faq")})
+- [ご依頼・ご相談（料金の目安）](${absoluteUrl("/request")})
 - [お問い合わせ・無料相談](${absoluteUrl("/contact")})
 - [できること（デモ一覧）](${absoluteUrl("/demo")})
 ${capabilities.map((c) => `- [${c.title}のデモ](${absoluteUrl(`/demo/${c.slug}`)})`).join("\n")}

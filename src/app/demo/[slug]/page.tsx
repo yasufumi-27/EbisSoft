@@ -270,7 +270,7 @@ export default async function DemoDetailPage({
             <ButtonLink href="/contact" size="lg" withArrow>
               無料で相談する
             </ButtonLink>
-            <ButtonLink href="/#pricing" size="lg" variant="secondary">
+            <ButtonLink href="/request#pricing" size="lg" variant="secondary">
               料金を見る
             </ButtonLink>
           </div>

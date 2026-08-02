@@ -6,6 +6,8 @@ import { DemoStage } from "./DemoUi";
 import { Icon } from "@/components/ui/icons";
 import {
   CONFIDENCE_THRESHOLD,
+  FOCUS_THRESHOLD,
+  isConfident,
   kbDocs,
   searchKb,
   suggestedQuestions,
@@ -195,7 +197,7 @@ export default function DemoChatbot() {
     setLastHits(hits);
 
     const top = hits[0];
-    const confident = !!top && top.score >= CONFIDENCE_THRESHOLD;
+    const confident = isConfident(top);
 
     // 検索〜生成の待ち時間を再現（実際のLLM応答は数百ms〜数秒）
     later(() => {
@@ -538,21 +540,29 @@ export default function DemoChatbot() {
                     <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-white/10">
                       <div
                         className={`h-full rounded-full transition-all duration-500 ${
-                          i === 0 && h.score >= CONFIDENCE_THRESHOLD
+                          i === 0 && isConfident(h)
                             ? "bg-gradient-to-r from-brand to-accent"
                             : "bg-white/25"
                         }`}
                         style={{ width: `${Math.round(h.relevance * 100)}%` }}
                       />
                     </div>
-                    <p className="mt-1 text-[10px] text-slate-600">{h.doc.category}</p>
+                    <p className="mt-1 text-[10px] text-slate-600">
+                      {h.doc.category}
+                      <span className="ml-2 tabular-nums">
+                        内容語 {Math.round(h.focus * 100)}%
+                      </span>
+                    </p>
                   </li>
                 ))
               )}
             </ul>
             <p className="mt-4 border-t border-white/10 pt-3 text-[11px] text-slate-500">
-              しきい値 <span className="text-slate-300">{CONFIDENCE_THRESHOLD}</span> 未満のときは
-              回答せず、問い合わせへ誘導します（誤答の抑制）。
+              スコアが <span className="text-slate-300">{CONFIDENCE_THRESHOLD}</span> 未満のとき、
+              またはスコアの{" "}
+              <span className="text-slate-300">{Math.round(FOCUS_THRESHOLD * 100)}%</span>{" "}
+              以上が内容語で説明できないときは回答せず、問い合わせへ誘導します。
+              「〜ますか」のような言い回しだけで点が積み上がった一致を弾くための判定です（誤答の抑制）。
             </p>
           </div>
         ) : (

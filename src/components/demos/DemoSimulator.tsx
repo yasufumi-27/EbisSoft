@@ -125,10 +125,10 @@ export default function DemoSimulator() {
     // おすすめプラン（content.ts の plans と価格帯を揃えている）
     const plan =
       subtotal >= 1_400_000
-        ? { name: "プレミアム", href: "/#pricing", reason: "AI機能・3D・システム連携を含む構成のため" }
+        ? { name: "プレミアム", href: "/request#pricing", reason: "AI機能・3D・システム連携を含む構成のため" }
         : subtotal >= 600_000
-          ? { name: "スタンダード", href: "/#pricing", reason: "ページ数と機能のバランスが標準的なため" }
-          : { name: "ライト", href: "/#pricing", reason: "構成がコンパクトで、短期公開に向くため" };
+          ? { name: "スタンダード", href: "/request#pricing", reason: "ページ数と機能のバランスが標準的なため" }
+          : { name: "ライト", href: "/request#pricing", reason: "構成がコンパクトで、短期公開に向くため" };
 
     // 月額の目安（保守・サーバー・ドメイン）
     const monthly =

@@ -6,7 +6,7 @@ import { ja } from "@/lib/typography";
 
 /**
  * トップ用の料金ダイジェスト。
- * 価格の全内訳は /web#pricing に置き、ここは「いくらから頼めるか」だけを示します。
+ * 価格の全内訳と料金の考え方は /request に置き、ここは「いくらから頼めるか」だけを示します。
  */
 export function PricingTeaser() {
   return (
@@ -50,10 +50,10 @@ export function PricingTeaser() {
       <p className="mt-10 text-center" data-reveal>
         <Link
           prefetch={false}
-          href="/web#pricing"
+          href="/request#pricing"
           className="inline-flex items-center gap-2 text-sm font-bold text-brand-light transition-colors hover:text-white"
         >
-          プランに含まれるものを詳しく見る
+          料金の詳細とご依頼の流れを見る
           <Icon name="arrowRight" className="size-4" />
         </Link>
       </p>

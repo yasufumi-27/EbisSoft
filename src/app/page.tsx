@@ -10,7 +10,7 @@ import { PricingTeaser } from "@/components/sections/PricingTeaser";
 import { Faq } from "@/components/sections/Faq";
 import { ContactCta } from "@/components/sections/ContactCta";
 import { RelatedPages } from "@/components/sections/RelatedPages";
-import { SectionNav } from "@/components/fx/SectionNav";
+import { PageNav } from "@/components/site/PageNav";
 import { faqs } from "@/lib/content";
 
 /**
@@ -21,12 +21,11 @@ import { faqs } from "@/lib/content";
  * FAQ もトップは抜粋のみとし、全件は /faq に集約しています（内容の重複を避けるため）。
  */
 
-/** 右端のセクションインジケーター（広い画面のみ表示）。ページ内の id と対応させる。 */
+/** ページ内メニュー（ヘッダー直下に貼り付く）。ページ内の id と対応させる。 */
 const SECTIONS = [
-  { id: "top", label: "TOP" },
-  { id: "key-facts", label: "要点" },
-  { id: "pillars", label: "事業" },
-  { id: "demos", label: "デモ" },
+  { id: "key-facts", label: "30秒でわかる" },
+  { id: "pillars", label: "事業内容" },
+  { id: "demos", label: "できること" },
   { id: "strengths", label: "強み" },
   { id: "pricing-teaser", label: "料金" },
   { id: "faq", label: "よくある質問" },
@@ -57,10 +56,9 @@ export default function Home() {
       */}
       <JsonLd data={[webPageJsonLd(), breadcrumbJsonLd(), faqJsonLd(topFaqs)]} />
 
-      <SectionNav items={SECTIONS} />
-
       <Hero />
       <TechMarquee />
+      <PageNav items={SECTIONS} />
       <KeyFacts />
       <Pillars />
       <DemoShowcase bg="deep" />
@@ -72,7 +70,7 @@ export default function Home() {
         description="ご相談前によくいただく質問です。ほかの質問は一覧ページにまとめています。"
         moreHref="/faq"
       />
-      <RelatedPages hrefs={["/ai", "/web", "/embedded", "/demo", "/company", "/faq"]} />
+      <RelatedPages hrefs={["/ai", "/web", "/embedded", "/demo", "/request", "/faq"]} />
       <ContactCta />
     </>
   );

@@ -39,12 +39,12 @@ export function SiteHeader() {
         <Logo />
 
         {/* デスクトップナビ：ホバーでシアンの下線が伸びる */}
-        <nav className="hidden items-center gap-7 md:flex" aria-label="グローバルナビゲーション">
+        <nav className="hidden items-center gap-7 lg:flex" aria-label="グローバルナビゲーション">
           {nav.map((item) => (
             <SmartLink
               key={item.href}
               href={item.href}
-              className="group relative py-1 text-sm font-medium text-slate-300 transition-colors hover:text-white"
+              className="group relative py-1 text-sm font-medium whitespace-nowrap text-slate-300 transition-colors hover:text-white"
             >
               {item.label}
               <span
@@ -55,7 +55,7 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <div className="hidden md:block">
+        <div className="hidden lg:block">
           <ButtonLink href="/contact" withArrow>
             無料で相談する
           </ButtonLink>
@@ -64,7 +64,7 @@ export function SiteHeader() {
         {/* モバイル：ハンバーガー */}
         <button
           type="button"
-          className="inline-flex size-10 items-center justify-center rounded-lg text-slate-200 transition-colors hover:bg-white/10 md:hidden"
+          className="inline-flex size-10 items-center justify-center rounded-lg text-slate-200 transition-colors hover:bg-white/10 lg:hidden"
           aria-expanded={open}
           aria-controls="mobile-menu"
           aria-label={open ? "メニューを閉じる" : "メニューを開く"}
@@ -87,7 +87,7 @@ export function SiteHeader() {
 
       {/* モバイルメニュー */}
       {open ? (
-        <div id="mobile-menu" className="border-t border-white/10 bg-ink md:hidden">
+        <div id="mobile-menu" className="border-t border-white/10 bg-ink lg:hidden">
           <nav
             className="gutter-x mx-auto flex w-full max-w-6xl flex-col py-3"
             aria-label="モバイルナビゲーション"

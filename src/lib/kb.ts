@@ -43,7 +43,7 @@ function buildDocs(): KbDoc[] {
       category: "FAQ",
       key: f.question,
       answer: f.answer,
-      href: "/#faq",
+      href: "/faq",
     });
   });
 
@@ -64,7 +64,7 @@ function buildDocs(): KbDoc[] {
       category: "サービス",
       key: `${s.title} ${s.features.join(" ")}`,
       answer: `${s.description}（主な内容：${s.features.join("／")}）`,
-      href: "/#services",
+      href: "/web#services",
     });
   });
 
@@ -86,7 +86,7 @@ function buildDocs(): KbDoc[] {
       category: "料金",
       key: `${p.name}プラン 料金 価格 費用 いくら 見積もり ${p.priceNote}`,
       answer: `${p.name}プランは ${p.price}（${p.priceNote}）です。${p.description} 含まれるもの：${p.features.join("／")}。初回のご相談・お見積もりは無料です。`,
-      href: "/#pricing",
+      href: "/request#pricing",
     });
   });
 
@@ -98,7 +98,7 @@ function buildDocs(): KbDoc[] {
     answer: `AIを制作フロー全体に組み込むことで、制作期間は従来の約1/3になります。目安は次のとおりです。${aiImpacts
       .map((i) => `${i.label}：${i.before} → ${i.after}`)
       .join("／")}。`,
-    href: "/#ai-power",
+    href: "/ai#ai-power",
   });
 
   docs.push({
@@ -117,7 +117,7 @@ function buildDocs(): KbDoc[] {
     key: "AI 強い 得意 生成AI ChatGPT Claude 活用 自動化 エージェント LLM 機械学習",
     answer:
       "エビスソフトはAIを「使う側」と「作る側」の両方を手がけます。制作工程ではAIコーディングエージェントで実装を並列化して期間を約1/3に短縮し、納品物としてはRAG構成のAIチャットボットやAI機能の開発を行います。さらに、生成AIに引用・推薦されるためのAEO / LLMO最適化も内側から理解して実装します。",
-    href: "/#ai-power",
+    href: "/ai",
   });
 
   docs.push({
@@ -127,7 +127,7 @@ function buildDocs(): KbDoc[] {
     key: "組み込み 組込み 組込 ファームウェア firmware マイコン 基板 デバイス 機器 iot センサー 制御 c言語 c++ stm32 esp32 arm cortex rtos ble bluetooth wi-fi mqtt uart i2c spi ハードウェア 電子機器",
     answer:
       "Web制作だけでなく、組み込みソフトウェア開発にも対応しています。マイコン（ARM Cortex-M・STM32・ESP32など）のファームウェアをC / C++で開発し、BLE・Wi-Fi・MQTT・UART・I2C・SPIの通信実装、センサー制御、省電力設計まで行います。取得データを表示する管理画面やクラウド連携も同じ体制で担当できるため、装置側とWeb側を別々の会社に発注する必要がありません。",
-    href: "/#services",
+    href: "/embedded",
   });
 
   docs.push({
@@ -136,8 +136,19 @@ function buildDocs(): KbDoc[] {
     category: "会社情報",
     key: "問い合わせ 相談 依頼 発注 申し込み 無料 見積 連絡 したい",
     answer:
-      "初回のご相談・お見積もりは無料です。ページ下部のお問い合わせフォーム、またはお電話・メールでご連絡ください。ご要望を伺ったうえで、構成案とお見積もりをご提示します。",
-    href: "/#contact",
+      "初回のご相談・お見積もりは無料です。お問い合わせページのフォーム、またはお電話・メールでご連絡ください。ご要望を伺ったうえで、構成案とお見積もりをご提示します。",
+    href: "/contact",
+  });
+
+  // サイト内の案内（「どこに何が書いてあるか」を聞かれたときのための道案内）
+  docs.push({
+    id: "sitemap",
+    source: "サイトの案内（ページ一覧）",
+    category: "会社情報",
+    key: "サイト ページ 一覧 どこ 見たい 探して メニュー 目次 案内 構成 リンク どのページ",
+    answer:
+      "このサイトは次のページで構成されています。\n・AI活用（/ai）… AIで作る／AI機能をつくる、AEO・LLMO対策\n・Web制作（/web）… サービス内容・制作の流れ\n・組み込み開発（/embedded）… ファームウェア・IoT連携\n・できること（/demo）… 実際に動くデモ15種\n・ご依頼・ご相談（/request）… 料金・お見積もり\n・よくある質問（/faq）／会社概要（/company）／お問い合わせ（/contact）\n気になるページがあれば、そのまま質問してください。",
+    href: "/demo",
   });
 
   return docs;
@@ -254,7 +265,15 @@ export type SearchHit = {
   score: number;
   /** 0〜1 に正規化した関連度（UI表示用） */
   relevance: number;
+  /** スコアのうち「内容語」が占める割合（0〜1）。低いほど、てにをはだけで当たっている。 */
+  focus: number;
 };
+
+/**
+ * 内容語（＝そのトークンを含む文書が全体の何割以下なら“珍しい”とみなすか）。
+ * 「ます」「すか」のような文末表現はほぼ全文書に現れるため、これで内容語と切り分けます。
+ */
+const CONTENT_TERM_DF_RATIO = 0.25;
 
 /**
  * BM25 で知識ドキュメントを検索する。
@@ -265,17 +284,23 @@ export function searchKb(query: string, topK = 3): SearchHit[] {
   const terms = tokenize(query);
   if (terms.length === 0) return [];
 
+  const contentDfLimit = INDEX.total * CONTENT_TERM_DF_RATIO;
+
   const scored = INDEX.indexed.map(({ doc, tf, length }) => {
     let score = 0;
+    // 内容語だけで積んだスコア。全体に占める割合が focus。
+    let contentScore = 0;
     for (const term of terms) {
       const f = tf.get(term);
       if (!f) continue;
       const n = INDEX.df.get(term) ?? 0;
       const idf = Math.log(1 + (INDEX.total - n + 0.5) / (n + 0.5));
       const denom = f + K1 * (1 - B + (B * length) / INDEX.avgLength);
-      score += idf * ((f * (K1 + 1)) / denom);
+      const part = idf * ((f * (K1 + 1)) / denom);
+      score += part;
+      if (n <= contentDfLimit) contentScore += part;
     }
-    return { doc, score };
+    return { doc, score, focus: score > 0 ? contentScore / score : 0 };
   });
 
   scored.sort((a, b) => b.score - a.score);
@@ -293,8 +318,26 @@ export function searchKb(query: string, topK = 3): SearchHit[] {
 /**
  * 回答に足る関連度があるかの閾値。
  * これを下回る場合は「わからない」と答え、問い合わせへ誘導します（誤答の抑制）。
+ *
+ * 実測にもとづく値：想定質問（サジェスト18問）の最低スコアは 7.3 だったのに対し、
+ * 無関係な質問（「明日の天気は？」）がたまたま1語だけ引っかかると 3.7 前後になる。
+ * その間に置いた 6.0 を境界にしている。
  */
-export const CONFIDENCE_THRESHOLD = 3.2;
+export const CONFIDENCE_THRESHOLD = 6.0;
+
+/**
+ * 回答してよいかの判定。
+ *
+ * BM25 のスコアだけで判定すると、「明日の天気は？」のような無関係な質問でも
+ * 「〜ますか」「でき」といった文末・助動詞の bi-gram が積み上がって閾値を超え、
+ * 見当違いのドキュメントを自信満々に返してしまいます（実測 3.72）。
+ * そこで、スコアのうち内容語が占める割合（focus）が一定以上あることも条件にします。
+ */
+export const FOCUS_THRESHOLD = 0.4;
+
+export function isConfident(hit: SearchHit | undefined): hit is SearchHit {
+  return !!hit && hit.score >= CONFIDENCE_THRESHOLD && hit.focus >= FOCUS_THRESHOLD;
+}
 
 /** チャット欄に出すサジェスト質問 */
 export const suggestedQuestions = [
