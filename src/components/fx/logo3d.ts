@@ -153,18 +153,18 @@ export function createLogo3d(
     const upper = w.deg > 0 && w.deg < 180;
     mesh.rotation.z = rad + (upper ? -Math.PI / 2 : Math.PI / 2);
     // 帯に完全に寝かせると真横から見ることになり読めないので、少しだけ手前へ起こす
-    mesh.rotateX(-0.8);
+    mesh.rotateX(0.8);
     ringA.add(mesh);
     wordMeshes.push(mesh);
     disposables.push(geo);
   }
 
-  /* リングの向き（ご指定）：X軸に対して**右上がり45度**、Y軸に対して**手前へ45度**。
+  /* リングの向き（ご指定）：X軸に対して**右上がり45度**、Y軸に対して**奥へ45度**。
      ⚠️ 1つのオブジェクトに rotation.x と rotation.z を両方入れると、three の既定の
      オイラー順（XYZ＝Zから適用）のせいで z は面内の回転になり**見た目が変わらない**。
      そのため「傾ける」用と「起こす」用でグループを入れ子にしている。 */
   ring.add(ringA, ringB);
-  ring.rotation.x = Math.PI / 4; // 手前へ45度（リングの面がこちらを向く）
+  ring.rotation.x = -Math.PI / 4; // 奥へ45度
   const ringRoll = new THREE.Group();
   ringRoll.rotation.z = Math.PI / 4; // 右上がり45度
   ringRoll.add(ring);

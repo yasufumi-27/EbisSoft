@@ -13,8 +13,8 @@ export const LOGO_IMAGE = {
   /** WebP非対応環境向けの控え（640×640・PNG） */
   png: "/logo/ebisu-soft-logo-3d.png",
   /** 縦横比（正方形。レイアウトずれ＝CLS を防ぐために固定） */
-  width: 1464,
-  height: 1464,
+  width: 1442,
+  height: 1442,
 } as const;
 
 const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
