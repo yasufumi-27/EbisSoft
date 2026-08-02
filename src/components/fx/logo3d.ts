@@ -54,7 +54,13 @@ function makeText(text: string, size: number, depth: number) {
   return { geo, width: bb.max.x - bb.min.x, height: bb.max.y - bb.min.y };
 }
 
-export function createLogo3d(options: { lettersMaterial?: THREE.Material } = {}): Logo3d {
+export function createLogo3d(
+  options: {
+    lettersMaterial?: THREE.Material;
+    /** リングだけを大きくする倍率（背景では文字より遥かに大きな軌道にする） */
+    ringScale?: number;
+  } = {},
+): Logo3d {
   const group = new THREE.Group();
   const disposables: { dispose: () => void }[] = [];
 
@@ -130,6 +136,7 @@ export function createLogo3d(options: { lettersMaterial?: THREE.Material } = {})
     { text: "NETWORKS", deg: 250 },
     { text: "GLOBAL", deg: 345 },
   ];
+  const wordMeshes: THREE.Mesh[] = [];
   const wordMat = new THREE.MeshStandardMaterial({
     color: new THREE.Color(0xdff6ff),
     emissive: new THREE.Color(0x9fe8ff),
@@ -148,14 +155,22 @@ export function createLogo3d(options: { lettersMaterial?: THREE.Material } = {})
     // 帯に完全に寝かせると真横から見ることになり読めないので、少しだけ手前へ起こす
     mesh.rotateX(-0.8);
     ringA.add(mesh);
+    wordMeshes.push(mesh);
     disposables.push(geo);
   }
 
+  /* リングの向き（ご指定）：X軸に対して**右上がり45度**、Y軸に対して**手前へ45度**。
+     ⚠️ 1つのオブジェクトに rotation.x と rotation.z を両方入れると、three の既定の
+     オイラー順（XYZ＝Zから適用）のせいで z は面内の回転になり**見た目が変わらない**。
+     そのため「傾ける」用と「起こす」用でグループを入れ子にしている。 */
   ring.add(ringA, ringB);
-  // 原画と同じ角度に寝かせる（楕円の縦横比 175/430 ≒ 66度の傾き、面内の回転 -17度）
-  ring.rotation.x = 1.15;
-  ring.rotation.z = -0.3;
-  group.add(ring);
+  ring.rotation.x = Math.PI / 4; // 手前へ45度（リングの面がこちらを向く）
+  const ringRoll = new THREE.Group();
+  ringRoll.rotation.z = Math.PI / 4; // 右上がり45度
+  ringRoll.add(ring);
+  // 背景など、リングだけを大きく見せたい場面のための倍率
+  ring.scale.setScalar(options.ringScale ?? 1);
+  group.add(ringRoll);
   disposables.push(ringGeoA, ringGeoB, ringMat, beadGeo, beadMat);
 
   /* --- 周りを飛ぶ小さな光 --- */
@@ -189,6 +204,18 @@ export function createLogo3d(options: { lettersMaterial?: THREE.Material } = {})
   group.rotation.x = -0.18;
   disposables.push(sparkGeo, sparkMat);
 
+  // 裏返って見える語（リングの向こう側）は180度返して、静止時はすべて読めるようにする
+  group.updateMatrixWorld(true);
+  {
+    const q = new THREE.Quaternion();
+    const n = new THREE.Vector3();
+    for (const mesh of wordMeshes) {
+      mesh.getWorldQuaternion(q);
+      n.set(0, 0, 1).applyQuaternion(q);
+      if (n.z < 0) mesh.rotateY(Math.PI);
+    }
+  }
+
   // 実際にシーンへ出ているメッシュ（文字・Soft・リング・帯・リングの言葉）の合計
   let triangles = 0;
   group.traverse((o) => {
@@ -200,9 +227,9 @@ export function createLogo3d(options: { lettersMaterial?: THREE.Material } = {})
 
   const update = (t: number) => {
     // リングだけが回る（EBISU と Soft は回さない）
+    // ご指定の角度を崩さないよう、回すのは面内（リング自身の軸まわり）だけ
     ringA.rotation.z = t * 0.55;
     ringB.rotation.z = -t * 0.38;
-    ring.rotation.y = Math.sin(t * 0.25) * 0.35;
     // 小さな光が模型の周りを流れる
     for (let i = 0; i < SPARKS; i++) {
       const s = sparkSeed[i];

@@ -199,7 +199,7 @@ export default function Demo3dcg() {
     const ensureLogo = () => {
       if (logo) return;
       logo = createLogo3d({ lettersMaterial: mat });
-      logo.group.scale.setScalar(1.25);
+      logo.group.scale.setScalar(0.92);
       scene.add(logo.group);
     };
 

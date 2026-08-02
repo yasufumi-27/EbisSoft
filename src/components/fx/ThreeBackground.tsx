@@ -118,9 +118,11 @@ export default function ThreeBackground() {
     // 背景シーンには環境マップがないため、金属マテリアルだと真っ黒に沈む。
     // 弱く自己発光する非金属にして、暗い背景でも輪郭が分かるようにする。
     const logo = createLogo3d({
+      // リングは文字よりはるかに大きな軌道にして、星（四角い粒）と同じくらいの距離まで広げる
+      ringScale: 4,
       lettersMaterial: new THREE.MeshStandardMaterial({
         color: new THREE.Color(LOGO_BLUE),
-        emissive: new THREE.Color(0x14406e),
+        emissive: new THREE.Color(0x1a5490),
         emissiveIntensity: 1,
         metalness: 0.15,
         roughness: 0.55,
@@ -130,12 +132,12 @@ export default function ThreeBackground() {
       const m = (o as THREE.Mesh).material as THREE.Material | undefined;
       if (m && !(m as THREE.PointsMaterial).isPointsMaterial) {
         m.transparent = true;
-        m.opacity = 0.5;
+        m.opacity = 0.62;
         m.depthWrite = false;
       }
     });
-    logo.group.scale.setScalar(1.9);
-    logo.group.position.set(-13, 1.2, -4);
+    logo.group.scale.setScalar(1.4);
+    logo.group.position.set(-4, 1, -6);
     logo.group.rotation.y = 0.32;
     scene.add(logo.group);
 
@@ -174,8 +176,8 @@ export default function ThreeBackground() {
       core.position.y = 2.5 + Math.sin(t * 0.5) * 0.5 - Math.min(sy * 0.0012, 4);
       // ロゴはリングと光だけが動き、文字はゆっくり漂わせる
       logo.update(t);
-      logo.group.rotation.y = 0.32 + Math.sin(t * 0.14) * 0.2;
-      logo.group.position.y = 1.5 + Math.sin(t * 0.3) * 0.5 - Math.min(sy * 0.0009, 3.5);
+      logo.group.rotation.y = 0.1 + Math.sin(t * 0.14) * 0.12;
+      logo.group.position.y = 1 + Math.sin(t * 0.3) * 0.4 - Math.min(sy * 0.0009, 3.5);
       // マウスに緩やかに追従するパララックス
       camera.position.x += (mouse.x * 1.6 - camera.position.x) * 0.03;
       camera.position.y += (1.2 - mouse.y * 1.0 - camera.position.y) * 0.03;

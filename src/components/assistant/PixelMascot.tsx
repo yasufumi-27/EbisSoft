@@ -24,15 +24,16 @@ const COLORS: Record<string, string> = {
   v: "#08121f", // バイザー（暗い画面）
   e: "#22d3ee", // 目（点滅させるので別記号）
   w: "#ffffff", // 目のハイライト（これも目の一部として点滅させる）
-  p: "#f9a8c9", // 頬（ほんのり赤らむ）
-  c: "#22d3ee", // シアンのアクセント（アンテナ・口・胸のモニタ・手）
+  c: "#22d3ee", // シアンのアクセント（アンテナ・胸のモニタ・手）
   a: "#e2c078", // 金のアクセント（胸のランプ）
-  k: "#2b3c5e", // キャタピラの履帯（転輪のあいだ）
+  k: "#2b3c5e", // キャタピラの履帯（前後の転輪のあいだ）
 };
 
 /**
  * 全身（20×24）。上からアンテナ → 頭 → 首 → 胴体 → キャタピラ。
- * 棒立ちにならないよう、右手（画面左）を頭の横まで挙げて手を振るポーズにしています。
+ * 顔は大きな目だけ（口や頬は描かない）。
+ * 棒立ちにならないよう、左手（画面右）を軽く挙げて手を振るポーズにしています。
+ * 足まわりは転輪2つの履帯ひとつ。3本足に見えないよう、転輪は前後の端だけに置いています。
  * 頭・首・目を中心よりわずかに左へ寄せ、アンテナも左に傾けて「少し左向き」に。
  */
 const ART_FULL = [
@@ -41,45 +42,45 @@ const ART_FULL = [
   ".....o..............",
   "...ooooooooooo......",
   "..obbbbbbbbbbso.....",
-  "..obvvvvvvvvvso.ccc.",
-  "..obvwevvwevvso.ccc.",
-  "..obveevveevvso.obb.",
-  "..obpvvvvvvpvso.obb.",
-  "..obvcvvvcvvvso.obb.",
-  "..obvvcccvvvvso.obb.",
+  "..obvvvvvvvvvso.....",
+  "..obvweevweevso.....",
+  "..obveeeveeevso.ccc.",
+  "..obveeeveeevso.ccc.",
+  "..obvvvvvvvvvso.obb.",
   "..obbbbbbbbbbso.obb.",
   "...ooooooooooo.obb..",
   "......obbo....obb...",
   "......oooooooobbo...",
-  "...obbobbbbbsobo....",
+  "...obbobbbbbso......",
   "...ob.obcccabo......",
   "...ob.obcccbso......",
   "...cc.obbbbbso......",
   "......oooooooo......",
   ".....oooooooooo.....",
-  "....obbkkbbkkbbo....",
-  "....obbkkbbkkbbo....",
+  "....okbbkkkkbbko....",
+  "....obbbkkkkbbbo....",
+  "....okbbkkkkbbko....",
   ".....oooooooooo.....",
 ];
 
 /** 顔まわりだけ（16×16）。チャット内の小さなアイコン用。 */
 const ART_HEAD = [
-  "..cc............",
+  ".cc.............",
+  "..o.............",
   "...o............",
-  "....o...........",
   "..ooooooooooo...",
   ".obbbbbbbbbbso..",
   ".obvvvvvvvvvso..",
-  ".obvwevvwevvso..",
-  ".obveevveevvso..",
-  ".obpvvvvvvpvso..",
-  ".obvcvvvcvvvso..",
-  ".obvvcccvvvvso..",
+  ".obvweevweevso..",
+  ".obveeeveeevso..",
+  ".obveeeveeevso..",
+  ".obvvvvvvvvvso..",
   ".obbbbbbbbbbso..",
   "..ooooooooooo...",
   ".....obbo.......",
-  "....oooooooo....",
-  "....obbbbbbo....",
+  "...oooooooo.....",
+  "...obbbbbbo.....",
+  "...oooooooo.....",
 ];
 
 type Run = { x: number; y: number; w: number; ch: string };
