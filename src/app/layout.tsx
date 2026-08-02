@@ -71,8 +71,10 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: siteConfig.title,
     description: siteConfig.description,
-    site: siteConfig.twitterHandle,
-    creator: siteConfig.twitterHandle,
+    // アカウント未開設のあいだは出力しない
+    ...(siteConfig.twitterHandle
+      ? { site: siteConfig.twitterHandle, creator: siteConfig.twitterHandle }
+      : {}),
     // twitter:image は app/twitter-image.tsx から自動付与されます
   },
   robots: {

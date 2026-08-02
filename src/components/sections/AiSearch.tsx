@@ -3,6 +3,9 @@ import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/icons";
 import { aeo } from "@/lib/content";
 
+/** サブパス配信（GitHub Pages）でも 404 にしないためのプレフィックス。 */
+const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
 /**
  * AEO / LLMO（AI検索最適化）特化セクション。
  * 「定義 → エビスソフトの具体的な施策」を結論ファーストで提示し、
@@ -77,6 +80,28 @@ export function AiSearch() {
               <p className="mt-2 text-sm leading-relaxed text-slate-400">{t.description}</p>
             </div>
           ))}
+        </div>
+
+        {/* このサイト自体での実装状況（主張ではなく、その場で確認できる一次情報） */}
+        <div className="panel panel-corners mt-12 p-6 sm:p-8" data-reveal>
+          <h3 className="text-lg font-bold text-white">このサイト自体が、実装例です。</h3>
+          <p className="speakable mt-2 text-sm leading-relaxed text-slate-400">
+            下記はすべて、いま見ているこのサイトで動いているものです。リンクから中身をそのまま確認できます。
+          </p>
+          <ul className="mt-5 flex flex-wrap gap-2.5">
+            {aeo.selfImplementation.map((item) => (
+              <li key={item.href}>
+                {/* ページではなく生成ファイルを含むため、basePath を明示して素の <a> で出す */}
+                <a
+                  href={`${BASE_PATH}${item.href}`}
+                  className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs text-slate-300 transition-colors hover:border-brand/50 hover:text-white"
+                >
+                  <Icon name="check" className="size-3.5 text-gold" />
+                  {item.label}
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
 
         <div className="mt-12" data-reveal>

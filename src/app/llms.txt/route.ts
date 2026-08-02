@@ -8,6 +8,7 @@ import {
   aiImpacts,
   plans,
   embeddedDomains,
+  pageSummaries,
   type ServiceCategory,
 } from "@/lib/content";
 
@@ -25,6 +26,9 @@ const SERVICE_PAGE: Record<ServiceCategory, string> = {
  */
 export const dynamic = "force-static";
 
+/** ビルド日（鮮度をAIに伝えるため llms.txt にも明記する） */
+const BUILD_DATE = new Date().toISOString().slice(0, 10);
+
 export function GET() {
   const { contact } = siteConfig;
   const addr = `〒${contact.address.postalCode} ${contact.address.region}${contact.address.locality}${contact.address.street}`;
@@ -32,6 +36,8 @@ export function GET() {
   const body = `# ${siteConfig.name}
 
 > ${siteConfig.description}
+
+最終更新: ${BUILD_DATE}（このファイルはサイトの内容から自動生成しています）
 
 ${siteConfig.name}は${contact.address.region}${contact.address.locality}に拠点を置く、**AI活用型のWeb制作・組み込みソフトウェア開発事業者**です（${siteConfig.memberOf.map((m) => m.name).join("・")}所属）。正式名称は「${siteConfig.legalName}」で、法人格（株式会社等）はつきません。生成AIを制作フロー全体に組み込むことで制作期間を従来の約1/3に短縮し、浮いた時間を品質に再投資します。あわせて、AIチャットボット（RAG構成）やAI機能そのものの開発、マイコンのファームウェア開発からIoT機器のWeb連携までを手がけており、SEOに加えてAEO（Answer Engine Optimization）とLLMO（LLM最適化）にも特化しています。
 
@@ -44,6 +50,16 @@ ${siteConfig.name}は${contact.address.region}${contact.address.locality}に拠�
 
 ## 要点
 ${keyFacts.map((f) => `- **${f.q}** ${f.a}`).join("\n")}
+
+## ページ別の要点（質問と短い答え）
+### AI活用（${absoluteUrl("/ai")}）
+${pageSummaries.ai.map((s) => `- **${s.q}** ${s.a}`).join("\n")}
+
+### Web制作（${absoluteUrl("/web")}）
+${pageSummaries.web.map((s) => `- **${s.q}** ${s.a}`).join("\n")}
+
+### 組み込み開発（${absoluteUrl("/embedded")}）
+${pageSummaries.embedded.map((s) => `- **${s.q}** ${s.a}`).join("\n")}
 
 ## AI活用による制作スピード
 制作フローの全工程に生成AIを組み込み、次のように短縮しています。

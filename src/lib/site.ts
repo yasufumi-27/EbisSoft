@@ -137,15 +137,14 @@ export const siteConfig = {
   ],
   /** 設立年月日（ISO） */
   foundingDate: "2018-04-01", // ★
-  /** SNS・外部プロフィール（構造化データ sameAs に使用） */
-  sameAs: [
-    "https://x.com/ebisusoft", // ★
-    "https://www.facebook.com/ebisusoft", // ★
-    "https://www.instagram.com/ebisusoft", // ★
-    "https://github.com/ebisusoft", // ★
-  ],
-  /** X(Twitter) ハンドル */
-  twitterHandle: "@ebisusoft", // ★
+  /**
+   * SNS・外部プロフィール（構造化データ sameAs に使用）。
+   * ★ 実在しないアカウントを載せると誤情報になるため、開設済みのURLだけを追加すること。
+   * 空のあいだは sameAs / twitter:site を出力しません。
+   */
+  sameAs: [] as string[],
+  /** X(Twitter) ハンドル。★ 開設したら "@..." を設定（未設定なら twitter:site を出力しない） */
+  twitterHandle: "",
   /** OG画像の代替テキスト */
   ogImageAlt: "エビスソフト｜AI活用のWeb制作・組み込み開発（京都市伏見区）",
 } as const;

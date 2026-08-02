@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { JsonLd } from "@/components/JsonLd";
 import { breadcrumbJsonLd, webPageJsonLd } from "@/lib/jsonld";
@@ -13,7 +14,7 @@ import { RelatedPages } from "@/components/sections/RelatedPages";
 import { ContactCta } from "@/components/sections/ContactCta";
 
 const title = "会社概要";
-const description = `${siteConfig.legalName}の会社概要です。所在地は${siteConfig.contact.address.region}${siteConfig.contact.address.locality}、京都商工会所属。AIを活用したWeb制作、AIチャットボット開発、3DCG・システム連携に加え、組み込みソフトウェア・IoT開発も提供しています。`;
+const description = `${siteConfig.legalName}の会社概要です。所在地は${siteConfig.contact.address.region}${siteConfig.contact.address.locality}、京都商工会所属。AIを開発プロセスにも成果物にも使うソフトウェア開発事業者として、Web制作と組み込みソフトウェア開発の両方を手がけています。`;
 
 export const metadata: Metadata = {
   title,
@@ -45,7 +46,7 @@ const profile: { label: string; value: string }[] = [
   {
     label: "事業内容",
     value:
-      "AIを活用したWebサイト制作／AIチャットボット・AI機能開発／3DCG・WebGL・Webアニメーション制作／組み込みソフトウェア・IoT機器開発（ファームウェア・デバイス連携）／SNS連携・業務システム連携／SEO・AEO・LLMO対策／Webサイトの運用・改善",
+      "生成AIを活用したソフトウェア開発（開発プロセスへのAI導入）／AI機能の受託開発（RAGチャットボット・音声AI・レコメンド・異常検知）／Webサイト制作・Webアプリ開発／組み込みソフトウェア開発（ファームウェア・通信・IoT連携）／SEO・AEO・LLMO対策／公開後の運用・改善",
   },
   { label: "所属団体", value: siteConfig.memberOf.map((m) => m.name).join("／") },
   { label: "対応エリア", value: siteConfig.areaServed },
@@ -55,24 +56,49 @@ const profile: { label: string; value: string }[] = [
 /** 私たちの姿勢（E-E-A-T：Trust。約束できることを具体的に明文化） */
 const principles = [
   {
+    icon: "sparkles" as const,
+    title: "AIは、作業に使う。判断には使わない",
+    body: "解析・実装・テストなど量産できる作業にはAIを使い倒します。一方で設計方針、コードレビュー、納品可否の判断は必ず人が行います。Webでも組み込みでも、この線引きは変えません。",
+  },
+  {
     icon: "bolt" as const,
     title: "速さは、手段であって目的ではない",
-    body: "短縮した時間はそのまま利益にせず、表示速度・アクセシビリティ・文章の精度に再投資します。速いだけの安いサイトは作りません。",
+    body: "AIで短縮した時間はそのまま利益にせず、品質・検証・文章の精度に再投資します。速いだけの安い納品物は作りません。",
   },
   {
     icon: "check" as const,
     title: "できること／できないことを、正直に言う",
-    body: "本サイトのデモにも、どこまでが実装かを明記しています。受注のために「できます」と言って後から詰まる進め方はしません。",
+    body: "本サイトのデモにも、どこまでが実装かを明記しています。組み込みでもお引き受けできない範囲を先に開示します。受注のために「できます」と言って後から詰まる進め方はしません。",
   },
   {
     icon: "gauge" as const,
     title: "品質は、計測できる形で示す",
-    body: "Lighthouseの計測結果を納品時にお渡しします。主観ではなく数値で品質を確認いただけます。",
+    body: "Webは Lighthouse の計測結果を、組み込みは実機での検証結果とテストを添えてお渡しします。主観ではなく記録で確認いただけます。",
+  },
+];
+
+/**
+ * 私たちの定義（AI活用を軸にした事業の説明）。
+ * Web制作・組み込みは「AIをどう使うか」の適用先として並列に置く。
+ */
+const aiIdentity = [
+  {
+    icon: "bolt" as const,
+    label: "プロセスに使う",
+    title: "つくり方そのものをAIで変える",
+    body: "要件整理、コード生成、既存コードの解析、テスト生成、ドキュメント作成にAIエージェントを組み込みます。Web制作では期間が従来の約1/3になり、組み込みでは既存ファームウェアの読み解きや検証の手間を大きく減らせます。",
   },
   {
-    icon: "shield" as const,
-    title: "安全と法令への配慮を標準にする",
-    body: "常時SSL・セキュリティヘッダー・プライバシーポリシーの整備、NDAへの対応まで標準で満たします。",
+    icon: "bot" as const,
+    label: "成果物に使う",
+    title: "AI機能そのものを開発して納める",
+    body: "自社データを知識源にするRAGチャットボット、音声AI、レコメンド、センサーデータの異常検知など、AIを組み込んだ機能を実装します。作る側の経験があるため、精度・コスト・限界を具体的にお話しできます。",
+  },
+  {
+    icon: "search" as const,
+    label: "見つけられ方に使う",
+    title: "AIに引用される状態をつくる",
+    body: "AI検索（AI Overviews・ChatGPTなど）から引用・推薦されるためのAEO / LLMOを、制作の最初から設計に含めます。このサイト自体がその実装例です。",
   },
 ];
 
@@ -100,10 +126,10 @@ export default function CompanyPage() {
           <>
             {siteConfig.contact.address.locality}から、
             <br />
-            <span className="text-gradient">AI時代のWeb</span>をつくる。
+            <span className="text-gradient">AI</span>でソフトウェアをつくる。
           </>
         }
-        lead={`${contact.address.region}${contact.address.locality}を拠点に、Web制作と組み込みソフトウェア開発を手がけています（京都商工会所属）。生成AIを制作フローに組み込み、従来の約1/3の期間で高性能なサイトを構築します。AIを「使う側」であると同時に「作る側」でもあること、そして画面の中だけでなく機器のファームウェアまで扱えることが、私たちの特徴です。`}
+        lead={`${contact.address.locality}を拠点とするソフトウェア開発事業者です（京都商工会所属）。AIを「開発プロセス」と「成果物」の両方に使うことを事業の軸にしており、その適用先としてWebサイト制作と組み込みソフトウェア開発の両方を手がけています。分野で分けるのではなく、AIで何をどこまで速く・確かにできるかで考えます。`}
       >
         <div className="mt-8 flex flex-wrap gap-3">
           <ButtonLink href="/contact" withArrow>
@@ -173,6 +199,45 @@ export default function CompanyPage() {
         </address>
       </Section>
 
+      {/* ------------- 事業の軸（AI活用） ------------- */}
+      <Section id="ai-identity">
+        <SectionHeading
+          eyebrow="Our Core"
+          title="私たちは、AIの使い方で仕事をしています。"
+          description="Web制作も組み込み開発も、AIをどう使うかという同じ軸の上にあります。"
+        />
+        <div className="mt-14 grid gap-6 lg:grid-cols-3">
+          {aiIdentity.map((a, i) => (
+            <article
+              key={a.title}
+              className="panel panel-hover panel-corners flex flex-col p-7"
+              data-reveal
+              style={{ "--reveal-delay": `${i * 0.1}s` } as React.CSSProperties}
+            >
+              <div className="flex items-center gap-3">
+                <span className="grid size-12 place-items-center rounded-xl border border-brand/30 bg-brand/10 text-brand-light shadow-[0_0_20px_rgba(34,211,238,0.2)]">
+                  <Icon name={a.icon} className="size-6" />
+                </span>
+                <span className="font-display rounded-md border border-gold/30 bg-gold/10 px-2.5 py-1 text-xs font-bold tracking-wider text-gold-light">
+                  {a.label}
+                </span>
+              </div>
+              <h3 className="mt-5 text-lg font-bold text-white">{a.title}</h3>
+              <p className="speakable mt-3 flex-1 text-sm leading-relaxed text-slate-400">
+                {a.body}
+              </p>
+            </article>
+          ))}
+        </div>
+        <p className="mt-10 text-center text-sm text-slate-500" data-reveal>
+          AI活用の具体的な中身は
+          <Link href="/ai" className="mx-1 text-brand-light underline-offset-4 hover:underline">
+            AI活用のページ
+          </Link>
+          にまとめています。
+        </p>
+      </Section>
+
       {/* ------------- 姿勢 ------------- */}
       <Section bg="deep">
         <SectionHeading
@@ -202,7 +267,7 @@ export default function CompanyPage() {
       <Section>
         <div className="grid gap-6 lg:grid-cols-2">
           <div className="panel panel-corners p-7" data-reveal>
-            <h2 className="text-xl font-bold text-white">事業内容</h2>
+            <h2 className="text-xl font-bold text-white">提供サービス</h2>
             <ul className="mt-5 space-y-3">
               {services.map((s) => (
                 <li key={s.slug} className="flex gap-3">

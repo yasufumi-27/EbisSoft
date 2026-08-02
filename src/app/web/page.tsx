@@ -9,12 +9,13 @@ import {
   webPageJsonLd,
 } from "@/lib/jsonld";
 import { siteConfig } from "@/lib/site";
-import { faqs, webDemoSlugs } from "@/lib/content";
+import { faqs, webDemoSlugs, pageSummaries } from "@/lib/content";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { ButtonLink } from "@/components/ui/Button";
 import { Section, SectionHeading } from "@/components/ui/Section";
 import { Icon } from "@/components/ui/icons";
+import { PageSummary } from "@/components/sections/PageSummary";
 import { Services } from "@/components/sections/Services";
 import { Process } from "@/components/sections/Process";
 import { Pricing } from "@/components/sections/Pricing";
@@ -124,6 +125,8 @@ export default function WebPage() {
           </ButtonLink>
         </div>
       </PageHeader>
+
+      <PageSummary items={pageSummaries.web} />
 
       {/* AI開発プロセスの中身 */}
       <Section id="ai-process">

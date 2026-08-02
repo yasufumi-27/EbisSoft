@@ -1,14 +1,21 @@
 import type { Metadata } from "next";
 
 import { JsonLd } from "@/components/JsonLd";
-import { breadcrumbJsonLd, faqJsonLd, servicesJsonLd, webPageJsonLd } from "@/lib/jsonld";
+import {
+  breadcrumbJsonLd,
+  definedTermsJsonLd,
+  faqJsonLd,
+  servicesJsonLd,
+  webPageJsonLd,
+} from "@/lib/jsonld";
 import { siteConfig } from "@/lib/site";
-import { aiDemoSlugs, faqs, aiImpacts } from "@/lib/content";
+import { aiDemoSlugs, faqs, aiImpacts, pageSummaries } from "@/lib/content";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { ButtonLink } from "@/components/ui/Button";
 import { Section, SectionHeading } from "@/components/ui/Section";
 import { Icon } from "@/components/ui/icons";
+import { PageSummary } from "@/components/sections/PageSummary";
 import { AiPower } from "@/components/sections/AiPower";
 import { AiSearch } from "@/components/sections/AiSearch";
 import { Services } from "@/components/sections/Services";
@@ -89,6 +96,7 @@ export default function AiPage() {
           }),
           breadcrumbJsonLd(crumbs),
           servicesJsonLd("ai"),
+          definedTermsJsonLd("/ai"),
           faqJsonLd(aiFaqs),
         ]}
       />
@@ -115,6 +123,8 @@ export default function AiPage() {
           </ButtonLink>
         </div>
       </PageHeader>
+
+      <PageSummary items={pageSummaries.ai} />
 
       {/* 使う側 / 作る側（このページの結論） */}
       <Section id="two-sides">

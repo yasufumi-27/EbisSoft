@@ -27,21 +27,6 @@ export function SiteFooter() {
               {siteConfig.memberOf.map((m) => m.name).join("・")}
               所属）。生成AIを制作フローに組み込み、最速で高性能なサイトを構築。3DCG・AIチャットボット・システム連携から、マイコン・IoT機器の開発まで対応します。
             </p>
-            <ul className="mt-6 flex gap-3">
-              {siteConfig.sameAs.map((url) => (
-                <li key={url}>
-                  <a
-                    href={url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="grid size-9 place-items-center rounded-lg bg-white/5 text-slate-300 ring-1 ring-white/10 transition-all hover:bg-brand/15 hover:text-brand-light hover:ring-brand/50 hover:shadow-[0_0_16px_rgba(34,211,238,0.35)]"
-                    aria-label={`${siteConfig.name}の外部プロフィール`}
-                  >
-                    <Icon name="arrowRight" className="size-4 -rotate-45" />
-                  </a>
-                </li>
-              ))}
-            </ul>
           </div>
 
           {/* サイトメニュー */}

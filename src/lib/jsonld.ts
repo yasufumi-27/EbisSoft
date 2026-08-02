@@ -9,6 +9,7 @@
 
 import { siteConfig, absoluteUrl } from "@/lib/site";
 import {
+  aeo,
   faqs,
   services,
   servicesByCategory,
@@ -79,7 +80,8 @@ export function organizationJsonLd(): JsonLd {
       opens: "10:00",
       closes: "19:00",
     },
-    sameAs: [...siteConfig.sameAs],
+    // 実在するアカウントがある場合のみ出力（架空のプロフィールを載せない）
+    ...(siteConfig.sameAs.length > 0 ? { sameAs: [...siteConfig.sameAs] } : {}),
     // 所属団体（商工団体への加入は事業者の実在性・信頼性のシグナルになる）
     memberOf: siteConfig.memberOf.map((m) => ({
       "@type": "Organization",
@@ -214,6 +216,28 @@ export function faqJsonLd(items: { question: string; answer: string }[] = faqs):
         text: f.answer,
       },
     })),
+  };
+}
+
+/**
+ * 用語の定義（DefinedTermSet）。
+ * AEO / LLMO のような専門用語を機械可読な定義として置くことで、
+ * 「AEOとは？」型の質問に対する引用元になりやすくします（AEO）。
+ */
+export function definedTermsJsonLd(path: string): JsonLd {
+  return {
+    "@context": "https://schema.org",
+    "@type": "DefinedTermSet",
+    "@id": `${absoluteUrl(path)}#terms`,
+    name: "AI検索まわりの用語",
+    hasDefinedTerm: aeo.definitions.map((d) => ({
+      "@type": "DefinedTerm",
+      name: d.term,
+      alternateName: d.full,
+      description: d.description,
+      inDefinedTermSet: `${absoluteUrl(path)}#terms`,
+    })),
+    publisher: { "@id": ORGANIZATION_ID },
   };
 }
 

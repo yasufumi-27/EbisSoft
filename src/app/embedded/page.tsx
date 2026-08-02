@@ -3,19 +3,28 @@ import type { Metadata } from "next";
 import { JsonLd } from "@/components/JsonLd";
 import { breadcrumbJsonLd, faqJsonLd, servicesJsonLd, webPageJsonLd } from "@/lib/jsonld";
 import { siteConfig } from "@/lib/site";
-import { embeddedDomains, embeddedSteps, embeddedStrengths, faqs } from "@/lib/content";
+import {
+  embeddedDomains,
+  embeddedOptions,
+  embeddedSteps,
+  embeddedStrengths,
+  faqs,
+  pageSummaries,
+} from "@/lib/content";
+import Link from "next/link";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { ButtonLink } from "@/components/ui/Button";
 import { Section, SectionHeading } from "@/components/ui/Section";
 import { Icon } from "@/components/ui/icons";
+import { PageSummary } from "@/components/sections/PageSummary";
 import { Faq } from "@/components/sections/Faq";
 import { RelatedPages } from "@/components/sections/RelatedPages";
 import { ContactCta } from "@/components/sections/ContactCta";
 
 const title = "組み込み開発｜ファームウェア・IoTの受託";
 const description =
-  "京都市伏見区のエビスソフトの組み込みソフトウェア開発。ARM Cortex-M・STM32・ESP32などのマイコンのファームウェアをC / C++で受託開発し、BLE・Wi-Fi・MQTTでのIoT連携、データの見える化までワンストップで対応します。部分的なご相談・技術調査のみも歓迎です。";
+  "京都市伏見区のエビスソフトの組み込みソフトウェア開発。ARM Cortex-M・STM32・ESP32などのマイコン向けファームウェアをC / C++で受託開発します。新規開発から既存コードの改修・移植、通信の実装、実機検証まで対応。ご希望に応じてAIを活用した開発プロセスやクラウド連携にも広げられます。技術調査のみのご相談も歓迎です。";
 
 export const metadata: Metadata = {
   title,
@@ -25,10 +34,13 @@ export const metadata: Metadata = {
     "組み込みソフトウェア開発 京都",
     "ファームウェア開発 委託",
     "マイコン 開発 外注",
-    "IoT 開発 京都",
+    "組み込み 業務委託",
+    "ファームウェア 改修",
     "STM32 開発",
     "ESP32 開発",
     "BLE 開発",
+    "RTOS 開発",
+    "IoT 開発 京都",
   ],
   alternates: { canonical: "/embedded" },
   openGraph: {
@@ -53,11 +65,12 @@ const embeddedFaqs = faqs.filter((f) => f.category === "embedded");
 
 /** 「こんな相談から始められます」の具体例。依頼のハードルを下げるための一次情報。 */
 const entryPoints = [
-  "既存の装置にBLEを追加して、スマホから操作できるようにしたい",
-  "センサーの測定値をクラウドに上げて、ブラウザでグラフにしたい",
   "前任者が辞めてしまい、既存ファームウェアの改修ができず困っている",
+  "既存の装置にBLEを追加して、スマホから操作できるようにしたい",
+  "廃番になったマイコンから、別のマイコンへ移植したい",
   "試作品を動かすところまで（PoC）を、まず短期間で確かめたい",
-  "装置側のエンジニアはいるが、Web・クラウド側だけ任せたい",
+  "手が足りないので、機能単位でファームウェアの実装を任せたい",
+  "センサーの測定値をクラウドに上げて、ブラウザでグラフにしたい（任意のオプション）",
 ];
 
 export default function EmbeddedPage() {
@@ -82,22 +95,24 @@ export default function EmbeddedPage() {
         eyebrow="Embedded Systems"
         title={
           <>
-            <span className="text-gradient">機器の中身</span>から、
+            <span className="text-gradient">機器の中で動く</span>
             <br />
-            Webの向こう側まで。
+            ソフトウェアを、つくります。
           </>
         }
-        lead="マイコンのファームウェア開発を受託します。C / C++での実装、センサー制御、BLE・Wi-Fi・MQTTでの通信、そして取得したデータをブラウザで見える形にするところまで、同じ体制で対応します。部分的なご相談や技術調査だけでも構いません。"
+        lead="マイコンのファームウェア開発を受託します。C / C++での新規開発、既存コードの改修・移植、センサー制御、省電力設計、BLE・Wi-Fi などの通信実装、実機での検証まで。組み込み単体のご依頼が中心で、技術調査だけのご相談も歓迎です。"
       >
         <div className="mt-8 flex flex-wrap gap-3">
           <ButtonLink href="/contact" withArrow>
             組み込み開発を相談する
           </ButtonLink>
-          <ButtonLink href="/demo/integration" variant="ghost">
-            システム連携のデモを見る
+          <ButtonLink href="/embedded#options" variant="ghost">
+            AI活用・Web連携もできます
           </ButtonLink>
         </div>
       </PageHeader>
+
+      <PageSummary items={pageSummaries.embedded} />
 
       {/* 対応領域 */}
       <Section id="domains">
@@ -134,6 +149,48 @@ export default function EmbeddedPage() {
         </div>
       </Section>
 
+      {/* 必要なときだけ広げられる範囲（AI活用・Web連携はあくまで任意） */}
+      <Section id="options">
+        <SectionHeading
+          eyebrow="Optional"
+          title="必要なら、ここまで広げられます。"
+          description="以下はすべて任意です。組み込み単体で完結するご依頼が基本で、要らない場合は含めません。"
+        />
+        <div className="mt-14 grid gap-6 lg:grid-cols-3">
+          {embeddedOptions.map((o, i) => (
+            <article
+              key={o.title}
+              className="panel panel-hover flex flex-col p-6"
+              data-reveal
+              style={{ "--reveal-delay": `${(i % 3) * 0.1}s` } as React.CSSProperties}
+            >
+              <span className="grid size-11 place-items-center rounded-xl border border-gold/30 bg-gold/10 text-gold-light">
+                <Icon name={o.icon} className="size-5" />
+              </span>
+              <h3 className="mt-4 text-lg font-bold text-white">{o.title}</h3>
+              <p className="speakable mt-2 flex-1 text-sm leading-relaxed text-slate-400">
+                {o.description}
+              </p>
+              <ul className="mt-4 space-y-2 border-t border-white/10 pt-4">
+                {o.items.map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-sm text-slate-300">
+                    <Icon name="check" className="mt-0.5 size-4 shrink-0 text-gold" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </article>
+          ))}
+        </div>
+        <p className="mt-8 text-center text-sm text-slate-500" data-reveal>
+          AI活用の詳細は
+          <Link href="/ai" className="mx-1 text-brand-light underline-offset-4 hover:underline">
+            AI活用のページ
+          </Link>
+          をご覧ください。
+        </p>
+      </Section>
+
       {/* 依頼のきっかけ（相談のハードルを下げる） */}
       <Section id="entry-points" bg="deep">
         <SectionHeading
@@ -160,8 +217,8 @@ export default function EmbeddedPage() {
       <Section id="strengths">
         <SectionHeading
           eyebrow="Why Us"
-          title="装置とWebを、まとめて任せられます。"
-          description="組み込みとWeb・AIを1社で担当できることが、私たちの一番の特徴です。"
+          title="組み込み単体でも、その先まででも。"
+          description="機器の中で完結する開発をきちんとやり切ったうえで、必要になれば外側まで伸ばせます。"
         />
         <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {embeddedStrengths.map((s, i) => (
