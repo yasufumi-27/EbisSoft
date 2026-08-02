@@ -4,7 +4,6 @@ import { siteConfig } from "@/lib/site";
 import { nav, subNav } from "@/lib/nav";
 import { capabilities } from "@/lib/content";
 import { Logo } from "@/components/site/Logo";
-import { CompanyLogo } from "@/components/site/CompanyLogo";
 import { Icon } from "@/components/ui/icons";
 import { ja } from "@/lib/typography";
 
@@ -27,13 +26,6 @@ export function SiteFooter() {
           {/* ブランド */}
           <div className="lg:col-span-5">
             <Logo />
-            {/* 会社ロゴ（透過画像）。全ページの下部に掲出する */}
-            <Link prefetch={false} href="/company#logo" aria-label="会社ロゴ・会社概要へ">
-              <CompanyLogo
-                sizes="208px"
-                className="mt-6 h-auto w-52 max-w-full opacity-90 transition-opacity hover:opacity-100"
-              />
-            </Link>
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-slate-400">
               {ja(siteConfig.legalName)}は、{ja(siteConfig.contact.address.locality)}
               {ja("のAI活用型Web制作・組み込みソフトウェア開発事業者です（")}

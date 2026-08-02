@@ -9,7 +9,6 @@ import { businessLines, services, techStack } from "@/lib/content";
 import { Section, SectionHeading } from "@/components/ui/Section";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
-import { CompanyLogo } from "@/components/site/CompanyLogo";
 import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/icons";
 import { BusinessLines } from "@/components/sections/BusinessLines";
@@ -140,38 +139,6 @@ export default function CompanyPage() {
           </ButtonLink>
         </div>
       </PageHeader>
-
-      {/* ------------- 会社ロゴ ------------- */}
-      <Section id="logo">
-        <SectionHeading
-          eyebrow="Logo"
-          title="会社ロゴ"
-          description="背景を透過しているため、暗い画面でも白い紙でもそのまま置けます。"
-          align="left"
-        />
-        <div className="panel panel-corners mt-10 grid items-center gap-8 p-6 sm:p-10 lg:grid-cols-5" data-reveal>
-          <div className="lg:col-span-3">
-            <CompanyLogo className="mx-auto h-auto w-full max-w-md drop-shadow-[0_0_45px_rgba(34,211,238,0.18)]" />
-          </div>
-          <div className="lg:col-span-2">
-            <p className="speakable text-sm leading-relaxed text-slate-300">
-              {ja(
-                "20年以上使ってきた EBISU の綴りを軸に、周回するリング（クラウド・セキュリティ・ネットワーク・AI・グローバル）で、事業の広がりと技術のつながりを表しています。",
-              )}
-            </p>
-            <p className="mt-4 text-sm leading-relaxed text-slate-400">
-              {ja(
-                "このロゴはサイト背景の3D演出にも使っており、3DCGデモでは実際に立体として回して確認できます。",
-              )}
-            </p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <ButtonLink href="/demo/3dcg" variant="ghost">
-                3DCGデモで見る
-              </ButtonLink>
-            </div>
-          </div>
-        </div>
-      </Section>
 
       {/* ------------- 会社概要 ------------- */}
       <Section id="profile">

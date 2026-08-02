@@ -1,43 +1,21 @@
 import Link from "next/link";
 import { siteConfig } from "@/lib/site";
+import { CompanyLogo } from "@/components/site/CompanyLogo";
 
 /**
- * ロゴ（ワードマーク）。ヘッダー/フッターで共用。
+ * ロゴ（シンボル＋ワードマーク）。ヘッダー/フッターで共用。
  *
- * デザイン方針（2026-08-03 リニューアル）：
- * - 旧ロゴの3D文字・グラデーション・影・楕円リングは廃止し、フラットな文字ロゴに統一。
- * - 20年以上の認知がある **EBISU** の綴りは残す（実績の継承）。
- * - 「SOFT」だけをシアンにして、堅実なベース＋一点の進化、という関係で見せる。
- *   AIを直接表すモチーフ（脳・回路・ロボット）は使わない。
- * - シンボルは E 一文字ではなく EBISU の綴りに由来する "EB" マーク（`app/icon.svg` と同じ図形）。
- *   ワードマークだけだと見出しの文字と区別がつかないため、会社ロゴとしてマークを必ず伴わせる。
+ * デザイン方針：
+ * - シンボルは**依頼主提供の会社ロゴ画像**（背景を透過したWebP／`public/logo/`）。
+ *   ヘッダーは全ページで読み込むため、`sizes` で最小の176px版（約21KB）だけを取りに行かせる。
+ * - ワードマークは `EBISU`（白）＋ `SOFT`（シアン）。画像は小さいと文字が読めないため、
+ *   社名が確実に伝わるよう文字は残す（画像だけにすると潰れて読めない）。
+ * - 読み上げ・SEO上の社名は日本語の「エビスソフト」なので、リンクの aria-label で補い、
+ *   画像側の alt は空にして重複読み上げを避ける。
  *
- * 読み上げ・SEO上の社名は日本語の「エビスソフト」のままなので、aria-label で補う。
+ * ※ ファビコン（`app/icon.svg` / `favicon.ico`）は16〜32pxで潰れないよう、
+ *   引き続き `EB` の2文字マークのままです。
  */
-/**
- * シンボルマーク（角丸スクエア＋EB）。`app/icon.svg`（ファビコン）と同じ図形です。
- * 見出しの文字と混ざらないよう、ロゴだけは常にこのマークを伴わせます。
- * 図形はインラインSVG＝追加の読み込みなし・どの倍率でも滲みません。
- */
-function LogoMark({ className = "" }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 64 64" aria-hidden className={className}>
-      <rect width="64" height="64" rx="14" fill="#0f2e5f" />
-      <g fill="#ffffff">
-        <rect x="9" y="17" width="6" height="30" />
-        <rect x="9" y="17" width="16" height="6" />
-        <rect x="9" y="41" width="16" height="6" />
-      </g>
-      <rect x="9" y="29" width="13" height="6" fill="#22d3ee" />
-      <g fill="none" stroke="#ffffff" strokeWidth="6">
-        <path d="M34 17V47" />
-        <path d="M34 20h11.5a6 6 0 0 1 0 12H34" />
-        <path d="M34 32h13a6 6 0 0 1 0 12H34" />
-      </g>
-    </svg>
-  );
-}
-
 export function Logo() {
   return (
     <Link
@@ -46,7 +24,12 @@ export function Logo() {
       className="group inline-flex items-center whitespace-nowrap"
       aria-label={`${siteConfig.name} ホームへ`}
     >
-      <LogoMark className="mr-2.5 size-9 shrink-0 rounded-[0.5rem] ring-1 ring-white/10 transition-shadow group-hover:ring-brand/50" />
+      <CompanyLogo
+        alt=""
+        priority
+        sizes="72px"
+        className="mr-2 h-11 w-auto shrink-0 transition-[filter] group-hover:brightness-110 sm:mr-2.5 sm:h-14"
+      />
       <span
         aria-hidden
         className="text-lg font-extrabold tracking-[0.1em] text-white transition-colors group-hover:text-brand-light sm:text-xl"
