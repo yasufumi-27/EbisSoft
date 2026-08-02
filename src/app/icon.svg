@@ -1,12 +1,23 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none" role="img" aria-label="エビスソフト">
-  <rect width="64" height="64" rx="16" fill="url(#ebis-grad)" />
-  <path d="M16 41l10-11 8 7 14-18" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
-  <path d="M42 19h8v8" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
-  <defs>
-    <linearGradient id="ebis-grad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#0e7490" />
-      <stop offset="0.55" stop-color="#22d3ee" />
-      <stop offset="1" stop-color="#8b5cf6" />
-    </linearGradient>
-  </defs>
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-label="エビスソフト">
+  <!--
+    小サイズ用のマーク（ブラウザのタブ・SNSアイコン）。
+    ロゴ本体は "EBISU SOFT" のワードマークだが、16〜32px では5文字が潰れるため
+    頭2文字 "EB" に縮めている。Eの中央バーだけをシアンにして、
+    どのサイズでもブランドカラーが残るようにしている。
+    3D・グラデーション・影は使わない（フラット統一）。
+  -->
+  <rect width="64" height="64" rx="14" fill="#0f2e5f" />
+  <!-- E：横棒3本。中央だけシアン -->
+  <g fill="#ffffff">
+    <rect x="9" y="17" width="6" height="30" />
+    <rect x="9" y="17" width="16" height="6" />
+    <rect x="9" y="41" width="16" height="6" />
+  </g>
+  <rect x="9" y="29" width="13" height="6" fill="#22d3ee" />
+  <!-- B：同じ太さ・同じ高さで揃える -->
+  <g fill="none" stroke="#ffffff" stroke-width="6">
+    <path d="M34 17V47" />
+    <path d="M34 20h11.5a6 6 0 0 1 0 12H34" />
+    <path d="M34 32h13a6 6 0 0 1 0 12H34" />
+  </g>
 </svg>

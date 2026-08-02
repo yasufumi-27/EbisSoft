@@ -31,24 +31,23 @@ export default function OgImage() {
           fontFamily: "sans-serif",
         }}
       >
-        {/* ヘッダー：ロゴ */}
+        {/* ヘッダー：ロゴ（フラットなワードマーク。satoriは日本語グリフを持たないため英字で出す） */}
         <div style={{ display: "flex", alignItems: "center" }}>
+          <div style={{ display: "flex", fontSize: 44, fontWeight: 800, letterSpacing: 4 }}>
+            EBISU
+          </div>
           <div
             style={{
-              width: 72,
-              height: 72,
-              borderRadius: 18,
-              background: "linear-gradient(135deg, #22d3ee, #8b5cf6)",
               display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 42,
+              marginLeft: 16,
+              fontSize: 44,
               fontWeight: 800,
+              letterSpacing: 4,
+              color: "#22d3ee",
             }}
           >
-            E
+            SOFT
           </div>
-          <div style={{ marginLeft: 24, fontSize: 38, fontWeight: 700 }}>エビスソフト</div>
         </div>
 
         {/* 中央：キャッチ */}

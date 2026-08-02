@@ -21,7 +21,8 @@ export default function manifest(): MetadataRoute.Manifest {
     scope: `${base}/`,
     display: "standalone",
     background_color: "#05070f",
-    theme_color: "#22d3ee",
+    // ブラウザUIの色。ロゴのメインカラー（ネイビー）に合わせる
+    theme_color: "#0f2e5f",
     icons: [
       { src: `${base}/icon.svg`, sizes: "any", type: "image/svg+xml", purpose: "any" },
       { src: `${base}/apple-icon`, sizes: "180x180", type: "image/png" },

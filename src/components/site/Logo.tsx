@@ -1,21 +1,38 @@
 import Link from "next/link";
-import { Icon } from "@/components/ui/icons";
 import { siteConfig } from "@/lib/site";
 
-/** ロゴ（マーク＋ワードマーク）。ヘッダー/フッターで共用。 */
+/**
+ * ロゴ（ワードマーク）。ヘッダー/フッターで共用。
+ *
+ * デザイン方針（2026-08-03 リニューアル）：
+ * - 旧ロゴの3D文字・グラデーション・影・楕円リングは廃止し、フラットな文字ロゴに統一。
+ * - 20年以上の認知がある **EBISU** の綴りは残す（実績の継承）。
+ * - 「SOFT」だけをシアンにして、堅実なベース＋一点の進化、という関係で見せる。
+ *   AIを直接表すモチーフ（脳・回路・ロボット）は使わない。
+ * - シンボルは E 一文字ではなく EBISU の語そのもの。小サイズ用（ファビコン等）だけ
+ *   `app/icon.svg` の "EB" マークに縮める。
+ *
+ * 読み上げ・SEO上の社名は日本語の「エビスソフト」のままなので、aria-label で補う。
+ */
 export function Logo() {
   return (
     <Link
       prefetch={false}
       href="/"
-      className="group inline-flex items-center gap-2.5"
+      className="group inline-flex items-center whitespace-nowrap"
       aria-label={`${siteConfig.name} ホームへ`}
     >
-      <span className="relative grid size-9 place-items-center overflow-hidden rounded-lg bg-gradient-to-br from-brand via-sky-500 to-accent text-ink shadow-[0_0_18px_rgba(34,211,238,0.45)] transition-shadow group-hover:shadow-[0_0_28px_rgba(34,211,238,0.7)]">
-        <Icon name="rocket" className="size-5" />
+      <span
+        aria-hidden
+        className="text-lg font-extrabold tracking-[0.1em] text-white transition-colors group-hover:text-brand-light sm:text-xl"
+      >
+        EBISU
       </span>
-      <span className="font-display text-lg font-bold tracking-[0.12em] whitespace-nowrap text-white">
-        {siteConfig.name}
+      <span
+        aria-hidden
+        className="ml-2 text-lg font-extrabold tracking-[0.1em] text-brand sm:text-xl"
+      >
+        SOFT
       </span>
     </Link>
   );

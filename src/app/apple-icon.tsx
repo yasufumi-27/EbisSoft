@@ -7,6 +7,11 @@ export const dynamic = "force-static";
 export const size = { width: 180, height: 180 };
 export const contentType = "image/png";
 
+/**
+ * ホーム画面に置かれるサイズ（180px）では文字が読めるため、
+ * ファビコンの "EB" ではなくロゴ本体（EBISU / SOFT）を2段で入れる。
+ * 地色はブランドネイビー、アクセントはシアンのみ。グラデーション・影は使わない。
+ */
 export default function AppleIcon() {
   return new ImageResponse(
     (
@@ -15,16 +20,36 @@ export default function AppleIcon() {
           width: "100%",
           height: "100%",
           display: "flex",
+          flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          background: "linear-gradient(135deg, #0e7490 0%, #22d3ee 55%, #8b5cf6 100%)",
-          color: "#05070f",
-          fontSize: 112,
-          fontWeight: 800,
+          background: "#0f2e5f",
           fontFamily: "sans-serif",
         }}
       >
-        E
+        <div
+          style={{
+            display: "flex",
+            fontSize: 44,
+            fontWeight: 800,
+            letterSpacing: 2,
+            color: "#ffffff",
+          }}
+        >
+          EBISU
+        </div>
+        <div
+          style={{
+            display: "flex",
+            marginTop: 6,
+            fontSize: 44,
+            fontWeight: 800,
+            letterSpacing: 2,
+            color: "#22d3ee",
+          }}
+        >
+          SOFT
+        </div>
       </div>
     ),
     { ...size },
