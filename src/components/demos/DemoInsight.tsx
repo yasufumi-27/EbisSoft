@@ -228,7 +228,7 @@ export default function DemoInsight() {
       <div className="grid gap-5 [&>*]:min-w-0 lg:grid-cols-5">
         <div className="min-w-0 lg:col-span-3">
           <DemoStage
-            label="EbisuSoft.Heatmap"
+            label="エビスソフト.Heatmap"
             status={`${points.length} clicks recorded`}
           >
             <div

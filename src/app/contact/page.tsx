@@ -12,7 +12,7 @@ import { InquiryForm } from "@/components/sections/InquiryForm";
 
 const title = "お問い合わせ・無料相談";
 const description =
-  "EbisuSoftへのご相談はこちらから。ご予算・ページ数・必要な機能を選択式でお伝えいただけます。分からない項目は空欄で構いません。初回のご相談・お見積もりは無料です。";
+  "エビスソフトへのご相談はこちらから。ご予算・ページ数・必要な機能を選択式でお伝えいただけます。分からない項目は空欄で構いません。初回のご相談・お見積もりは無料です。";
 
 export const metadata: Metadata = {
   title,

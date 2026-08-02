@@ -21,7 +21,7 @@ export function DemoStage({
   children: ReactNode;
   className?: string;
 }) {
-  // ラベルは "EbisuSoft.XXX" 形式。狭い端末では屋号の部分を伏せ、
+  // ラベルは "エビスソフト.XXX" 形式。狭い端末では屋号の部分を伏せ、
   // 機能名（XXX）が省略記号で切れないようにする。
   const dot = label.indexOf(".");
   const prefix = dot > 0 ? label.slice(0, dot + 1) : "";

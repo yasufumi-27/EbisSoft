@@ -8,9 +8,24 @@
  */
 
 import { siteConfig, absoluteUrl } from "@/lib/site";
-import { faqs, services, steps, capabilities, type Capability } from "@/lib/content";
+import {
+  faqs,
+  services,
+  servicesByCategory,
+  steps,
+  capabilities,
+  type Capability,
+  type ServiceCategory,
+} from "@/lib/content";
 
 type JsonLd = Record<string, unknown>;
+
+/** カテゴリ別サービス一覧の名称（構造化データのリスト名に使用）。 */
+const SERVICE_LIST_NAME: Record<ServiceCategory, string> = {
+  ai: "AI関連サービス",
+  web: "Web制作サービス",
+  embedded: "組み込みソフトウェア開発サービス",
+};
 
 const ORGANIZATION_ID = `${siteConfig.url}/#organization`;
 const WEBSITE_ID = `${siteConfig.url}/#website`;
@@ -28,7 +43,6 @@ export function organizationJsonLd(): JsonLd {
     "@type": ["ProfessionalService", "Organization"],
     "@id": ORGANIZATION_ID,
     name: siteConfig.legalName,
-    alternateName: [...new Set([siteConfig.name, siteConfig.reading])],
     url: siteConfig.url,
     logo: {
       "@type": "ImageObject",
@@ -104,7 +118,6 @@ export function websiteJsonLd(): JsonLd {
     "@id": WEBSITE_ID,
     url: siteConfig.url,
     name: siteConfig.name,
-    alternateName: siteConfig.legalName,
     description: siteConfig.description,
     inLanguage: siteConfig.lang,
     publisher: { "@id": ORGANIZATION_ID },
@@ -127,13 +140,22 @@ export function breadcrumbJsonLd(
   };
 }
 
-/** 提供サービス一覧（ItemList）。各サービスを provider に紐づけ。 */
-export function servicesJsonLd(): JsonLd {
+/**
+ * 提供サービス一覧（ItemList）。各サービスを provider に紐づけ。
+ * category を渡すと、その詳細ページに掲載しているサービスだけを出力します
+ * （ページの見た目と構造化データを一致させ、実態と異なる記述を作らないため）。
+ */
+export function servicesJsonLd(category?: ServiceCategory): JsonLd {
+  const items = category ? servicesByCategory(category) : services;
+  const listName = category
+    ? `${siteConfig.name}の${SERVICE_LIST_NAME[category]}`
+    : `${siteConfig.name}の提供サービス`;
+
   return {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    name: `${siteConfig.name}のWeb制作サービス`,
-    itemListElement: services.map((s, i) => ({
+    name: listName,
+    itemListElement: items.map((s, i) => ({
       "@type": "ListItem",
       position: i + 1,
       item: {

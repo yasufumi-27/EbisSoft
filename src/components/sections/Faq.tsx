@@ -1,20 +1,34 @@
+import Link from "next/link";
 import { Section, SectionHeading } from "@/components/ui/Section";
-import { faqs } from "@/lib/content";
+import { Icon } from "@/components/ui/icons";
+import { faqs, type Faq as FaqItem } from "@/lib/content";
 
 /**
  * よくある質問。JSなしの <details>/<summary> でアコーディオン化。
  * 表示内容は FAQ 構造化データ（faqJsonLd）と同じ content.ts から生成しています。
+ * items を渡すと、そのページに関係する質問だけを掲載できます。
  */
-export function Faq() {
+export function Faq({
+  items = faqs,
+  eyebrow = "FAQ",
+  title = "よくある質問",
+  description = "ご相談前によくいただく質問をまとめました。ここにない疑問もお気軽にお問い合わせください。",
+  moreHref,
+  bg = "transparent",
+}: {
+  items?: FaqItem[];
+  eyebrow?: string;
+  title?: string;
+  description?: string;
+  /** 「すべての質問を見る」の遷移先（一覧ページへの導線） */
+  moreHref?: string;
+  bg?: "transparent" | "deep";
+}) {
   return (
-    <Section id="faq">
-      <SectionHeading
-        eyebrow="FAQ"
-        title="よくある質問"
-        description="ご相談前によくいただく質問をまとめました。ここにない疑問もお気軽にお問い合わせください。"
-      />
+    <Section id="faq" bg={bg}>
+      <SectionHeading eyebrow={eyebrow} title={title} description={description} />
       <div className="panel mx-auto mt-12 max-w-3xl divide-y divide-white/10 overflow-hidden" data-reveal>
-        {faqs.map((faq) => (
+        {items.map((faq) => (
           <details
             key={faq.question}
             className="group px-6 transition-colors open:bg-white/[0.03] [&_summary::-webkit-details-marker]:hidden"
@@ -39,6 +53,18 @@ export function Faq() {
           </details>
         ))}
       </div>
+
+      {moreHref ? (
+        <p className="mt-8 text-center" data-reveal>
+          <Link
+            href={moreHref}
+            className="inline-flex items-center gap-2 text-sm font-bold text-brand-light transition-colors hover:text-white"
+          >
+            すべての質問を見る
+            <Icon name="arrowRight" className="size-4" />
+          </Link>
+        </p>
+      ) : null}
     </Section>
   );
 }

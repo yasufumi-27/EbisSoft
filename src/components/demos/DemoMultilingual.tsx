@@ -186,7 +186,7 @@ export default function DemoMultilingual() {
       {/* ---------- サイトプレビュー ---------- */}
       <DemoStage
         className="min-w-0 lg:col-span-3"
-        label="EbisuSoft.i18n_Preview"
+        label="エビスソフト.i18n_Preview"
         status={`${def.locale} / ${def.currency}`}
       >
         {/* 言語切り替え */}

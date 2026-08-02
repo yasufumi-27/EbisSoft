@@ -250,7 +250,7 @@ export default function DemoVoice() {
     <div className="grid gap-5 [&>*]:min-w-0 lg:grid-cols-5">
       <DemoStage
         className="min-w-0 lg:col-span-3"
-        label="EbisuSoft.Voice_Assistant"
+        label="エビスソフト.Voice_Assistant"
         status={listening ? "LISTENING…" : speaking ? "SPEAKING…" : "READY"}
       >
         <div ref={logRef} className="h-[300px] space-y-4 overflow-y-auto p-5 sm:h-[360px]" role="log" aria-live="polite">

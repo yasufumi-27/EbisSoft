@@ -590,7 +590,7 @@ export default function DemoAr() {
     <div className="grid gap-5 [&>*]:min-w-0 lg:grid-cols-5">
       <DemoStage
         className="min-w-0 lg:col-span-3"
-        label="EbisuSoft.AR_Viewer"
+        label="エビスソフト.AR_Viewer"
         status={
           mode === "xr"
             ? "AR SESSION"

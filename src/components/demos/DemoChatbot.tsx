@@ -49,7 +49,7 @@ const BOOKING_DATES = [
 ];
 
 const GREETING =
-  "こんにちは。EbisuSoftのサイト内AIアシスタントです。制作期間・料金・できること・会社情報などについてお答えします。この会話の中で、ご相談の予約まで完了できます。";
+  "こんにちは。エビスソフトのサイト内AIアシスタントです。制作期間・料金・できること・会社情報などについてお答えします。この会話の中で、ご相談の予約まで完了できます。";
 
 let messageId = 0;
 const nextId = () => (messageId += 1);
@@ -243,7 +243,7 @@ export default function DemoChatbot() {
       {/* ---------------- チャット本体 ---------------- */}
       <DemoStage
         className="min-w-0 lg:col-span-3"
-        label="EbisuSoft.AI_Assistant"
+        label="エビスソフト.AI_Assistant"
         status={thinking ? "THINKING…" : "ONLINE"}
       >
         <div

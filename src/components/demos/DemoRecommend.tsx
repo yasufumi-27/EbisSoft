@@ -159,7 +159,7 @@ export default function DemoRecommend() {
       {/* ---------------- 推薦結果と商品一覧 ---------------- */}
       <div className="space-y-5 min-w-0 lg:col-span-3">
         <DemoStage
-          label="EbisuSoft.Recommender"
+          label="エビスソフト.Recommender"
           status={profile ? `RANKED / ${history.length} views` : "NO DATA"}
         >
           <div className="p-5">

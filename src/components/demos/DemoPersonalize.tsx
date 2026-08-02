@@ -180,7 +180,7 @@ export default function DemoPersonalize() {
 
       <div className="grid gap-5 [&>*]:min-w-0 lg:grid-cols-5">
         {/* ---------- 出し分けの結果 ---------- */}
-        <DemoStage className="min-w-0 lg:col-span-3" label="EbisuSoft.Personalized_View" status={current.label}>
+        <DemoStage className="min-w-0 lg:col-span-3" label="エビスソフト.Personalized_View" status={current.label}>
           <div key={current.key} className="stagger-item p-6 sm:p-8">
             <p
               className={`inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r ${current.accent} px-3 py-1 text-[11px] font-bold text-ink`}

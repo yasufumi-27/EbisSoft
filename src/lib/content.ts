@@ -7,13 +7,96 @@
 import type { IconKey } from "@/components/ui/icons";
 
 export type NavItem = { label: string; href: string };
+
+/**
+ * グローバルナビ。並び順は「遷移してほしい優先度」そのものです。
+ * 1. AI活用（最も見せたい強み） 2. Web制作（主力サービス） 3. 組み込み開発（相談を増やしたい領域）
+ */
 export const nav: NavItem[] = [
-  { label: "AI活用", href: "/#ai-power" },
-  { label: "できること", href: "/#capabilities" },
-  { label: "サービス", href: "/#services" },
-  { label: "AI検索対策", href: "/#ai-search" },
-  { label: "料金", href: "/#pricing" },
-  { label: "よくある質問", href: "/#faq" },
+  { label: "AI活用", href: "/ai" },
+  { label: "Web制作", href: "/web" },
+  { label: "組み込み開発", href: "/embedded" },
+  { label: "できること", href: "/demo" },
+  { label: "料金", href: "/web#pricing" },
+  { label: "会社概要", href: "/company" },
+];
+
+/** フッター用の補助リンク（グローバルナビに載せない下層ページ）。 */
+export const subNav: NavItem[] = [
+  { label: "よくある質問", href: "/faq" },
+  { label: "お問い合わせ", href: "/contact" },
+  { label: "プライバシーポリシー", href: "/privacy" },
+];
+
+/* ------------------------------------------------------------------
+ * トップページの3本柱。
+ * トップは「要約と入口」に徹し、詳細は各ページへ送る構成にしています。
+ * ---------------------------------------------------------------- */
+
+export type Pillar = {
+  /** 遷移先 */
+  href: string;
+  /** 英字ラベル */
+  eyebrow: string;
+  title: string;
+  /** カードで太字にする一行（この事業で何が得られるか） */
+  lead: string;
+  description: string;
+  bullets: string[];
+  icon: IconKey;
+  gradient: string;
+  cta: string;
+};
+
+export const pillars: Pillar[] = [
+  {
+    href: "/ai",
+    eyebrow: "AI Utilization",
+    title: "AI活用",
+    lead: "AIを「使う側」であり、「作る側」でもあります。",
+    description:
+      "生成AIを制作フローに組み込んで期間を約1/3に短縮し、納品物としてもRAG構成のAIチャットボットやAI機能を開発します。AI検索（AEO / LLMO）への最適化も、作る側の理解で実装します。",
+    bullets: [
+      "AIエージェントによる開発の並列化",
+      "自社データで答えるAIチャットボット（RAG）",
+      "AI検索に引用されるためのAEO / LLMO",
+    ],
+    icon: "sparkles",
+    gradient: "from-cyan-500 via-sky-500 to-violet-500",
+    cta: "AI活用の中身を見る",
+  },
+  {
+    href: "/web",
+    eyebrow: "Web Production",
+    title: "Web制作",
+    lead: "AI開発のプロセスで、Webサイトをつくります。",
+    description:
+      "要件整理・設計・実装・テストの各工程にAIを入れ、人は判断と品質に集中。コーポレートサイト・LP・EC・Webアプリまで、成果から逆算して構築します。",
+    bullets: [
+      "制作期間は従来の約1/3（最短5日）",
+      "SEO / AEO / LLMO・表示速度まで標準実装",
+      "公開後の運用・改善までワンストップ",
+    ],
+    icon: "layout",
+    gradient: "from-sky-500 via-cyan-400 to-emerald-400",
+    cta: "Web制作の進め方を見る",
+  },
+  {
+    href: "/embedded",
+    eyebrow: "Embedded Systems",
+    title: "組み込み開発",
+    lead: "機器のファームウェアから、Web連携まで相談できます。",
+    description:
+      "マイコンのファームウェア開発、センサー制御、BLE / Wi-Fi / MQTT の通信実装に対応。取得したデータの見える化やクラウド連携まで同じ体制で担当します。",
+    bullets: [
+      "C / C++ でのファームウェア受託開発",
+      "IoT機器とクラウド・Webの接続",
+      "装置側とWeb側の窓口を一本化",
+    ],
+    icon: "cpu",
+    gradient: "from-violet-500 via-indigo-500 to-cyan-500",
+    cta: "組み込み開発を相談する",
+  },
 ];
 
 export type Stat = { value: string; label: string };
@@ -794,13 +877,23 @@ export function getCapability(slug: string): Capability | undefined {
  * サービス
  * ---------------------------------------------------------------- */
 
+/** サービスの掲載先。1つのサービスを複数ページに出せるよう配列で持つ。 */
+export type ServiceCategory = "ai" | "web" | "embedded";
+
 export type Service = {
   slug: string;
   title: string;
   description: string;
   icon: IconKey;
   features: string[];
+  /** どの詳細ページに掲載するか */
+  categories: ServiceCategory[];
 };
+
+/** カテゴリでサービスを絞り込む（各詳細ページから使用）。 */
+export function servicesByCategory(category: ServiceCategory): Service[] {
+  return services.filter((s) => s.categories.includes(category));
+}
 
 export const services: Service[] = [
   {
@@ -810,6 +903,7 @@ export const services: Service[] = [
       "各工程に生成AIを組み込み、従来の数分の一の期間で構築。空いた時間は、AIには決められない戦略と品質の作り込みに充てます。",
     icon: "sparkles",
     features: ["AIによる高速プロトタイピング", "最短5日で公開", "人の監修による品質担保"],
+    categories: ["web", "ai"],
   },
   {
     slug: "corporate",
@@ -818,6 +912,7 @@ export const services: Service[] = [
       "信頼性を高め、採用・取引・問い合わせにつなげる企業サイト。CMSで自社更新もできます。",
     icon: "layout",
     features: ["情報設計・ワイヤーフレーム", "CMS（記事・実績更新）", "問い合わせ最適化"],
+    categories: ["web"],
   },
   {
     slug: "landing-page",
@@ -826,6 +921,7 @@ export const services: Service[] = [
       "コンバージョン特化のLPを制作。AIで複数の訴求案を高速に検証し、勝ちパターンを見つけます。",
     icon: "target",
     features: ["訴求設計・コピー", "高速表示・計測タグ", "A/Bテスト対応"],
+    categories: ["web"],
   },
   {
     slug: "ai-development",
@@ -834,6 +930,7 @@ export const services: Service[] = [
       "自社データを知識源にしたチャットボット、話して聞ける音声AI、文書要約や問い合わせの自動分類まで組み込みます。",
     icon: "chat",
     features: ["RAG構成（根拠つき回答）", "音声での応対・読み上げ", "会話内で予約まで完結"],
+    categories: ["ai"],
   },
   {
     slug: "system-integration",
@@ -842,6 +939,7 @@ export const services: Service[] = [
       "在庫・予約・CRMなど既存システムとWebをAPIで接続。予約・会員・管理画面のWebアプリ開発にも対応します。",
     icon: "plug",
     features: ["API・Webhook連携", "認証・管理画面", "業務フローの自動化"],
+    categories: ["web", "embedded"],
   },
   {
     slug: "embedded",
@@ -854,6 +952,7 @@ export const services: Service[] = [
       "BLE・Wi-Fi・MQTTでのIoT通信",
       "デバイス連携の管理画面・可視化",
     ],
+    categories: ["embedded"],
   },
   {
     slug: "3dcg-webgl",
@@ -862,6 +961,7 @@ export const services: Service[] = [
       "Three.js / WebGL による3D表現、スマホで実物大に置けるAR、サイト内アニメーションの設計・実装。",
     icon: "cube",
     features: ["Three.js / WebGL実装", "WebXR・AR Quick Look対応", "軽量化と表示速度の両立"],
+    categories: ["web"],
   },
   {
     slug: "cro",
@@ -870,6 +970,7 @@ export const services: Service[] = [
       "ヒートマップと到達率で離脱点を特定し、2案を同時に出して統計的に判定。勘ではなく数字で、問い合わせ・購入を積み上げます。",
     icon: "flask",
     features: ["ヒートマップ・離脱点の特定", "A/Bテストと有意差判定", "フォーム改善・計測設計"],
+    categories: ["web"],
   },
   {
     slug: "commerce",
@@ -878,6 +979,7 @@ export const services: Service[] = [
       "色や仕様を選ぶと価格・納期が変わる注文画面、行動から自動で並べ替えるおすすめ表示、料金シミュレーターまで実装します。",
     icon: "sliders",
     features: ["商品コンフィギュレーター", "AIレコメンド（回遊・客単価）", "料金シミュレーター・自動診断"],
+    categories: ["web"],
   },
   {
     slug: "renewal",
@@ -886,6 +988,7 @@ export const services: Service[] = [
       "表示速度・スマホ対応・SEO・AI検索対応の観点で刷新。検索評価を引き継ぎながら成果を底上げします。",
     icon: "refresh",
     features: ["現状分析・課題抽出", "リダイレクト設計", "評価を落とさない移行"],
+    categories: ["web"],
   },
   {
     slug: "multilingual",
@@ -894,6 +997,7 @@ export const services: Service[] = [
       "AI翻訳＋人のレビューで、更新のたびに全言語へ即日反映。hreflangの設計まで含めて、各言語が検索される状態をつくります。",
     icon: "globe",
     features: ["英語・中国語・韓国語ほか", "hreflang設計", "通貨・日付のロケール対応"],
+    categories: ["web"],
   },
   {
     slug: "pwa",
@@ -902,6 +1006,7 @@ export const services: Service[] = [
       "アプリを開発せずに、ホーム画面への追加・オフライン表示・プッシュ通知を実現します。再訪の導線を広告費なしで持てます。",
     icon: "bell",
     features: ["ホーム画面追加", "オフライン対応", "プッシュ通知配信"],
+    categories: ["web"],
   },
   {
     slug: "ai-agent-ready",
@@ -910,6 +1015,7 @@ export const services: Service[] = [
       "llms.txt・構造化データ・エージェント向けAPIを整備し、AIが情報源として選び、行動できる状態にします。",
     icon: "bot",
     features: ["llms.txt整備", "MCPサーバー提供", "エージェント向けAPI"],
+    categories: ["ai"],
   },
   {
     slug: "seo-aeo-llmo",
@@ -918,6 +1024,7 @@ export const services: Service[] = [
       "検索エンジンに加え、生成AI（AI Overviews・ChatGPT等）から引用・推薦されるための最適化まで実装します。",
     icon: "search",
     features: ["キーワード・エンティティ設計", "構造化データ・llms.txt整備", "結論ファーストのAI最適化"],
+    categories: ["web", "ai"],
   },
 ];
 
@@ -1104,117 +1211,145 @@ export const steps: Step[] = [
  * FAQ（AEO / LLMO：質問→簡潔な答え）
  * ---------------------------------------------------------------- */
 
-export type Faq = { question: string; answer: string };
+/**
+ * FAQのカテゴリ。詳細ページごとに関連する質問だけを抜き出して掲載し、
+ * /faq では全件をカテゴリ別に見せる（AEO：質問と答えの対応を明快に保つ）。
+ */
+export type FaqCategory = "ai" | "web" | "embedded" | "price" | "company";
+
+export type Faq = { question: string; answer: string; category: FaqCategory };
 export const faqs: Faq[] = [
   {
     question: "AIを使うと、制作はどれくらい速くなりますか？",
     answer:
       "制作期間は従来の約1/3が目安です。小規模サイトなら最短5日、標準的なコーポレートサイトで3〜4週間で公開できます。要件整理・コピー・実装・テストの各工程にAIエージェントを組み込み、人は設計判断と品質のレビューに集中するためです。",
+    category: "ai",
   },
   {
     question: "AIで作ると品質は落ちませんか？",
     answer:
       "落ちません。AIは「量産できる工程」を担当し、設計方針・ブランド表現の判断・コードレビュー・公開判断は必ず人が行います。AIで浮いた時間を品質に再投資できるため、むしろ作り込みは深くなります。実際に当サイトはAIを駆使して制作し、Lighthouse 性能スコア100点で動いています。",
+    category: "ai",
   },
   {
-    question: "EbisuSoft（エビスソフト）はどこにありますか？",
+    question: "エビスソフトはどこにありますか？",
     answer:
       "京都府京都市伏見区に拠点を置き、Web制作と組み込みソフトウェア開発を行っています（京都商工会所属）。京都・滋賀・大阪を中心に、オンラインで日本全国のご依頼に対応しています。",
+    category: "company",
   },
   {
     question: "3DCGやWebアニメーションはどんなことができますか？",
     answer:
       "Three.js / WebGLによる製品の360度ビューア、ブランドの3D演出、空間ビジュアライズのほか、スクロール連動演出やSVGアニメーションまで対応します。実際に動くデモをサイト内（できること）で公開しているので、発注前にご確認いただけます。",
+    category: "web",
   },
   {
     question: "AIチャットボットは自社の情報に答えられますか？",
     answer:
       "はい。自社のサービス情報・FAQ・社内マニュアルなどを知識源にしたRAG（検索拡張生成）構成で構築します。回答の根拠となった文書を提示でき、知識源にない質問には答えず問い合わせへ誘導するため、誤った回答のリスクを抑えられます。",
+    category: "ai",
   },
   {
     question: "既存の基幹システムや予約システムと連携できますか？",
     answer:
       "できます。REST / GraphQL API や Webhook を用いて、在庫・予約枠・顧客データをリアルタイムに同期します。kintone・Salesforce・Shopify・Stripe などの連携実装に対応し、リトライやエラー通知まで含めた止まらない設計を行います。",
+    category: "web",
   },
   {
     question: "SNSの投稿をサイトに表示できますか？",
     answer:
       "はい。Instagram Graph API・X API・YouTube Data API などから投稿を定期取得し、サイトに自動掲載します。あわせて、シェア時に表示されるOGPカードの設計・動的生成も行い、拡散時のクリック率を高めます。",
+    category: "web",
   },
   {
     question: "AEO・LLMOとは何ですか？",
     answer:
-      "AEOは検索やAIが返す「答え」に選ばれるための最適化（Answer Engine Optimization）、LLMOはChatGPTなどの生成AIに情報源として引用・推薦されるための最適化（LLM Optimization）です。EbisuSoftはAI開発を手がける立場から、この両方を制作段階で実装します。",
+      "AEOは検索やAIが返す「答え」に選ばれるための最適化（Answer Engine Optimization）、LLMOはChatGPTなどの生成AIに情報源として引用・推薦されるための最適化（LLM Optimization）です。エビスソフトはAI開発を手がける立場から、この両方を制作段階で実装します。",
+    category: "ai",
   },
   {
     question: "ChatGPTやAI Overviewsからの集客にも対応できますか？",
     answer:
       "はい。構造化データの整備、結論ファーストの文章設計、llms.txtの設置、AIクローラーの許可設定などを行い、生成AIに引用・推薦されやすいサイトに仕上げます。",
+    category: "ai",
   },
   {
     question: "料金の目安を教えてください。",
     answer:
       "ライトプランは298,000円〜、スタンダードは680,000円〜、AI機能や3D・システム連携を含むプレミアムは1,500,000円〜です。ページ数や機能により変動するため、ご要望を伺ったうえでお見積もりします。初回のご相談・お見積もりは無料です。",
+    category: "price",
   },
   {
     question: "ARやスマホでの実物大表示にも対応できますか？",
     answer:
       "対応できます。WebXRを使えば、アプリのインストールなしにスマートフォンのカメラへ実物大で表示できます。iOSにはAR Quick Look（USDZ）で同等の体験を提供します。3Dモデルがあれば、同じ資産をそのままARへ転用できるため、追加費用を抑えられます。",
+    category: "web",
   },
   {
     question: "多言語・インバウンド対応はできますか？",
     answer:
       "できます。英語・中国語・韓国語などへ展開し、hreflangの設計まで行って各言語が正しく検索される状態にします。翻訳はAIで行い、ネイティブがレビューしてから公開するため、更新のたびに全言語へ即日反映できます。通貨・日付の表記も言語圏ごとに自動で切り替わります。",
+    category: "web",
   },
   {
     question: "アプリを作らずに、プッシュ通知を送ることはできますか？",
     answer:
       "できます。PWA（Progressive Web App）として構築すれば、ホーム画面への追加、オフラインでの閲覧、プッシュ通知が可能です。iOS・Android別々にアプリを開発する場合に比べ、費用と期間を大きく抑えられ、アプリストアの審査も不要です。",
+    category: "web",
   },
   {
     question: "サイト上で概算見積もりを出せるようにできますか？",
     answer:
       "できます。条件を選ぶだけで概算金額・期間・おすすめプランがその場で出る料金シミュレーターを実装します。価格が分からないことによる離脱を防ぎ、条件が固まった状態の問い合わせだけが届くようになります。診断結果はそのまま問い合わせフォームやCRMへ引き継げます。実際に動くデモをサイト内（できること）で公開しています。",
+    category: "web",
   },
   {
     question: "色や仕様を選ぶと価格が変わる注文画面は作れますか？",
     answer:
       "作れます。色・素材・サイズ・オプションの選択に応じて、見た目・価格・納期・在庫がその場で変わる商品コンフィギュレーターを実装します。選んだ構成はそのまま注文内容として引き継げるため、仕様確認のメール往復がなくなります。価格表や在庫は基幹システム・Shopify等のAPIと連携できます。",
+    category: "web",
   },
   {
     question: "サイトのどこで離脱しているか分かりますか？",
     answer:
       "分かります。クリックヒートマップとスクロール到達率で「読まれずに閉じられている箇所」「押されていないCTA」「フォームで止まる項目」を特定します。さらにA/Bテストで2案を同時に出し、統計的な有意差で勝ち負けを判定するため、改善が効いたかどうかを数字で確認できます。",
+    category: "web",
   },
   {
     question: "おすすめ表示（レコメンド）は商品が少なくても効果がありますか？",
     answer:
       "あります。商品数が少ない場合は、閲覧履歴から関心を推定するコンテンツベースの推薦が有効です。商品が増え行動データが溜まってきたら、「よく一緒に見られている」組み合わせを使った協調フィルタリングを併用します。どちらも人が手作業でおすすめを紐付ける必要がありません。",
+    category: "ai",
   },
   {
     question: "Web制作以外に、組み込み系の開発も依頼できますか？",
     answer:
       "できます。マイコン（ARM Cortex-M・STM32・ESP32など）のファームウェアをC / C++で開発し、BLE・Wi-Fi・MQTT・UART・I2C・SPIといった通信部分の実装、センサー制御、省電力設計まで対応します。取得したデータを表示する管理画面やクラウド連携もあわせて実装できるため、「装置側」と「Web側」で別々の会社に発注する必要がありません。",
+    category: "embedded",
   },
   {
     question: "IoT機器のデータをWebで見られるようにできますか？",
     answer:
       "できます。デバイス側のファームウェア、MQTT等での送信、クラウドでの蓄積、Web上のダッシュボード表示までを一貫して設計・実装します。組み込みとWebの両方を同じ体制で担当するため、通信仕様の擦り合わせや責任の切り分けで止まることがありません。",
+    category: "embedded",
   },
   {
     question: "所属している団体はありますか？",
     answer:
       "京都商工会に所属しています。地域の事業者とのつながりを持ちながら、京都市伏見区を拠点に事業を行っています。",
+    category: "company",
   },
   {
     question: "京都以外の企業でも依頼できますか？",
     answer:
       "できます。打ち合わせはオンライン会議で完結できるため、全国からご依頼いただけます。京都・滋賀・大阪など近隣であれば対面での打ち合わせにも伺います。",
+    category: "company",
   },
   {
     question: "公開後の更新や運用もお願いできますか？",
     answer:
       "CMS導入による自社更新のほか、月次の運用・保守・改善提案にも対応しています。AIでアクセスデータを分析し、週次で改善案をご提示することも可能です。",
+    category: "web",
   },
 ];
 
@@ -1224,7 +1359,7 @@ export const faqs: Faq[] = [
  */
 export const keyFacts: { q: string; a: string }[] = [
   {
-    q: "EbisuSoft（エビスソフト）とは？",
+    q: "エビスソフトとは？",
     a: "京都市伏見区を拠点に、AIを駆使して最速・高性能なWebサイトを制作し、あわせて組み込みソフトウェア（IoT・マイコン）開発も手がける事業者です。京都商工会に所属しています。",
   },
   {
@@ -1327,3 +1462,195 @@ export const aeo = {
     },
   ] as AeoTactic[],
 };
+
+/* ------------------------------------------------------------------
+ * 詳細ページごとの掲載データ
+ * （トップは要約だけを置き、実体はこのデータを使う各ページに持たせる）
+ * ---------------------------------------------------------------- */
+
+/** 実動デモのうち、AI活用ページで見せるもの（AIそのものを作れる証拠）。 */
+export const aiDemoSlugs = ["ai-chatbot", "voice", "ai-agent", "recommend", "insight", "personalize"];
+
+/** Web制作ページで見せる実動デモ（サイトの表現力・機能面の証拠）。 */
+export const webDemoSlugs = ["3dcg", "animation", "configurator", "simulator", "sns", "integration"];
+
+/** slug の配列から Capability を並び順どおりに取り出す。 */
+export function capabilitiesBySlug(slugs: string[]): Capability[] {
+  return slugs
+    .map((slug) => capabilities.find((c) => c.slug === slug))
+    .filter((c): c is Capability => Boolean(c));
+}
+
+/* ---------------- 組み込み開発 ---------------- */
+
+export type EmbeddedDomain = {
+  title: string;
+  description: string;
+  items: string[];
+  icon: IconKey;
+};
+
+/** 組み込み開発で受託できる領域。「どこまで頼めるか」を具体語で示す。 */
+export const embeddedDomains: EmbeddedDomain[] = [
+  {
+    title: "ファームウェア開発",
+    description:
+      "マイコン上で動くソフトウェアをC / C++で設計・実装します。ベアメタルからRTOS構成まで、要件に合わせて選定します。",
+    items: [
+      "ARM Cortex-M / STM32 / ESP32 / Raspberry Pi Pico",
+      "ベアメタル・FreeRTOS などのRTOS構成",
+      "センサー・アクチュエータ制御、省電力設計",
+      "ブートローダ・OTA（無線経由）アップデート",
+    ],
+    icon: "cpu",
+  },
+  {
+    title: "通信・IoT連携",
+    description:
+      "機器同士、機器とクラウドをつなぐ通信部分を実装します。仕様書がない既存装置の解析からでもご相談いただけます。",
+    items: [
+      "BLE / Wi-Fi / LTE-M によるネットワーク接続",
+      "MQTT / HTTP でのクラウド送信",
+      "UART / I2C / SPI / CAN などの機器間通信",
+      "既存装置のプロトコル解析・リバース調査",
+    ],
+    icon: "plug",
+  },
+  {
+    title: "データの見える化・Web連携",
+    description:
+      "取得したデータを蓄積し、ブラウザで見られる形にします。装置側とWeb側を同じ体制で担当できるのが最大の強みです。",
+    items: [
+      "計測データのダッシュボード・アラート通知",
+      "クラウド（AWS / GCP など）へのデータ蓄積",
+      "遠隔監視・遠隔操作の管理画面",
+      "AIによる異常検知・傾向分析の組み込み",
+    ],
+    icon: "chart",
+  },
+  {
+    title: "検証・保守・引き継ぎ",
+    description:
+      "作って終わりにしません。テストと文書を残し、社内で保守できる状態でお渡しします。",
+    items: [
+      "単体テスト・結合テスト、実機での長時間動作検証",
+      "回路図・データシートを踏まえた不具合解析",
+      "設計書・手順書の整備、社内エンジニアへの引き継ぎ",
+      "量産・認証に向けた前段の技術検証（PoC）",
+    ],
+    icon: "shield",
+  },
+];
+
+/** 組み込み案件の進め方（Webとは工程が異なるため別に持つ）。 */
+export const embeddedSteps: Step[] = [
+  {
+    title: "ご相談・現状の共有",
+    description:
+      "対象の機器、使用中のマイコン、既存ソースの有無、困っていることを伺います。仕様が固まっていない段階でも構いません。",
+  },
+  {
+    title: "技術調査・実現性の確認",
+    description:
+      "データシートや既存コードを確認し、実現方法と想定リスクを整理します。難しい点は難しいとこの段階でお伝えします。",
+  },
+  {
+    title: "見積もり・体制の決定",
+    description:
+      "作業範囲・期間・費用をご提示します。ファームウェアのみ／Web連携まで含む、といった範囲の切り分けも可能です。",
+  },
+  {
+    title: "実装・実機検証",
+    description:
+      "実装と並行して実機で動作を確認します。進捗は週次で共有し、仕様変更にも都度対応します。",
+  },
+  {
+    title: "納品・引き継ぎ",
+    description:
+      "ソースコード・設計書・手順書を納品します。ご希望に応じて、保守や機能追加も継続して承ります。",
+  },
+];
+
+/** 組み込みを当社に頼む理由（差別化の明示）。 */
+export const embeddedStrengths: Strength[] = [
+  {
+    title: "装置とWebを、ひとつの窓口で",
+    description:
+      "ファームウェアとWeb・クラウドの両方を同じ体制で担当します。通信仕様の擦り合わせや責任の押し付け合いで止まりません。",
+    icon: "plug",
+  },
+  {
+    title: "小さな相談から受けられます",
+    description:
+      "「既存機器にBLEを足したい」「センサーの値をクラウドに上げたい」といった部分的な依頼から対応します。まず技術調査だけでも構いません。",
+    icon: "check",
+  },
+  {
+    title: "AIを開発にも成果物にも使う",
+    description:
+      "コード解析やテストの自動生成にAIを活用して工数を圧縮し、必要であれば異常検知などのAI機能そのものも実装します。",
+    icon: "sparkles",
+  },
+  {
+    title: "できないことは、先に言う",
+    description:
+      "量産設計・電気回路の設計や認証取得の代行は行いません。対応できる範囲を最初に明示し、必要なら専門の協力先と組む形をご提案します。",
+    icon: "shield",
+  },
+];
+
+/* ---------------- ページ間の回遊（内部リンク） ---------------- */
+
+export type PageLink = {
+  href: string;
+  title: string;
+  description: string;
+  icon: IconKey;
+};
+
+/** サイト内の主要ページ。各ページ末尾の「次に見るページ」に使用します。 */
+export const pageLinks: PageLink[] = [
+  {
+    href: "/ai",
+    title: "AI活用",
+    description: "AIをどう使い、何を作れるのか。制作フローへの組み込みとAI開発の実力。",
+    icon: "sparkles",
+  },
+  {
+    href: "/web",
+    title: "Web制作",
+    description: "AI開発のプロセスで進めるサイト制作。対応範囲・進め方・料金。",
+    icon: "layout",
+  },
+  {
+    href: "/embedded",
+    title: "組み込み開発",
+    description: "ファームウェア開発からIoTのWeb連携まで。受託の範囲と進め方。",
+    icon: "cpu",
+  },
+  {
+    href: "/demo",
+    title: "できること（実動デモ）",
+    description: "15領域すべてを、その場で操作できるデモとして公開しています。",
+    icon: "play",
+  },
+  {
+    href: "/company",
+    title: "会社概要",
+    description: "所在地・連絡先・所属団体、そして私たちが約束できること。",
+    icon: "pin",
+  },
+  {
+    href: "/faq",
+    title: "よくある質問",
+    description: "料金・期間・対応範囲について、事前によくいただく質問への回答。",
+    icon: "chat",
+  },
+];
+
+/** 指定したパス以外のページリンクを、指定順で取り出す。 */
+export function relatedPages(hrefs: string[]): PageLink[] {
+  return hrefs
+    .map((href) => pageLinks.find((p) => p.href === href))
+    .filter((p): p is PageLink => Boolean(p));
+}

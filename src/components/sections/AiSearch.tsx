@@ -5,7 +5,7 @@ import { aeo } from "@/lib/content";
 
 /**
  * AEO / LLMO（AI検索最適化）特化セクション。
- * 「定義 → EbisuSoftの具体的な施策」を結論ファーストで提示し、
+ * 「定義 → エビスソフトの具体的な施策」を結論ファーストで提示し、
  * このサイト自体がAEO/LLMOの実装例になるよう構成しています。
  */
 export function AiSearch() {
@@ -60,7 +60,7 @@ export function AiSearch() {
 
         {/* 具体的な施策 */}
         <h3 className="mt-14 text-xl font-bold text-white" data-reveal>
-          EbisuSoftが実装するAEO / LLMO施策
+          エビスソフトが実装するAEO / LLMO施策
         </h3>
         <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {aeo.tactics.map((t, i) => (

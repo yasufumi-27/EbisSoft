@@ -7,9 +7,9 @@ export function Strengths() {
   return (
     <Section id="strengths">
       <SectionHeading
-        eyebrow="Why EbisuSoft"
+        eyebrow="Why エビスソフト"
         title="速い。強い。そして、確かめられる。"
-        description="AIを使いこなす制作体制と、AIそのものを作る技術力。EbisuSoftが選ばれる4つの理由です。"
+        description="AIを使いこなす制作体制と、AIそのものを作る技術力。エビスソフトが選ばれる4つの理由です。"
       />
       <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {strengths.map((s, i) => (

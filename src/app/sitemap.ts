@@ -19,6 +19,31 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 1,
     },
+    // 3本柱（AI活用 → Web制作 → 組み込み開発の順に重要度を置く）
+    {
+      url: absoluteUrl("/ai"),
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.95,
+    },
+    {
+      url: absoluteUrl("/web"),
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.95,
+    },
+    {
+      url: absoluteUrl("/embedded"),
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
+      url: absoluteUrl("/faq"),
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
     {
       url: absoluteUrl("/contact"),
       lastModified,

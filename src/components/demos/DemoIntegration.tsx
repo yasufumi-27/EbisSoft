@@ -239,7 +239,7 @@ export default function DemoIntegration() {
     <div className="space-y-5">
       {/* ---------- パイプライン可視化 ---------- */}
       <DemoStage
-        label="EbisuSoft.Integration_Pipeline"
+        label="エビスソフト.Integration_Pipeline"
         status={busy ? "PROCESSING…" : "IDLE"}
       >
         <div className="flex items-center gap-1 overflow-x-auto p-5 sm:gap-2">
@@ -279,7 +279,7 @@ export default function DemoIntegration() {
 
       <div className="grid gap-5 [&>*]:min-w-0 lg:grid-cols-5">
         {/* ---------- 在庫検索・予約 ---------- */}
-        <DemoStage className="min-w-0 lg:col-span-3" label="EbisuSoft.Inventory_Client">
+        <DemoStage className="min-w-0 lg:col-span-3" label="エビスソフト.Inventory_Client">
           <div className="space-y-4 p-5">
             <form
               onSubmit={(e) => {
@@ -385,7 +385,7 @@ export default function DemoIntegration() {
         {/* ---------- イベントログ ---------- */}
         <DemoStage
           className="min-w-0 lg:col-span-2"
-          label="EbisuSoft.Event_Log"
+          label="エビスソフト.Event_Log"
           status={successRate === null ? "—" : `${successRate}% OK`}
         >
           <dl className="grid grid-cols-3 gap-px border-b border-white/10 bg-white/5 text-center">

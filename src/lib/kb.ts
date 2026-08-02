@@ -106,7 +106,7 @@ function buildDocs(): KbDoc[] {
     source: "会社情報（所在地・連絡先）",
     category: "会社情報",
     key: "会社 会社名 名称 屋号 所在地 住所 どこ 場所 京都 伏見 電話 連絡先 営業時間 アクセス エリア 対応地域 商工会 所属団体 加盟",
-    answer: `${siteConfig.legalName}（${siteConfig.name}）は${siteConfig.contact.address.region}${siteConfig.contact.address.locality}に拠点を置き、Web制作と組み込みソフトウェア開発を手がけています。所在地は〒${siteConfig.contact.address.postalCode} ${siteConfig.contact.address.region}${siteConfig.contact.address.locality}${siteConfig.contact.address.street}、電話は${siteConfig.contact.telephoneDisplay}（${siteConfig.contact.openingHoursDisplay}）。${siteConfig.memberOf.map((m) => m.name).join("・")}に所属しています。対応エリアは${siteConfig.areaServed}です。`,
+    answer: `${siteConfig.legalName}は${siteConfig.contact.address.region}${siteConfig.contact.address.locality}に拠点を置き、Web制作と組み込みソフトウェア開発を手がけています。所在地は〒${siteConfig.contact.address.postalCode} ${siteConfig.contact.address.region}${siteConfig.contact.address.locality}${siteConfig.contact.address.street}、電話は${siteConfig.contact.telephoneDisplay}（${siteConfig.contact.openingHoursDisplay}）。${siteConfig.memberOf.map((m) => m.name).join("・")}に所属しています。対応エリアは${siteConfig.areaServed}です。`,
     href: "/company",
   });
 
@@ -116,7 +116,7 @@ function buildDocs(): KbDoc[] {
     category: "要点",
     key: "AI 強い 得意 生成AI ChatGPT Claude 活用 自動化 エージェント LLM 機械学習",
     answer:
-      "EbisuSoftはAIを「使う側」と「作る側」の両方を手がけます。制作工程ではAIコーディングエージェントで実装を並列化して期間を約1/3に短縮し、納品物としてはRAG構成のAIチャットボットやAI機能の開発を行います。さらに、生成AIに引用・推薦されるためのAEO / LLMO最適化も内側から理解して実装します。",
+      "エビスソフトはAIを「使う側」と「作る側」の両方を手がけます。制作工程ではAIコーディングエージェントで実装を並列化して期間を約1/3に短縮し、納品物としてはRAG構成のAIチャットボットやAI機能の開発を行います。さらに、生成AIに引用・推薦されるためのAEO / LLMO最適化も内側から理解して実装します。",
     href: "/#ai-power",
   });
 

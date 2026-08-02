@@ -14,19 +14,17 @@ function normalizeUrl(url: string): string {
 }
 
 export const siteConfig = {
-  /** 表示用ブランド名 */
-  name: "EbisuSoft",
+  /** 表示用ブランド名（表記は「エビスソフト」で統一。英字表記 EbisuSoft は使わない） */
+  name: "エビスソフト",
   /** 正式名称。法人格（株式会社等）はつきません。表記は必ずこの形に統一すること */
   legalName: "エビスソフト",
-  /** ふりがな・読み（表示名 name の英字表記に対する読み） */
-  reading: "エビスソフト",
   /** サイトのデフォルトタイトル（トップ） */
-  title: "EbisuSoft｜AIで最速・高性能なホームページ制作（京都市伏見区）",
+  title: "エビスソフト｜AI活用のWeb制作・組み込み開発（京都市伏見区）",
   /** タイトルテンプレートの接尾辞 */
-  titleTemplate: "%s｜EbisuSoft",
+  titleTemplate: "%s｜エビスソフト",
   /** メタディスクリプション（120〜160字目安） */
   description:
-    "EbisuSoft（エビスソフト）は京都市伏見区のAI活用型Web制作・組み込みソフトウェア開発事業者です。生成AIを制作フロー全体に組み込み、通常の数分の一の期間で高性能なサイトを構築。3DCG・WebGL演出、AIチャットボット、業務システム連携に加え、マイコン・IoT機器のファームウェア開発とWeb連携まで一貫対応します。SEO・AEO・LLMO（AI検索最適化）にも特化。京都商工会所属。",
+    "エビスソフトは京都市伏見区のAI活用型Web制作・組み込みソフトウェア開発事業者です。生成AIを制作フロー全体に組み込み、通常の数分の一の期間で高性能なサイトを構築。3DCG・WebGL演出、AIチャットボット、業務システム連携に加え、マイコン・IoT機器のファームウェア開発とWeb連携まで一貫対応します。SEO・AEO・LLMO（AI検索最適化）にも特化。京都商工会所属。",
   /** 公開URL（末尾スラッシュなし） */
   url: normalizeUrl(process.env.NEXT_PUBLIC_SITE_URL ?? FALLBACK_URL),
   /** OGロケール */
@@ -149,7 +147,7 @@ export const siteConfig = {
   /** X(Twitter) ハンドル */
   twitterHandle: "@ebisusoft", // ★
   /** OG画像の代替テキスト */
-  ogImageAlt: "EbisuSoft｜AIで最速・高性能なWeb制作（京都市伏見区）",
+  ogImageAlt: "エビスソフト｜AI活用のWeb制作・組み込み開発（京都市伏見区）",
 } as const;
 
 export type SiteConfig = typeof siteConfig;

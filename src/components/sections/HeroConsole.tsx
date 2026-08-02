@@ -89,7 +89,7 @@ export default function HeroConsole() {
         <span className="size-3 shrink-0 rounded-full bg-amber-300/80" />
         <span className="size-3 shrink-0 rounded-full bg-emerald-400/80" />
         <span className="font-display ml-2 flex h-5 min-w-0 flex-1 items-center overflow-hidden rounded-md bg-white/5 px-2 text-[9px] tracking-[0.06em] text-slate-500 sm:ml-3 sm:text-[10px] sm:tracking-[0.25em]">
-          <span className="truncate">EBISUSOFT.AI_PIPELINE</span>
+          <span className="truncate">エビスソフト.AI_PIPELINE</span>
         </span>
         <span
           className={`font-display shrink-0 text-[10px] tracking-widest ${

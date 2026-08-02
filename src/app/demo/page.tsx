@@ -13,7 +13,7 @@ import { Icon } from "@/components/ui/icons";
 
 const title = "できること（実際に動くデモ一覧）";
 const description =
-  "3DCG・WebGL、Web内アニメーション、AIチャットボット、SNS連携、業務システム連携。EbisuSoftができることを、説明ではなく実際に動くデモで公開しています。発注前に実力をご確認ください。";
+  "3DCG・WebGL、Web内アニメーション、AIチャットボット、SNS連携、業務システム連携。エビスソフトができることを、説明ではなく実際に動くデモで公開しています。発注前に実力をご確認ください。";
 
 export const metadata: Metadata = {
   title,
@@ -70,7 +70,7 @@ export default function DemoIndexPage() {
           <ButtonLink href="/contact" withArrow>
             無料で相談する
           </ButtonLink>
-          <ButtonLink href="/#ai-power" variant="ghost">
+          <ButtonLink href="/ai" variant="ghost">
             AI活用の仕組みを見る
           </ButtonLink>
         </div>

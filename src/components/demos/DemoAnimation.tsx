@@ -404,7 +404,7 @@ const PANELS: Panel[] = [
     note: "見出しの登場演出。クリック／ホバーで再生します。",
     render: () => (
       <div className="grid h-full place-items-center">
-        <ScrambleText text="EBISUSOFT" className="text-3xl font-bold text-gradient sm:text-4xl" />
+        <ScrambleText text="エビスソフト" className="text-3xl font-bold text-gradient sm:text-4xl" />
       </div>
     ),
   },
@@ -471,7 +471,7 @@ export default function DemoAnimation() {
         </p>
       ) : null}
 
-      <DemoStage label="EbisuSoft.Motion_Lab" status="LIVE / 8 PATTERNS">
+      <DemoStage label="エビスソフト.Motion_Lab" status="LIVE / 8 PATTERNS">
         <div className="grid gap-px bg-white/5 sm:grid-cols-2 lg:grid-cols-4">
           {PANELS.map((p) => (
             <div key={p.title} className="flex flex-col bg-ink-2/70 p-5">

@@ -9,9 +9,11 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/icons";
+import { RelatedPages } from "@/components/sections/RelatedPages";
+import { ContactCta } from "@/components/sections/ContactCta";
 
 const title = "会社概要";
-const description = `${siteConfig.legalName}（${siteConfig.name}）の会社概要です。所在地は${siteConfig.contact.address.region}${siteConfig.contact.address.locality}、京都商工会所属。AIを活用したWeb制作、AIチャットボット開発、3DCG・システム連携に加え、組み込みソフトウェア・IoT開発も提供しています。`;
+const description = `${siteConfig.legalName}の会社概要です。所在地は${siteConfig.contact.address.region}${siteConfig.contact.address.locality}、京都商工会所属。AIを活用したWeb制作、AIチャットボット開発、3DCG・システム連携に加え、組み込みソフトウェア・IoT開発も提供しています。`;
 
 export const metadata: Metadata = {
   title,
@@ -35,7 +37,7 @@ const fullAddress = `〒${contact.address.postalCode} ${contact.address.region}$
 
 /** 会社概要テーブルの項目（NAPは site.ts の単一情報源から生成し、表記ゆれを作らない） */
 const profile: { label: string; value: string }[] = [
-  { label: "名称", value: `${siteConfig.legalName}（${siteConfig.name}）` },
+  { label: "名称", value: siteConfig.legalName },
   { label: "所在地", value: fullAddress },
   { label: "電話番号", value: `${contact.telephoneDisplay}（${contact.openingHoursDisplay}）` },
   { label: "メールアドレス", value: contact.email },
@@ -252,6 +254,9 @@ export default function CompanyPage() {
           </div>
         </div>
       </Section>
+
+      <RelatedPages hrefs={["/ai", "/web", "/embedded", "/demo", "/faq"]} />
+      <ContactCta />
     </>
   );
 }

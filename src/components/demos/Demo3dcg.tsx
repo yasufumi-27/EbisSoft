@@ -328,7 +328,7 @@ export default function Demo3dcg() {
 
   if (unsupported) {
     return (
-      <DemoStage label="EbisuSoft.WebGL_Viewer">
+      <DemoStage label="エビスソフト.WebGL_Viewer">
         <div className="p-10 text-center text-sm text-slate-400">
           お使いの環境ではWebGLが利用できないため、3Dデモを表示できません。
           <br />
@@ -342,7 +342,7 @@ export default function Demo3dcg() {
     <div className="grid gap-5 [&>*]:min-w-0 lg:grid-cols-5">
       <DemoStage
         className="min-w-0 lg:col-span-3"
-        label="EbisuSoft.WebGL_Viewer"
+        label="エビスソフト.WebGL_Viewer"
         status={ready ? `${fps} FPS · ${triangles.toLocaleString()} TRI` : "LOADING…"}
       >
         <div className="relative">

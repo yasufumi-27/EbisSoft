@@ -1,0 +1,230 @@
+import type { Metadata } from "next";
+
+import { JsonLd } from "@/components/JsonLd";
+import { breadcrumbJsonLd, faqJsonLd, servicesJsonLd, webPageJsonLd } from "@/lib/jsonld";
+import { siteConfig } from "@/lib/site";
+import { embeddedDomains, embeddedSteps, embeddedStrengths, faqs } from "@/lib/content";
+import { Breadcrumbs } from "@/components/site/Breadcrumbs";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { ButtonLink } from "@/components/ui/Button";
+import { Section, SectionHeading } from "@/components/ui/Section";
+import { Icon } from "@/components/ui/icons";
+import { Faq } from "@/components/sections/Faq";
+import { RelatedPages } from "@/components/sections/RelatedPages";
+import { ContactCta } from "@/components/sections/ContactCta";
+
+const title = "組み込み開発｜ファームウェア・IoTの受託";
+const description =
+  "京都市伏見区のエビスソフトの組み込みソフトウェア開発。ARM Cortex-M・STM32・ESP32などのマイコンのファームウェアをC / C++で受託開発し、BLE・Wi-Fi・MQTTでのIoT連携、データの見える化までワンストップで対応します。部分的なご相談・技術調査のみも歓迎です。";
+
+export const metadata: Metadata = {
+  title,
+  description,
+  keywords: [
+    "組み込み開発 受託",
+    "組み込みソフトウェア開発 京都",
+    "ファームウェア開発 委託",
+    "マイコン 開発 外注",
+    "IoT 開発 京都",
+    "STM32 開発",
+    "ESP32 開発",
+    "BLE 開発",
+  ],
+  alternates: { canonical: "/embedded" },
+  openGraph: {
+    type: "website",
+    url: `${siteConfig.url}/embedded`,
+    title: `${title}｜${siteConfig.name}`,
+    description,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${title}｜${siteConfig.name}`,
+    description,
+  },
+};
+
+const crumbs = [
+  { name: "ホーム", path: "/" },
+  { name: "組み込み開発", path: "/embedded" },
+];
+
+const embeddedFaqs = faqs.filter((f) => f.category === "embedded");
+
+/** 「こんな相談から始められます」の具体例。依頼のハードルを下げるための一次情報。 */
+const entryPoints = [
+  "既存の装置にBLEを追加して、スマホから操作できるようにしたい",
+  "センサーの測定値をクラウドに上げて、ブラウザでグラフにしたい",
+  "前任者が辞めてしまい、既存ファームウェアの改修ができず困っている",
+  "試作品を動かすところまで（PoC）を、まず短期間で確かめたい",
+  "装置側のエンジニアはいるが、Web・クラウド側だけ任せたい",
+];
+
+export default function EmbeddedPage() {
+  return (
+    <>
+      <JsonLd
+        data={[
+          webPageJsonLd({
+            path: "/embedded",
+            name: `${title}｜${siteConfig.name}`,
+            description,
+          }),
+          breadcrumbJsonLd(crumbs),
+          servicesJsonLd("embedded"),
+          faqJsonLd(embeddedFaqs),
+        ]}
+      />
+
+      <Breadcrumbs items={crumbs} />
+
+      <PageHeader
+        eyebrow="Embedded Systems"
+        title={
+          <>
+            <span className="text-gradient">機器の中身</span>から、
+            <br />
+            Webの向こう側まで。
+          </>
+        }
+        lead="マイコンのファームウェア開発を受託します。C / C++での実装、センサー制御、BLE・Wi-Fi・MQTTでの通信、そして取得したデータをブラウザで見える形にするところまで、同じ体制で対応します。部分的なご相談や技術調査だけでも構いません。"
+      >
+        <div className="mt-8 flex flex-wrap gap-3">
+          <ButtonLink href="/contact" withArrow>
+            組み込み開発を相談する
+          </ButtonLink>
+          <ButtonLink href="/demo/integration" variant="ghost">
+            システム連携のデモを見る
+          </ButtonLink>
+        </div>
+      </PageHeader>
+
+      {/* 対応領域 */}
+      <Section id="domains">
+        <SectionHeading
+          eyebrow="Scope"
+          title="お引き受けできる領域"
+          description="「どこまで頼めるのか」が分かるよう、具体的な作業単位で挙げています。"
+        />
+        <div className="mt-14 grid gap-6 lg:grid-cols-2">
+          {embeddedDomains.map((d, i) => (
+            <article
+              key={d.title}
+              className="panel panel-hover panel-corners flex flex-col p-7"
+              data-reveal
+              style={{ "--reveal-delay": `${(i % 2) * 0.1}s` } as React.CSSProperties}
+            >
+              <span className="grid size-12 place-items-center rounded-xl bg-gradient-to-br from-brand/80 to-accent/80 text-ink shadow-[0_0_22px_rgba(34,211,238,0.35)]">
+                <Icon name={d.icon} className="size-6" />
+              </span>
+              <h3 className="mt-5 text-xl font-bold text-white">{d.title}</h3>
+              <p className="speakable mt-3 text-sm leading-relaxed text-slate-400">
+                {d.description}
+              </p>
+              <ul className="mt-5 space-y-2 border-t border-white/10 pt-5">
+                {d.items.map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-sm text-slate-300">
+                    <Icon name="check" className="mt-0.5 size-4 shrink-0 text-gold" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </article>
+          ))}
+        </div>
+      </Section>
+
+      {/* 依頼のきっかけ（相談のハードルを下げる） */}
+      <Section id="entry-points" bg="deep">
+        <SectionHeading
+          eyebrow="Where To Start"
+          title="こんな相談から始められます"
+          description="仕様書がなくても、途中まで作ったものがあっても構いません。"
+        />
+        <ul className="mx-auto mt-12 max-w-3xl space-y-3">
+          {entryPoints.map((e, i) => (
+            <li
+              key={e}
+              className="panel flex items-start gap-3 p-5 text-slate-200"
+              data-reveal
+              style={{ "--reveal-delay": `${i * 0.06}s` } as React.CSSProperties}
+            >
+              <Icon name="chat" className="mt-0.5 size-5 shrink-0 text-brand-light" />
+              <span className="speakable text-sm leading-relaxed">{e}</span>
+            </li>
+          ))}
+        </ul>
+      </Section>
+
+      {/* 選ばれる理由 */}
+      <Section id="strengths">
+        <SectionHeading
+          eyebrow="Why Us"
+          title="装置とWebを、まとめて任せられます。"
+          description="組み込みとWeb・AIを1社で担当できることが、私たちの一番の特徴です。"
+        />
+        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {embeddedStrengths.map((s, i) => (
+            <div
+              key={s.title}
+              className="panel panel-hover panel-corners p-6"
+              data-reveal
+              style={{ "--reveal-delay": `${i * 0.1}s` } as React.CSSProperties}
+            >
+              <span className="grid size-12 place-items-center rounded-xl border border-brand/30 bg-brand/10 text-brand-light shadow-[0_0_20px_rgba(34,211,238,0.2)]">
+                <Icon name={s.icon} className="size-6" />
+              </span>
+              <h3 className="mt-5 text-lg font-bold text-white">{s.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-slate-400">{s.description}</p>
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      {/* 進め方 */}
+      <Section id="process" bg="deep">
+        <SectionHeading
+          eyebrow="Process"
+          title="ご相談から納品までの流れ"
+          description="実現性の確認を先に行い、難しい点は着手前にお伝えします。"
+        />
+        <ol className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {embeddedSteps.map((step, i) => (
+            <li
+              key={step.title}
+              className="panel panel-hover relative p-6"
+              data-reveal
+              style={{ "--reveal-delay": `${(i % 3) * 0.1}s` } as React.CSSProperties}
+            >
+              <div className="flex items-center gap-4">
+                <span className="font-display grid size-11 shrink-0 place-items-center rounded-full border border-brand/40 bg-brand/10 text-base font-bold text-brand-light shadow-[0_0_18px_rgba(34,211,238,0.25)]">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <h3 className="text-lg font-bold text-white">{step.title}</h3>
+              </div>
+              <p className="mt-3 text-sm leading-relaxed text-slate-400">{step.description}</p>
+            </li>
+          ))}
+        </ol>
+
+        {/* 対応範囲の限界を明示（誠実さ＝E-E-A-T の Trust） */}
+        <details className="demo-note mt-10" data-reveal>
+          <summary>お引き受けできない範囲について</summary>
+          <p className="speakable mt-3 text-sm leading-relaxed text-slate-400">
+            電気回路・基板の設計、筐体の機構設計、量産管理、電波法・安全規格などの認証取得代行は行っていません。ソフトウェア（ファームウェア・通信・クラウド・Web）に専念し、ハードウェア側は貴社または専門の協力先と分担する形をご提案します。対応できない場合は、その旨を最初にお伝えします。
+          </p>
+        </details>
+      </Section>
+
+      <Faq
+        items={embeddedFaqs}
+        title="組み込み開発についてのよくある質問"
+        description="受託範囲や進め方について、いただくことの多い質問です。"
+        moreHref="/faq"
+      />
+
+      <RelatedPages hrefs={["/ai", "/web", "/company"]} />
+      <ContactCta />
+    </>
+  );
+}

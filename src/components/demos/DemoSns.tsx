@@ -35,7 +35,7 @@ const INITIAL_POSTS: Post[] = [
   {
     id: "p1",
     platform: "instagram",
-    author: "EbisuSoft",
+    author: "エビスソフト",
     handle: "@ebisusoft",
     body: "京都・伏見の町家をモチーフにしたコーポレートサイト、本日公開しました。3Dの町家モデルがスクロールに合わせて組み上がります。",
     tags: ["京都", "Web制作", "3DCG"],
@@ -47,7 +47,7 @@ const INITIAL_POSTS: Post[] = [
   {
     id: "p2",
     platform: "x",
-    author: "EbisuSoft",
+    author: "エビスソフト",
     handle: "@ebisusoft",
     body: "AIエージェントで実装を並列化したら、LPの制作が5日で公開まで完了。空いた時間はCore Web Vitalsの詰めに使えました。Lighthouse は100点。",
     tags: ["AI開発", "Nextjs"],
@@ -59,7 +59,7 @@ const INITIAL_POSTS: Post[] = [
   {
     id: "p3",
     platform: "youtube",
-    author: "EbisuSoft Channel",
+    author: "エビスソフト Channel",
     handle: "@ebisusoft",
     body: "【解説】RAG構成のAIチャットボットを自社サイトに導入する手順｜根拠つき回答の作り方",
     tags: ["AIチャットボット", "RAG"],
@@ -71,7 +71,7 @@ const INITIAL_POSTS: Post[] = [
   {
     id: "p4",
     platform: "instagram",
-    author: "EbisuSoft",
+    author: "エビスソフト",
     handle: "@ebisusoft",
     body: "在庫システムとECをAPIで接続。サイトの在庫表示が、倉庫の実数とリアルタイムで一致するようになりました。",
     tags: ["システム連携", "EC"],
@@ -83,7 +83,7 @@ const INITIAL_POSTS: Post[] = [
   {
     id: "p5",
     platform: "x",
-    author: "EbisuSoft",
+    author: "エビスソフト",
     handle: "@ebisusoft",
     body: "llms.txt を設置して2週間。生成AIからの参照が増えてきました。AEO / LLMO は「やっておくと効く」段階から「やらないと不利」な段階に入りつつあります。",
     tags: ["LLMO", "AEO"],
@@ -98,7 +98,7 @@ const INITIAL_POSTS: Post[] = [
 const INCOMING: Omit<Post, "id" | "minutesAgo">[] = [
   {
     platform: "x",
-    author: "EbisuSoft",
+    author: "エビスソフト",
     handle: "@ebisusoft",
     body: "WebGLの製品ビューアを公開しました。スマホでも60fpsで回せるよう、ポリゴンとテクスチャを詰めています。",
     tags: ["WebGL", "3DCG"],
@@ -108,7 +108,7 @@ const INCOMING: Omit<Post, "id" | "minutesAgo">[] = [
   },
   {
     platform: "instagram",
-    author: "EbisuSoft",
+    author: "エビスソフト",
     handle: "@ebisusoft",
     body: "伏見のオフィスから。今日は新しい採用サイトのワイヤーフレームを詰めています。",
     tags: ["京都", "採用サイト"],
@@ -159,7 +159,7 @@ export default function DemoSns() {
   };
 
   /* ---- OGPカード ---- */
-  const [title, setTitle] = useState("AIで最速・高性能なホームページ制作｜EbisuSoft");
+  const [title, setTitle] = useState("AIで最速・高性能なホームページ制作｜エビスソフト");
   const [desc, setDesc] = useState(
     "京都市伏見区のAI活用型Web制作会社。生成AIを制作フローに組み込み、最短5日で高性能なサイトを公開します。",
   );
@@ -177,7 +177,7 @@ export default function DemoSns() {
   return (
     <div className="grid gap-5 [&>*]:min-w-0 lg:grid-cols-2">
       {/* ================= フィード ================= */}
-      <DemoStage label="EbisuSoft.Social_Feed" status={`${visible.length} POSTS`}>
+      <DemoStage label="エビスソフト.Social_Feed" status={`${visible.length} POSTS`}>
         <div className="flex flex-wrap items-center gap-2 border-b border-white/10 px-4 py-3">
           <ChipButton active={filter === "all"} onClick={() => setFilter("all")}>
             すべて
@@ -235,7 +235,7 @@ export default function DemoSns() {
       </DemoStage>
 
       {/* ================= OGPカードプレビュー ================= */}
-      <DemoStage label="EbisuSoft.OGP_Preview" status="LIVE EDIT">
+      <DemoStage label="エビスソフト.OGP_Preview" status="LIVE EDIT">
         <div className="space-y-4 p-5">
           {/* プレビュー先の切り替え */}
           <ControlGroup label="Preview / 表示先">
@@ -272,7 +272,7 @@ export default function DemoSns() {
                   E
                 </span>
                 <span className="font-display text-xs font-bold tracking-widest text-white/90">
-                  EBISUSOFT
+                  エビスソフト
                 </span>
               </div>
               <p className="line-clamp-3 text-lg leading-snug font-bold text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.4)] sm:text-xl">

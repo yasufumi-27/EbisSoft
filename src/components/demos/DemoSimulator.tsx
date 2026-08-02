@@ -274,7 +274,7 @@ export default function DemoSimulator() {
 
       {/* ---------------- 結果 ---------------- */}
       <div className="space-y-5 min-w-0 lg:col-span-2">
-        <DemoStage label="EbisuSoft.Estimate" status="LIVE CALC">
+        <DemoStage label="エビスソフト.Estimate" status="LIVE CALC">
           <div className="p-5">
             <p className="font-display text-[10px] font-bold tracking-[0.25em] text-slate-500 uppercase">
               Estimated Cost / 概算費用

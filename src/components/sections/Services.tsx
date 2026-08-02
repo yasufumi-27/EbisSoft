@@ -1,18 +1,33 @@
 import { Section, SectionHeading } from "@/components/ui/Section";
 import { Icon } from "@/components/ui/icons";
-import { services } from "@/lib/content";
+import { services, servicesByCategory, type ServiceCategory } from "@/lib/content";
 
-/** 提供サービス一覧。 */
-export function Services() {
+/**
+ * 提供サービス一覧。
+ * category を渡すと、その領域のサービスだけを掲載します（詳細ページごとの出し分け）。
+ */
+export function Services({
+  category,
+  eyebrow = "Service",
+  title = "サービス",
+  description,
+  id = "services",
+  bg = "transparent",
+}: {
+  category?: ServiceCategory;
+  eyebrow?: string;
+  title?: string;
+  description?: string;
+  id?: string;
+  bg?: "transparent" | "deep";
+}) {
+  const items = category ? servicesByCategory(category) : services;
+
   return (
-    <Section id="services">
-      <SectionHeading
-        eyebrow="Service"
-        title="Web制作サービス"
-        description="コーポレートサイトからLP・EC・Webアプリ・SEOまで。事業の課題に合わせて最適な形をご提案します。"
-      />
+    <Section id={id} bg={bg}>
+      <SectionHeading eyebrow={eyebrow} title={title} description={description} />
       <div className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {services.map((s, i) => (
+        {items.map((s, i) => (
           <article
             key={s.slug}
             className="group panel panel-hover panel-corners flex flex-col p-7"

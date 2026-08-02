@@ -48,7 +48,7 @@ export default function OgImage() {
           >
             E
           </div>
-          <div style={{ marginLeft: 24, fontSize: 38, fontWeight: 700 }}>EbisuSoft</div>
+          <div style={{ marginLeft: 24, fontSize: 38, fontWeight: 700 }}>エビスソフト</div>
         </div>
 
         {/* 中央：キャッチ */}

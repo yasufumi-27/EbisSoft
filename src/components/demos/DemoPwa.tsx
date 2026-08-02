@@ -111,14 +111,14 @@ export default function DemoPwa() {
     const reg = await navigator.serviceWorker?.getRegistration();
     if (reg) {
       // Service Worker 経由：Web Push で届くときと同じ経路
-      await reg.showNotification("EbisuSoft からのお知らせ", {
+      await reg.showNotification("エビスソフト からのお知らせ", {
         body,
         icon: `${BASE}/icon.svg`,
         badge: `${BASE}/icon.svg`,
         tag: "ebisusoft-demo",
       });
     } else {
-      new Notification("EbisuSoft からのお知らせ", { body, icon: `${BASE}/icon.svg` });
+      new Notification("エビスソフト からのお知らせ", { body, icon: `${BASE}/icon.svg` });
     }
     setMessage("通知を送信しました。表示されない場合はOSの通知設定をご確認ください。");
     refresh();
@@ -182,7 +182,7 @@ export default function DemoPwa() {
       {/* ---------- 実際の状態 ---------- */}
       <DemoStage
         className="min-w-0 lg:col-span-3"
-        label="EbisuSoft.PWA_Status"
+        label="エビスソフト.PWA_Status"
         status={status.online ? "ONLINE" : "OFFLINE"}
       >
         <ul className="divide-y divide-white/5">

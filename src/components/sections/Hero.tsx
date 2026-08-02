@@ -34,7 +34,6 @@ export function Hero() {
           <div className="flex flex-wrap items-center gap-2">
             <p className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-4 py-1.5 text-sm font-semibold text-brand-light shadow-[0_0_18px_rgba(34,211,238,0.18)] backdrop-blur">
               <Icon name="pin" className="size-4" />
-              {siteConfig.contact.address.region}
               {siteConfig.contact.address.locality}のWeb制作・組み込み開発 {siteConfig.name}
             </p>
             <p className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-4 py-1.5 text-sm font-semibold text-gold-light backdrop-blur">
@@ -57,34 +56,34 @@ export function Hero() {
           <h1 className="mt-4 text-[clamp(1.75rem,8.2vw,2.25rem)] font-bold leading-[1.16] tracking-tight text-white [word-break:keep-all] sm:text-5xl lg:text-[3.5rem]">
             <span className="hero-line">
               <span style={{ "--line-delay": "0.08s" } as React.CSSProperties}>
-                <span className="text-gradient">AI</span>を駆使して、
+                <span className="text-gradient">AI活用</span>のWeb制作と、
               </span>
             </span>
             <span className="hero-line">
               <span style={{ "--line-delay": "0.26s" } as React.CSSProperties}>
-                <span className="text-gradient">最速</span>で、
-                <span className="text-gold">高性能</span>なサイトを。
+                <span className="text-gold">組み込み</span>開発。
               </span>
             </span>
           </h1>
 
           <p className="speakable mt-6 max-w-lg text-lg leading-relaxed text-slate-300">
-            {siteConfig.contact.address.locality}のAI活用型Web制作・組み込みソフトウェア開発。
+            {siteConfig.name}は、{siteConfig.contact.address.locality}
+            のソフトウェア開発事業者です。生成AIを制作フロー全体に組み込み、
             <strong className="font-bold text-white">制作期間は従来の約1/3、最短5日で公開</strong>
-            します。
+            。マイコン・IoT機器の組み込みソフトウェア開発もお引き受けします。
           </p>
 
-          {/* できることは文章で説明せず、実物への導線にする */}
+          {/* トップは要約に徹し、詳細は各ページへ送る */}
           <p className="mt-4 max-w-lg text-sm leading-relaxed text-slate-400">
-            3DCG・AR・料金シミュレーター・商品カスタマイズ・AIレコメンド・AIチャットボット。できることは15領域すべて、動くデモで確かめられます。
+            AIチャットボット・3DCG・AR・システム連携など15領域は、実際に動くデモで確かめられます。
           </p>
 
           <div className="mt-10 flex flex-col gap-3 sm:flex-row">
             <ButtonLink href="/contact" size="lg" withArrow>
               無料で相談する
             </ButtonLink>
-            <ButtonLink href="/#capabilities" size="lg" variant="secondary">
-              デモを体験する
+            <ButtonLink href="/ai" size="lg" variant="secondary">
+              AI活用の中身を見る
             </ButtonLink>
           </div>
 

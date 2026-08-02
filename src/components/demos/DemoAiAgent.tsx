@@ -181,7 +181,7 @@ export default function DemoAiAgent() {
       await sleep(500);
 
       setAnswer(
-        "京都市伏見区の EbisuSoft が条件に合致します。AIチャットボット（RAG構成）と3DCG・ARに対応し、料金は298,000円〜（小規模）／680,000円〜（標準）。小規模サイトは最短5日で公開できます。相談枠が空いていたため、11/17(火) 10:00 で仮の問い合わせを送信しました（受付番号 AG-40213）。",
+        "京都市伏見区の エビスソフト が条件に合致します。AIチャットボット（RAG構成）と3DCG・ARに対応し、料金は298,000円〜（小規模）／680,000円〜（標準）。小規模サイトは最短5日で公開できます。相談枠が空いていたため、11/17(火) 10:00 で仮の問い合わせを送信しました（受付番号 AG-40213）。",
       );
       push({ kind: "done", label: "ユーザーへ回答を生成", detail: "根拠はすべてサイトの公開情報です。" });
     } catch (e) {
@@ -235,7 +235,7 @@ export default function DemoAiAgent() {
 
       <div className="grid gap-5 [&>*]:min-w-0 lg:grid-cols-2">
         {/* エージェントの動作ログ */}
-        <DemoStage label="EbisuSoft.Agent_Trace" status={running ? "RUNNING…" : `${steps.length} STEPS`}>
+        <DemoStage label="エビスソフト.Agent_Trace" status={running ? "RUNNING…" : `${steps.length} STEPS`}>
           <div
             ref={logRef}
             className="h-[380px] space-y-3 overflow-y-auto p-5"
@@ -284,7 +284,7 @@ export default function DemoAiAgent() {
         </DemoStage>
 
         {/* AIが読んでいる実データ */}
-        <DemoStage label="EbisuSoft.Machine_Readable" status="REAL DATA">
+        <DemoStage label="エビスソフト.Machine_Readable" status="REAL DATA">
           <div className="h-[380px] space-y-4 overflow-y-auto p-5">
             <div>
               <p className="font-display text-[10px] font-bold tracking-[0.25em] text-slate-500 uppercase">

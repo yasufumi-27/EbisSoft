@@ -155,7 +155,7 @@ export default function DemoConfigurator() {
     <div className="grid gap-5 [&>*]:min-w-0 lg:grid-cols-5">
       {/* ---------------- プレビュー ---------------- */}
       <div className="space-y-5 min-w-0 lg:col-span-3">
-        <DemoStage label="EbisuSoft.Configurator" status={spec.code}>
+        <DemoStage label="エビスソフト.Configurator" status={spec.code}>
           <div className="relative">
             <div aria-hidden className="bg-grid absolute inset-0 opacity-25" />
             <svg
