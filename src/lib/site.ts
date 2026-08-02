@@ -72,7 +72,7 @@ export const siteConfig = {
     telephoneDisplay: "090-8208-7295", // 表示用
     email: "yasufumi2707@icloud.com",
     address: {
-      postalCode: "612-8493", // ★ 久我石原町の郵便番号。公開前に日本郵便で要確認
+      postalCode: "612-8491", // 京都市伏見区久我石原町
       region: "京都府", // 都道府県
       locality: "京都市伏見区", // 市区町村
       street: "久我石原町7-37", // 番地
