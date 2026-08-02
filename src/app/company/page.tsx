@@ -40,9 +40,7 @@ const fullAddress = `〒${contact.address.postalCode} ${contact.address.region}$
 const profile: { label: string; value: string }[] = [
   { label: "名称", value: siteConfig.legalName },
   { label: "所在地", value: fullAddress },
-  { label: "電話番号", value: `${contact.telephoneDisplay}（${contact.openingHoursDisplay}）` },
-  { label: "メールアドレス", value: contact.email },
-  { label: "設立", value: "2018年4月" },
+  { label: "設立", value: "2001年4月" },
   {
     label: "事業内容",
     value:
@@ -50,7 +48,6 @@ const profile: { label: string; value: string }[] = [
   },
   { label: "所属団体", value: siteConfig.memberOf.map((m) => m.name).join("／") },
   { label: "対応エリア", value: siteConfig.areaServed },
-  { label: "営業時間", value: contact.openingHoursDisplay },
 ];
 
 /** 私たちの姿勢（E-E-A-T：Trust。約束できることを具体的に明文化） */
@@ -162,41 +159,32 @@ export default function CompanyPage() {
           </dl>
         </div>
 
-        {/* 連絡先（NAPを繰り返し明示：ローカルSEO） */}
-        <address className="mt-6 grid gap-4 not-italic sm:grid-cols-3" data-reveal>
-          {[
-            { icon: "pin" as const, label: "所在地", value: fullAddress, href: undefined },
-            {
-              icon: "phone" as const,
-              label: "電話",
-              value: contact.telephoneDisplay,
-              href: `tel:${contact.telephone}`,
-            },
-            {
-              icon: "mail" as const,
-              label: "メール",
-              value: contact.email,
-              href: `mailto:${contact.email}`,
-            },
-          ].map((c) => (
-            <div key={c.label} className="panel p-5">
-              <p className="flex items-center gap-2 text-xs text-slate-500">
-                <Icon name={c.icon} className="size-4 text-gold" />
-                {c.label}
-              </p>
-              {c.href ? (
-                <a
-                  href={c.href}
-                  className="mt-2 block text-sm text-slate-200 transition-colors hover:text-brand-light"
-                >
-                  {c.value}
-                </a>
-              ) : (
-                <p className="mt-2 text-sm leading-relaxed text-slate-200">{c.value}</p>
-              )}
-            </div>
-          ))}
-        </address>
+        {/* 所在地と対応エリア（連絡先はお問い合わせ欄に集約） */}
+        <div className="mt-6 grid gap-4 sm:grid-cols-2" data-reveal>
+          <address className="panel p-5 not-italic">
+            <p className="flex items-center gap-2 text-xs text-slate-500">
+              <Icon name="pin" className="size-4 text-gold" />
+              所在地
+            </p>
+            <p className="mt-2 text-sm leading-relaxed text-slate-200">{fullAddress}</p>
+          </address>
+          <div className="panel p-5">
+            <p className="flex items-center gap-2 text-xs text-slate-500">
+              <Icon name="globe" className="size-4 text-gold" />
+              対応エリア
+            </p>
+            <p className="mt-2 text-sm leading-relaxed text-slate-200">{siteConfig.areaServed}</p>
+          </div>
+        </div>
+
+        <p className="mt-6 text-sm text-slate-500" data-reveal>
+          お電話・メールでのご連絡先は
+          <Link href="/contact" className="mx-1 text-brand-light underline-offset-4 hover:underline">
+            お問い合わせページ
+          </Link>
+          に記載しています。
+        </p>
+
       </Section>
 
       {/* ------------- 事業の軸（AI活用） ------------- */}
@@ -302,8 +290,8 @@ export default function CompanyPage() {
             <div className="panel p-7" data-reveal>
               <h2 className="text-xl font-bold text-white">対応エリア</h2>
               <p className="mt-4 text-sm leading-relaxed text-slate-400">
-                打ち合わせはオンライン会議で完結できるため、全国からご依頼いただけます。
-                下記エリアは対面での打ち合わせにも伺います。
+                下記の府県は対面での打ち合わせに伺います。
+                打ち合わせはオンライン会議でも完結できます。
               </p>
               <ul className="mt-4 flex flex-wrap gap-2">
                 {siteConfig.localAreas.map((a) => (
@@ -315,6 +303,9 @@ export default function CompanyPage() {
                   </li>
                 ))}
               </ul>
+              <p className="mt-4 text-xs leading-relaxed text-slate-500">
+                {siteConfig.localAreasNote}
+              </p>
             </div>
           </div>
         </div>

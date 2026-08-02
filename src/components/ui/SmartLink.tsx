@@ -46,7 +46,9 @@ export function SmartLink({ href, children, className, onClick, ...rest }: Props
   }
 
   return (
-    <Link href={href} className={className} onClick={onClick} {...rest}>
+    // ヘッダー/フッターのナビは全ページに出るため、画面内に入っただけの先読みはしない
+    // （Next.js は prefetch={false} でもホバー時には先読みするので、遷移の速さは保たれる）
+    <Link prefetch={false} href={href} className={className} onClick={onClick} {...rest}>
       {children}
     </Link>
   );

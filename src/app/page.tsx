@@ -1,11 +1,5 @@
 import { JsonLd } from "@/components/JsonLd";
-import {
-  webPageJsonLd,
-  breadcrumbJsonLd,
-  servicesJsonLd,
-  capabilitiesJsonLd,
-  faqJsonLd,
-} from "@/lib/jsonld";
+import { webPageJsonLd, breadcrumbJsonLd, faqJsonLd } from "@/lib/jsonld";
 import { Hero } from "@/components/sections/Hero";
 import { TechMarquee } from "@/components/sections/TechMarquee";
 import { KeyFacts } from "@/components/sections/KeyFacts";
@@ -56,16 +50,12 @@ const topFaqs = faqs.filter((f) => TOP_FAQ_QUESTIONS.includes(f.question));
 export default function Home() {
   return (
     <>
-      {/* ページ固有の構造化データ（WebPage/Speakable・パンくず・サービス・できること・FAQ） */}
-      <JsonLd
-        data={[
-          webPageJsonLd(),
-          breadcrumbJsonLd(),
-          servicesJsonLd(),
-          capabilitiesJsonLd(),
-          faqJsonLd(topFaqs),
-        ]}
-      />
+      {/*
+        ページ固有の構造化データ。
+        サービス一覧は /ai・/web・/embedded、できること一覧は /demo で出力しているため、
+        トップでは重複させない（HTMLを軽く保つ／同じ内容を二重に主張しない）。
+      */}
+      <JsonLd data={[webPageJsonLd(), breadcrumbJsonLd(), faqJsonLd(topFaqs)]} />
 
       <SectionNav items={SECTIONS} />
 

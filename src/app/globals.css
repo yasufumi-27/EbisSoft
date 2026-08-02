@@ -174,9 +174,10 @@
     border: 1px solid var(--color-line);
     background:
       linear-gradient(165deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.015) 55%),
-      rgba(10, 14, 29, 0.55);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+      rgba(10, 14, 29, 0.76);
+    /* backdrop-filter はページ内に数十枚あると合成コストが跳ね上がり、
+       スクロールがもたつく原因になる。背景を濃くして見た目を保ったうえで、
+       余裕のある環境（広い画面＋マウス操作）でのみ、すりガラスを有効にする。 */
     /* 上辺に髪の毛一本ぶんの光を入れる（ガラスの厚みが出て安っぽさが消える） */
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.07),
@@ -377,6 +378,17 @@
    * 3D背景の上に重ねることで、暗い画面が「黒い板」に見えなくなる。
    * 巨大なぼかしを毎フレーム再計算させないよう、transform だけを動かす。
    * ------------------------------------------------------------- */
+  /* 広い画面かつマウス操作の環境だけ、パネルをすりガラスにする */
+  @media (min-width: 1024px) and (hover: hover) {
+    .panel {
+      background:
+        linear-gradient(165deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.015) 55%),
+        rgba(10, 14, 29, 0.55);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+  }
+
   .aurora {
     position: fixed;
     inset: -25%;
@@ -388,6 +400,13 @@
       radial-gradient(30% 26% at 62% 82%, rgba(226, 192, 120, 0.07), transparent 70%);
     will-change: transform;
     animation: aurora-drift 32s ease-in-out infinite alternate;
+  }
+  /* 狭い画面では動かさない（常時アニメーションはバッテリーと発熱に響く） */
+  @media (max-width: 767px) {
+    .aurora {
+      animation: none;
+      will-change: auto;
+    }
   }
   @keyframes aurora-drift {
     from {
@@ -603,6 +622,17 @@
     transform 0.9s cubic-bezier(0.2, 0.65, 0.3, 1),
     filter 0.9s ease;
   transition-delay: var(--reveal-delay, 0s);
+  /* 保険：JSが遅い・落ちた・無効でも、2.5秒後には必ず表示する。
+     これがないと RevealInit の読み込み完了まで本文が透明のままになり、
+     低速回線ではLCP（最大コンテンツの描画）がその分だけ遅れる。 */
+  animation: reveal-fallback 0.01s linear 2.5s forwards;
+}
+@keyframes reveal-fallback {
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
 }
 [data-reveal][data-revealed] {
   opacity: 1;
@@ -932,6 +962,7 @@
     transform: none;
     filter: none;
     transition: none;
+    animation: none;
   }
   .aurora,
   .hero-line > span,

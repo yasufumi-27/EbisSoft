@@ -30,7 +30,7 @@ export function Hero() {
       <Container className="grid items-center gap-14 py-24 sm:py-28 lg:grid-cols-2 lg:gap-10 lg:py-36">
         {/* min-w-0：グリッド項目の既定（min-width:auto）だと中身の最小幅で列が広がり、
             狭い端末で右端がはみ出すため、必ず縮めるようにしておく */}
-        <div className="min-w-0" data-reveal>
+        <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
             <p className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-4 py-1.5 text-sm font-semibold text-brand-light shadow-[0_0_18px_rgba(34,211,238,0.18)] backdrop-blur">
               <Icon name="pin" className="size-4" />
@@ -93,7 +93,7 @@ export function Hero() {
         </div>
 
         {/* AI制作パイプラインのコンソール（工程ごとのAI／人の分担を可視化） */}
-        <div className="relative min-w-0" data-reveal style={{ "--reveal-delay": "0.15s" } as React.CSSProperties}>
+        <div className="relative min-w-0">
           <Tilt>
             <div className="animate-float">
               <HeroConsole />
@@ -115,7 +115,7 @@ export function Hero() {
 
       {/* 信頼指標：HUD風の計器パネル */}
       <Container className="pb-20 lg:pb-24">
-        <dl className="panel panel-corners grid grid-cols-2 divide-x divide-white/5 overflow-hidden sm:grid-cols-4" data-reveal>
+        <dl className="panel panel-corners grid grid-cols-2 divide-x divide-white/5 overflow-hidden sm:grid-cols-4">
           {stats.map((s, i) => (
             <div
               key={s.label}

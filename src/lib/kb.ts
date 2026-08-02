@@ -106,7 +106,7 @@ function buildDocs(): KbDoc[] {
     source: "会社情報（所在地・連絡先）",
     category: "会社情報",
     key: "会社 会社名 名称 屋号 所在地 住所 どこ 場所 京都 伏見 電話 連絡先 営業時間 アクセス エリア 対応地域 商工会 所属団体 加盟",
-    answer: `${siteConfig.legalName}は${siteConfig.contact.address.region}${siteConfig.contact.address.locality}に拠点を置き、Web制作と組み込みソフトウェア開発を手がけています。所在地は〒${siteConfig.contact.address.postalCode} ${siteConfig.contact.address.region}${siteConfig.contact.address.locality}${siteConfig.contact.address.street}、電話は${siteConfig.contact.telephoneDisplay}（${siteConfig.contact.openingHoursDisplay}）。${siteConfig.memberOf.map((m) => m.name).join("・")}に所属しています。対応エリアは${siteConfig.areaServed}です。`,
+    answer: `${siteConfig.legalName}は${siteConfig.contact.address.region}${siteConfig.contact.address.locality}に拠点を置き、Web制作と組み込みソフトウェア開発を手がけています。所在地は〒${siteConfig.contact.address.postalCode} ${siteConfig.contact.address.region}${siteConfig.contact.address.locality}${siteConfig.contact.address.street}。${siteConfig.memberOf.map((m) => m.name).join("・")}に所属しています。対応エリアは${siteConfig.areaServed}です。`,
     href: "/company",
   });
 

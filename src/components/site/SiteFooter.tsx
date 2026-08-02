@@ -7,7 +7,10 @@ import { Icon } from "@/components/ui/icons";
 
 const year = new Date().getFullYear();
 
-/** サイト共通フッター。NAP（社名/住所/電話）を明記しローカルSEOに対応。 */
+/**
+ * サイト共通フッター。所在地・対応エリア・所属団体を明記しローカルSEOに対応。
+ * 電話番号とメールアドレスは、お問い合わせ導線（ContactCta / /contact）に集約しています。
+ */
 export function SiteFooter() {
   const { contact } = siteConfig;
 
@@ -68,7 +71,10 @@ export function SiteFooter() {
               </li>
               {capabilities.map((c) => (
                 <li key={c.slug}>
+                  {/* フッターは全ページに出るため、ここからの先読みは行わない
+                      （15ページ分のRSCペイロードを毎回取得すると通信量が跳ね上がる） */}
                   <Link
+                    prefetch={false}
                     href={`/demo/${c.slug}`}
                     className="text-slate-400 transition-colors hover:text-brand-light"
                   >
@@ -96,21 +102,9 @@ export function SiteFooter() {
                   {contact.address.street}
                 </span>
               </p>
-              <p className="flex items-center gap-2.5">
-                <Icon name="phone" className="size-4 shrink-0 text-gold" />
-                <a href={`tel:${contact.telephone}`} className="transition-colors hover:text-white">
-                  {contact.telephoneDisplay}
-                </a>
-              </p>
-              <p className="flex items-center gap-2.5">
-                <Icon name="mail" className="size-4 shrink-0 text-gold" />
-                <a href={`mailto:${contact.email}`} className="transition-colors hover:text-white">
-                  {contact.email}
-                </a>
-              </p>
-              <p className="flex items-center gap-2.5">
-                <Icon name="clock" className="size-4 shrink-0 text-gold" />
-                <span>{contact.openingHoursDisplay}</span>
+              <p className="flex items-start gap-2.5">
+                <Icon name="globe" className="mt-0.5 size-4 shrink-0 text-gold" />
+                <span>{siteConfig.areaServed}</span>
               </p>
               <p className="flex items-center gap-2.5">
                 <Icon name="award" className="size-4 shrink-0 text-gold" />

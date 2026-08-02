@@ -24,7 +24,8 @@ export function PageHeader({
         className="bg-grid pointer-events-none absolute inset-0 -z-10 opacity-30 [mask-image:radial-gradient(70%_60%_at_50%_20%,black,transparent)]"
       />
       <Container>
-        <div className="max-w-3xl" data-reveal>
+        {/* ファーストビューは reveal を使わない（JS実行を待たずに描画させ、LCPを早める） */}
+        <div className="max-w-3xl">
           <p className="eyebrow">{eyebrow}</p>
           <h1 className="mt-5 text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
             {title}
