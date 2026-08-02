@@ -339,9 +339,9 @@ export default function Demo3dcg() {
   }
 
   return (
-    <div className="grid gap-5 lg:grid-cols-5">
+    <div className="grid gap-5 [&>*]:min-w-0 lg:grid-cols-5">
       <DemoStage
-        className="lg:col-span-3"
+        className="min-w-0 lg:col-span-3"
         label="EbisuSoft.WebGL_Viewer"
         status={ready ? `${fps} FPS · ${triangles.toLocaleString()} TRI` : "LOADING…"}
       >
@@ -365,7 +365,7 @@ export default function Demo3dcg() {
       </DemoStage>
 
       {/* 操作パネル */}
-      <div className="panel space-y-5 p-5 lg:col-span-2">
+      <div className="panel space-y-5 p-5 min-w-0 lg:col-span-2">
         <ControlGroup label="Shape / 形状">
           {SHAPES.map((s) => (
             <ChipButton key={s.key} active={shape === s.key} onClick={() => setShape(s.key)}>

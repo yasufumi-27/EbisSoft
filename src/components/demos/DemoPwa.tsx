@@ -178,10 +178,10 @@ export default function DemoPwa() {
   ];
 
   return (
-    <div className="grid gap-5 lg:grid-cols-5">
+    <div className="grid gap-5 [&>*]:min-w-0 lg:grid-cols-5">
       {/* ---------- 実際の状態 ---------- */}
       <DemoStage
-        className="lg:col-span-3"
+        className="min-w-0 lg:col-span-3"
         label="EbisuSoft.PWA_Status"
         status={status.online ? "ONLINE" : "OFFLINE"}
       >
@@ -204,7 +204,8 @@ export default function DemoPwa() {
                     {r.value}
                   </p>
                 </div>
-                <p className="mt-0.5 truncate text-[11px] text-slate-500">{r.note}</p>
+                {/* 補足文は狭い端末では折り返す（1行に収めると読めなくなる） */}
+                <p className="mt-0.5 text-[11px] text-slate-500 sm:truncate">{r.note}</p>
               </div>
             </li>
           ))}
@@ -216,7 +217,7 @@ export default function DemoPwa() {
       </DemoStage>
 
       {/* ---------- 操作 ---------- */}
-      <div className="panel space-y-4 p-5 lg:col-span-2">
+      <div className="panel space-y-4 p-5 min-w-0 lg:col-span-2">
         <div>
           <p className="font-display text-[10px] font-bold tracking-[0.25em] text-slate-500 uppercase">
             Try / 試す

@@ -57,6 +57,19 @@
     color: #05070f;
   }
 
+  /* ---------------------------------------------------------------
+   * iOS Safari は 16px 未満の入力欄にフォーカスすると、ページを自動で拡大する。
+   * 拡大は自動では戻らないため、以降ずっと「幅が合っていない」状態に見えてしまう。
+   * 狭い画面では入力欄の文字を 16px 下限にして、拡大自体を起こさせない。
+   * ------------------------------------------------------------- */
+  @media (max-width: 767px) {
+    input,
+    textarea,
+    select {
+      font-size: max(16px, 1em);
+    }
+  }
+
   /* 見出しは行末のバランスを整え、本文は孤立行（1語だけ残る行）を避ける。
      組版の質感が上がるうえ、対応していないブラウザでは単に無視される。 */
   h1,
@@ -105,6 +118,28 @@
 }
 
 @layer components {
+  /* ---------------------------------------------------------------
+   * ページ共通の左右余白。
+   * 横向きのiPhoneではノッチ側にセーフエリアが生じるため、
+   * 通常の余白と env() の大きいほうを採る（非対応環境では env() は 0）。
+   * ------------------------------------------------------------- */
+  .gutter-x {
+    padding-left: max(1.25rem, env(safe-area-inset-left));
+    padding-right: max(1.25rem, env(safe-area-inset-right));
+  }
+  @media (min-width: 640px) {
+    .gutter-x {
+      padding-left: max(1.5rem, env(safe-area-inset-left));
+      padding-right: max(1.5rem, env(safe-area-inset-right));
+    }
+  }
+  @media (min-width: 1024px) {
+    .gutter-x {
+      padding-left: max(2rem, env(safe-area-inset-left));
+      padding-right: max(2rem, env(safe-area-inset-right));
+    }
+  }
+
   /* ---------------------------------------------------------------
    * スキップリンク：キーボード利用者がナビを読み飛ばして本文へ行くための導線。
    * 普段は画面外に置き、フォーカスされたときだけ現れる。

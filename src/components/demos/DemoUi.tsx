@@ -21,17 +21,24 @@ export function DemoStage({
   children: ReactNode;
   className?: string;
 }) {
+  // ラベルは "EbisuSoft.XXX" 形式。狭い端末では屋号の部分を伏せ、
+  // 機能名（XXX）が省略記号で切れないようにする。
+  const dot = label.indexOf(".");
+  const prefix = dot > 0 ? label.slice(0, dot + 1) : "";
+  const main = dot > 0 ? label.slice(dot + 1) : label;
+
   return (
     <div className={`panel panel-corners overflow-hidden ${className}`}>
-      <div className="flex items-center gap-1.5 border-b border-white/10 px-4 py-3">
-        <span className="size-2.5 rounded-full bg-rose-400/70" />
-        <span className="size-2.5 rounded-full bg-amber-300/70" />
-        <span className="size-2.5 rounded-full bg-emerald-400/70" />
-        <span className="font-display ml-3 flex-1 truncate text-[10px] tracking-[0.25em] text-slate-500 uppercase">
-          {label}
+      <div className="flex min-w-0 items-center gap-1.5 border-b border-white/10 px-3 py-3 sm:px-4">
+        <span className="size-2.5 shrink-0 rounded-full bg-rose-400/70" />
+        <span className="size-2.5 shrink-0 rounded-full bg-amber-300/70" />
+        <span className="size-2.5 shrink-0 rounded-full bg-emerald-400/70" />
+        <span className="font-display ml-2 min-w-0 flex-1 truncate text-[9px] tracking-[0.08em] text-slate-500 uppercase sm:ml-3 sm:text-[10px] sm:tracking-[0.25em]">
+          {prefix ? <span className="hidden sm:inline">{prefix}</span> : null}
+          {main}
         </span>
         {status ? (
-          <span className="font-display shrink-0 text-[10px] tracking-widest text-brand-light">
+          <span className="font-display min-w-0 shrink truncate text-[9px] tracking-normal text-brand-light sm:text-[10px] sm:tracking-widest">
             {status}
           </span>
         ) : null}

@@ -30,7 +30,7 @@ export function SiteHeader() {
       {/* 下辺の発光ライン */}
       <div aria-hidden className="divider-glow absolute inset-x-0 bottom-0" />
 
-      <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-5 sm:px-6 lg:px-8">
+      <div className="gutter-x mx-auto flex h-16 w-full max-w-6xl items-center justify-between">
         <Logo />
 
         {/* デスクトップナビ：ホバーでシアンの下線が伸びる */}
@@ -84,7 +84,7 @@ export function SiteHeader() {
       {open ? (
         <div id="mobile-menu" className="border-t border-white/10 bg-ink/95 backdrop-blur-xl md:hidden">
           <nav
-            className="mx-auto flex w-full max-w-6xl flex-col px-5 py-3 sm:px-6"
+            className="gutter-x mx-auto flex w-full max-w-6xl flex-col py-3"
             aria-label="モバイルナビゲーション"
           >
             {nav.map((item) => (

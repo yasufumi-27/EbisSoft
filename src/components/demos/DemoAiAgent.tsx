@@ -233,7 +233,7 @@ export default function DemoAiAgent() {
         </button>
       </div>
 
-      <div className="grid gap-5 lg:grid-cols-2">
+      <div className="grid gap-5 [&>*]:min-w-0 lg:grid-cols-2">
         {/* エージェントの動作ログ */}
         <DemoStage label="EbisuSoft.Agent_Trace" status={running ? "RUNNING…" : `${steps.length} STEPS`}>
           <div

@@ -189,9 +189,9 @@ export default function DemoSimulator() {
   };
 
   return (
-    <div className="grid gap-5 lg:grid-cols-5">
+    <div className="grid gap-5 [&>*]:min-w-0 lg:grid-cols-5">
       {/* ---------------- 入力（診断） ---------------- */}
-      <div className="panel space-y-6 p-5 lg:col-span-3">
+      <div className="panel space-y-6 p-5 min-w-0 lg:col-span-3">
         <ControlGroup label="Site Type / サイトの種類">
           {KINDS.map((k) => (
             <ChipButton key={k.key} active={kind.key === k.key} onClick={() => pickKind(k)} title={k.note}>
@@ -273,7 +273,7 @@ export default function DemoSimulator() {
       </div>
 
       {/* ---------------- 結果 ---------------- */}
-      <div className="space-y-5 lg:col-span-2">
+      <div className="space-y-5 min-w-0 lg:col-span-2">
         <DemoStage label="EbisuSoft.Estimate" status="LIVE CALC">
           <div className="p-5">
             <p className="font-display text-[10px] font-bold tracking-[0.25em] text-slate-500 uppercase">

@@ -225,8 +225,8 @@ export default function DemoInsight() {
   return (
     <div className="space-y-5">
       {/* ---------------- ヒートマップ ---------------- */}
-      <div className="grid gap-5 lg:grid-cols-5">
-        <div className="lg:col-span-3">
+      <div className="grid gap-5 [&>*]:min-w-0 lg:grid-cols-5">
+        <div className="min-w-0 lg:col-span-3">
           <DemoStage
             label="EbisuSoft.Heatmap"
             status={`${points.length} clicks recorded`}
@@ -277,7 +277,7 @@ export default function DemoInsight() {
         </div>
 
         {/* クリックの内訳 */}
-        <div className="panel space-y-4 p-5 lg:col-span-2">
+        <div className="panel space-y-4 p-5 min-w-0 lg:col-span-2">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <p className="font-display text-[10px] font-bold tracking-[0.25em] text-slate-500 uppercase">
               Click map / クリックの内訳

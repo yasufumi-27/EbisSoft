@@ -155,9 +155,9 @@ export default function DemoRecommend() {
   const rest = profile ? ranked.slice(3) : ITEMS.map((it) => ({ item: it, score: 0, content: 0, collab: 0, axis: "" }));
 
   return (
-    <div className="grid gap-5 lg:grid-cols-5">
+    <div className="grid gap-5 [&>*]:min-w-0 lg:grid-cols-5">
       {/* ---------------- 推薦結果と商品一覧 ---------------- */}
-      <div className="space-y-5 lg:col-span-3">
+      <div className="space-y-5 min-w-0 lg:col-span-3">
         <DemoStage
           label="EbisuSoft.Recommender"
           status={profile ? `RANKED / ${history.length} views` : "NO DATA"}
@@ -226,7 +226,8 @@ export default function DemoRecommend() {
                     <span
                       className={`block h-12 w-full rounded-md bg-gradient-to-br ${r.item.hue} opacity-70`}
                     />
-                    <span className="mt-1.5 block truncate text-[10px] font-semibold text-slate-300">
+                    {/* 3列だと商品名が1行に収まらない端末があるため、2行まで折り返す */}
+                    <span className="mt-1.5 line-clamp-2 block text-[10px] leading-snug font-semibold text-slate-300">
                       {r.item.name}
                     </span>
                     <span className="block text-[10px] font-semibold text-slate-500 tabular-nums">
@@ -241,7 +242,7 @@ export default function DemoRecommend() {
       </div>
 
       {/* ---------------- 推定された好みと計算の中身 ---------------- */}
-      <div className="space-y-5 lg:col-span-2">
+      <div className="space-y-5 min-w-0 lg:col-span-2">
         <div className="panel p-5">
           <div className="flex items-start justify-between gap-3">
             <p className="font-display text-[10px] font-bold tracking-[0.25em] text-slate-500 uppercase">

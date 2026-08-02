@@ -152,9 +152,9 @@ export default function DemoConfigurator() {
   const gid = `cfg-${material.key}-${color.key}`;
 
   return (
-    <div className="grid gap-5 lg:grid-cols-5">
+    <div className="grid gap-5 [&>*]:min-w-0 lg:grid-cols-5">
       {/* ---------------- プレビュー ---------------- */}
-      <div className="space-y-5 lg:col-span-3">
+      <div className="space-y-5 min-w-0 lg:col-span-3">
         <DemoStage label="EbisuSoft.Configurator" status={spec.code}>
           <div className="relative">
             <div aria-hidden className="bg-grid absolute inset-0 opacity-25" />
@@ -393,7 +393,7 @@ export default function DemoConfigurator() {
       </div>
 
       {/* ---------------- 価格・注文 ---------------- */}
-      <div className="space-y-5 lg:col-span-2">
+      <div className="space-y-5 min-w-0 lg:col-span-2">
         <div className="panel p-5">
           <p className="font-display text-[10px] font-bold tracking-[0.25em] text-slate-500 uppercase">
             Your Configuration / この構成

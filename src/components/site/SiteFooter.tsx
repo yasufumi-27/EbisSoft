@@ -16,7 +16,7 @@ export function SiteFooter() {
       {/* 上辺の発光ライン */}
       <div aria-hidden className="divider-glow absolute inset-x-0 top-0" />
 
-      <div className="mx-auto w-full max-w-6xl px-5 py-16 sm:px-6 lg:px-8">
+      <div className="gutter-x mx-auto w-full max-w-6xl py-16">
         <div className="grid gap-10 lg:grid-cols-12">
           {/* ブランド */}
           <div className="lg:col-span-5">

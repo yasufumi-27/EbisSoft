@@ -247,9 +247,9 @@ export default function DemoVoice() {
   };
 
   return (
-    <div className="grid gap-5 lg:grid-cols-5">
+    <div className="grid gap-5 [&>*]:min-w-0 lg:grid-cols-5">
       <DemoStage
-        className="lg:col-span-3"
+        className="min-w-0 lg:col-span-3"
         label="EbisuSoft.Voice_Assistant"
         status={listening ? "LISTENING…" : speaking ? "SPEAKING…" : "READY"}
       >
@@ -400,7 +400,7 @@ export default function DemoVoice() {
       </DemoStage>
 
       {/* 設定・説明 */}
-      <div className="panel space-y-5 p-5 lg:col-span-2">
+      <div className="panel space-y-5 p-5 min-w-0 lg:col-span-2">
         <div>
           <p className="font-display text-[10px] font-bold tracking-[0.25em] text-slate-500 uppercase">
             Environment / 実行環境

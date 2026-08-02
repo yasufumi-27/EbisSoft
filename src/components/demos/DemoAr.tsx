@@ -587,9 +587,9 @@ export default function DemoAr() {
   const overlay = mode !== "preview";
 
   return (
-    <div className="grid gap-5 lg:grid-cols-5">
+    <div className="grid gap-5 [&>*]:min-w-0 lg:grid-cols-5">
       <DemoStage
-        className="lg:col-span-3"
+        className="min-w-0 lg:col-span-3"
         label="EbisuSoft.AR_Viewer"
         status={
           mode === "xr"
@@ -667,7 +667,7 @@ export default function DemoAr() {
         </div>
       </DemoStage>
 
-      <div className="panel space-y-5 p-5 lg:col-span-2">
+      <div className="panel space-y-5 p-5 min-w-0 lg:col-span-2">
         {/* 起動方法：端末に合わせて出し分ける */}
         <div className="rounded-xl border border-brand/25 bg-brand/[0.07] p-4">
           <p className="font-display text-[10px] font-bold tracking-[0.25em] text-brand uppercase">

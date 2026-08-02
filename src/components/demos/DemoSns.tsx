@@ -175,7 +175,7 @@ export default function DemoSns() {
 <meta name="twitter:card" content="summary_large_image" />`;
 
   return (
-    <div className="grid gap-5 lg:grid-cols-2">
+    <div className="grid gap-5 [&>*]:min-w-0 lg:grid-cols-2">
       {/* ================= フィード ================= */}
       <DemoStage label="EbisuSoft.Social_Feed" status={`${visible.length} POSTS`}>
         <div className="flex flex-wrap items-center gap-2 border-b border-white/10 px-4 py-3">

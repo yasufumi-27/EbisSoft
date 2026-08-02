@@ -28,7 +28,9 @@ export function Hero() {
       <div aria-hidden className="bg-grid pointer-events-none absolute inset-0 -z-10 opacity-40 [mask-image:radial-gradient(70%_60%_at_50%_30%,black,transparent)]" />
 
       <Container className="grid items-center gap-14 py-24 sm:py-28 lg:grid-cols-2 lg:gap-10 lg:py-36">
-        <div data-reveal>
+        {/* min-w-0：グリッド項目の既定（min-width:auto）だと中身の最小幅で列が広がり、
+            狭い端末で右端がはみ出すため、必ず縮めるようにしておく */}
+        <div className="min-w-0" data-reveal>
           <div className="flex flex-wrap items-center gap-2">
             <p className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-4 py-1.5 text-sm font-semibold text-brand-light shadow-[0_0_18px_rgba(34,211,238,0.18)] backdrop-blur">
               <Icon name="pin" className="size-4" />
@@ -42,7 +44,7 @@ export function Hero() {
           </div>
 
           {/* 英字ラベル：見出しの上に置く一本の情報線（HUDの静けさ） */}
-          <p className="eyebrow mt-9 flex items-center gap-3 text-[0.62rem]">
+          <p className="eyebrow mt-9 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.62rem]">
             <span aria-hidden className="size-1.5 rounded-full bg-brand shadow-[0_0_10px_rgba(34,211,238,0.9)]" />
             AI × Web Production
             <span aria-hidden className="h-px w-10 bg-gradient-to-r from-brand/70 to-transparent" />
@@ -50,7 +52,9 @@ export function Hero() {
           </p>
 
           {/* 行ごとに立ち上がる見出し（文字は分割していないので折り返し・読み上げに影響なし） */}
-          <h1 className="mt-4 text-4xl font-bold leading-[1.16] tracking-tight text-white [word-break:keep-all] sm:text-5xl lg:text-[3.5rem]">
+          {/* [word-break:keep-all] は語の途中で折らないぶん、狭い端末では1行が伸びる。
+              画面幅に追従する clamp で字送りを決め、どの端末でも見切れないようにする。 */}
+          <h1 className="mt-4 text-[clamp(1.75rem,8.2vw,2.25rem)] font-bold leading-[1.16] tracking-tight text-white [word-break:keep-all] sm:text-5xl lg:text-[3.5rem]">
             <span className="hero-line">
               <span style={{ "--line-delay": "0.08s" } as React.CSSProperties}>
                 <span className="text-gradient">AI</span>を駆使して、
@@ -90,7 +94,7 @@ export function Hero() {
         </div>
 
         {/* AI制作パイプラインのコンソール（工程ごとのAI／人の分担を可視化） */}
-        <div className="relative" data-reveal style={{ "--reveal-delay": "0.15s" } as React.CSSProperties}>
+        <div className="relative min-w-0" data-reveal style={{ "--reveal-delay": "0.15s" } as React.CSSProperties}>
           <Tilt>
             <div className="animate-float">
               <HeroConsole />

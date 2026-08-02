@@ -182,10 +182,10 @@ export default function DemoMultilingual() {
   }, []);
 
   return (
-    <div className="grid gap-5 lg:grid-cols-5">
+    <div className="grid gap-5 [&>*]:min-w-0 lg:grid-cols-5">
       {/* ---------- サイトプレビュー ---------- */}
       <DemoStage
-        className="lg:col-span-3"
+        className="min-w-0 lg:col-span-3"
         label="EbisuSoft.i18n_Preview"
         status={`${def.locale} / ${def.currency}`}
       >
@@ -269,7 +269,7 @@ export default function DemoMultilingual() {
       </DemoStage>
 
       {/* ---------- 技術的な裏側 ---------- */}
-      <div className="panel space-y-5 p-5 lg:col-span-2">
+      <div className="panel space-y-5 p-5 min-w-0 lg:col-span-2">
         <div>
           <p className="font-display text-[10px] font-bold tracking-[0.25em] text-slate-500 uppercase">
             Locale / 変換されている項目

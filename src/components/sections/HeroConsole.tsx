@@ -84,12 +84,12 @@ export default function HeroConsole() {
   return (
     <div className="panel panel-corners overflow-hidden shadow-[0_30px_80px_-30px_rgba(34,211,238,0.25)]">
       {/* タイトルバー */}
-      <div className="flex items-center gap-1.5 border-b border-white/10 px-4 py-3">
-        <span className="size-3 rounded-full bg-rose-400/80" />
-        <span className="size-3 rounded-full bg-amber-300/80" />
-        <span className="size-3 rounded-full bg-emerald-400/80" />
-        <span className="font-display ml-3 flex h-5 flex-1 items-center rounded-md bg-white/5 px-2 text-[10px] tracking-[0.25em] text-slate-500">
-          EBISUSOFT.AI_PIPELINE
+      <div className="flex min-w-0 items-center gap-1.5 border-b border-white/10 px-3 py-3 sm:px-4">
+        <span className="size-3 shrink-0 rounded-full bg-rose-400/80" />
+        <span className="size-3 shrink-0 rounded-full bg-amber-300/80" />
+        <span className="size-3 shrink-0 rounded-full bg-emerald-400/80" />
+        <span className="font-display ml-2 flex h-5 min-w-0 flex-1 items-center overflow-hidden rounded-md bg-white/5 px-2 text-[9px] tracking-[0.06em] text-slate-500 sm:ml-3 sm:text-[10px] sm:tracking-[0.25em]">
+          <span className="truncate">EBISUSOFT.AI_PIPELINE</span>
         </span>
         <span
           className={`font-display shrink-0 text-[10px] tracking-widest ${
@@ -107,7 +107,7 @@ export default function HeroConsole() {
           return (
             <li
               key={l.phase}
-              className={`flex items-center gap-3 px-4 py-[0.55rem] transition-colors duration-300 ${
+              className={`flex min-w-0 items-center gap-2 px-3 py-[0.55rem] transition-colors duration-300 sm:gap-3 sm:px-4 ${
                 state === "run" ? "bg-brand/[0.07]" : ""
               }`}
             >
@@ -130,7 +130,7 @@ export default function HeroConsole() {
               </span>
 
               <span
-                className={`font-display w-[4.6rem] shrink-0 text-[10px] tracking-wider ${
+                className={`font-display w-14 shrink-0 truncate text-[10px] tracking-normal max-[359px]:hidden sm:w-[4.6rem] sm:tracking-wider ${
                   state === "wait" ? "text-slate-600" : "text-slate-400"
                 }`}
               >
@@ -138,7 +138,7 @@ export default function HeroConsole() {
               </span>
 
               <span
-                className={`flex-1 truncate text-xs transition-colors duration-300 ${
+                className={`min-w-0 flex-1 truncate text-xs transition-colors duration-300 ${
                   state === "wait" ? "text-slate-600" : "text-slate-200"
                 }`}
               >

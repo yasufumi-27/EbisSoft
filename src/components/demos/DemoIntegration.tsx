@@ -277,9 +277,9 @@ export default function DemoIntegration() {
         </div>
       </DemoStage>
 
-      <div className="grid gap-5 lg:grid-cols-5">
+      <div className="grid gap-5 [&>*]:min-w-0 lg:grid-cols-5">
         {/* ---------- 在庫検索・予約 ---------- */}
-        <DemoStage className="lg:col-span-3" label="EbisuSoft.Inventory_Client">
+        <DemoStage className="min-w-0 lg:col-span-3" label="EbisuSoft.Inventory_Client">
           <div className="space-y-4 p-5">
             <form
               onSubmit={(e) => {
@@ -316,7 +316,8 @@ export default function DemoIntegration() {
                     className="flex flex-wrap items-center gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-3"
                   >
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-bold text-white">{item.name}</p>
+                      {/* 狭い端末では商品名を省略せず折り返す（切れると何の商品か分からない） */}
+                      <p className="text-sm font-bold text-white sm:truncate">{item.name}</p>
                       <p className="mt-0.5 text-[11px] text-slate-500">
                         {item.sku} ・ {item.category} ・ {item.location}
                       </p>
@@ -383,7 +384,7 @@ export default function DemoIntegration() {
 
         {/* ---------- イベントログ ---------- */}
         <DemoStage
-          className="lg:col-span-2"
+          className="min-w-0 lg:col-span-2"
           label="EbisuSoft.Event_Log"
           status={successRate === null ? "—" : `${successRate}% OK`}
         >
