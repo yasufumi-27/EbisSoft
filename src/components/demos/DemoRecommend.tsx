@@ -375,6 +375,7 @@ export default function DemoRecommend() {
         </div>
 
         <Link
+          prefetch={false}
           href="/contact"
           className="btn btn-secondary inline-flex h-11 w-full items-center justify-center px-5 text-sm"
         >

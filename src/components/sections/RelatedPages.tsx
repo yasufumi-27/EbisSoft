@@ -20,6 +20,7 @@ export function RelatedPages({ hrefs }: { hrefs: string[] }) {
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((p, i) => (
             <Link
+              prefetch={false}
               key={p.href}
               href={p.href}
               className="panel panel-hover group flex items-start gap-4 p-5"

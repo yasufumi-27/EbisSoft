@@ -7,8 +7,13 @@ import { ButtonLink } from "@/components/ui/Button";
 import { Logo } from "@/components/site/Logo";
 
 /**
- * サイト共通ヘッダー。ダークガラス＋下辺の発光ライン。
+ * サイト共通ヘッダー。暗い背景＋下辺の発光ライン。
  * スクロールすると背景の不透明度が上がり、コンテンツと干渉しない。
+ *
+ * ※ backdrop-filter（すりガラス）は使わない：
+ *   sticky なヘッダーの背後は 3D背景・オーロラが常に動いているため、
+ *   ぼかしの結果をキャッシュできず、スクロール中ずっと再合成が走って重かった。
+ *   代わりに背景をほぼ不透明にして、文字の可読性を確保している。
  */
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
@@ -23,8 +28,8 @@ export function SiteHeader() {
 
   return (
     <header
-      className={`sticky top-0 z-50 backdrop-blur-xl transition-colors duration-500 ${
-        scrolled || open ? "bg-ink/85" : "bg-ink/40"
+      className={`sticky top-0 z-50 transition-colors duration-500 ${
+        scrolled || open ? "bg-ink" : "bg-ink/90"
       }`}
     >
       {/* 下辺の発光ライン */}
@@ -82,7 +87,7 @@ export function SiteHeader() {
 
       {/* モバイルメニュー */}
       {open ? (
-        <div id="mobile-menu" className="border-t border-white/10 bg-ink/95 backdrop-blur-xl md:hidden">
+        <div id="mobile-menu" className="border-t border-white/10 bg-ink md:hidden">
           <nav
             className="gutter-x mx-auto flex w-full max-w-6xl flex-col py-3"
             aria-label="モバイルナビゲーション"

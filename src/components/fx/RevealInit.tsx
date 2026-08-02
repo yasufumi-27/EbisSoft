@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 /**
  * スクロールリビールの起動役。
@@ -13,10 +14,15 @@ import { useEffect } from "react";
  *   Reactが className を丸ごと書き戻すため、JSで足したクラスは消えてしまう。
  *   Reactが管理していない data-* 属性なら再レンダリングでも保持される。
  *
- * また、クライアント側で後から追加された要素（デモの切り替え等）も拾えるよう、
- * MutationObserver で新しい [data-reveal] を監視対象に追加している。
+ * この起動役は layout に置かれていて画面遷移でも再マウントされないため、
+ * pathname を依存に入れて遷移のたびに新しいページを走査し直す。
+ * （以前は MutationObserver で body 全体を subtree 監視していたが、
+ *   DOMが動くたびに document 全体の querySelectorAll が走って重かった。
+ *   後から現れる要素で [data-reveal] を持つものは無いので、遷移時の再走査で足りる。）
  */
 export function RevealInit() {
+  const pathname = usePathname();
+
   useEffect(() => {
     const reveal = (el: Element) => el.setAttribute("data-revealed", "");
 
@@ -41,22 +47,12 @@ export function RevealInit() {
       { threshold: [0, 0.12], rootMargin: "0px 0px -6% 0px" },
     );
 
-    const observeAll = (root: ParentNode) => {
-      root.querySelectorAll("[data-reveal]:not([data-revealed])").forEach((el) => {
-        observer.observe(el);
-      });
-    };
-    observeAll(document);
+    document.querySelectorAll("[data-reveal]:not([data-revealed])").forEach((el) => {
+      observer.observe(el);
+    });
 
-    // 動的に描画された要素（デモの切り替えなど）も監視対象に加える
-    const mutations = new MutationObserver(() => observeAll(document));
-    mutations.observe(document.body, { childList: true, subtree: true });
-
-    return () => {
-      observer.disconnect();
-      mutations.disconnect();
-    };
-  }, []);
+    return () => observer.disconnect();
+  }, [pathname]);
 
   return null;
 }

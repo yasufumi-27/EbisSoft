@@ -49,7 +49,7 @@ export function Pillars() {
 
             <p className="eyebrow mt-5">{p.eyebrow}</p>
             <h3 className="mt-2 text-2xl font-bold text-white">
-              <Link href={p.href} className="after:absolute after:inset-0 after:content-['']">
+              <Link prefetch={false} href={p.href} className="after:absolute after:inset-0 after:content-['']">
                 {p.title}
               </Link>
             </h3>

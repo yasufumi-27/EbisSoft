@@ -355,7 +355,7 @@ export default function DemoSimulator() {
           <p className="mt-1.5 text-[11px] leading-relaxed text-slate-400">{quote.plan.reason}</p>
 
           <div className="mt-4 flex flex-col gap-2">
-            <Link href="/contact" className="btn btn-primary inline-flex h-11 items-center justify-center px-5 text-sm">
+            <Link prefetch={false} href="/contact" className="btn btn-primary inline-flex h-11 items-center justify-center px-5 text-sm">
               この条件で相談する
               <Icon name="arrowRight" className="size-4" />
             </Link>

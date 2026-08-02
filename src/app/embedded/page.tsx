@@ -184,7 +184,7 @@ export default function EmbeddedPage() {
         </div>
         <p className="mt-8 text-center text-sm text-slate-500" data-reveal>
           AI活用の詳細は
-          <Link href="/ai" className="mx-1 text-brand-light underline-offset-4 hover:underline">
+          <Link prefetch={false} href="/ai" className="mx-1 text-brand-light underline-offset-4 hover:underline">
             AI活用のページ
           </Link>
           をご覧ください。

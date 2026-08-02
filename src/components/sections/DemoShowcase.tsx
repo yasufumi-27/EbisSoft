@@ -51,7 +51,7 @@ export function DemoShowcase({
             </span>
 
             <h3 className="mt-4 text-base font-bold text-white">
-              <Link href={`/demo/${c.slug}`} className="after:absolute after:inset-0 after:content-['']">
+              <Link prefetch={false} href={`/demo/${c.slug}`} className="after:absolute after:inset-0 after:content-['']">
                 {c.title}
               </Link>
             </h3>
@@ -68,6 +68,7 @@ export function DemoShowcase({
 
       <p className="mt-10 text-center" data-reveal>
         <Link
+          prefetch={false}
           href="/demo"
           className="inline-flex items-center gap-2 rounded-lg border border-gold/40 bg-gold/10 px-5 py-3 text-sm font-semibold text-gold-light transition-colors hover:bg-gold/20"
         >

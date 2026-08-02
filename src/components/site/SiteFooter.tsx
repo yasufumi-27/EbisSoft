@@ -51,6 +51,7 @@ export function SiteFooter() {
               {subNav.map((item) => (
                 <li key={item.href}>
                   <Link
+                    prefetch={false}
                     href={item.href}
                     className="text-slate-400 transition-colors hover:text-brand-light"
                   >
@@ -65,7 +66,7 @@ export function SiteFooter() {
             </h2>
             <ul className="mt-4 space-y-3 text-sm">
               <li>
-                <Link href="/demo" className="text-slate-400 transition-colors hover:text-brand-light">
+                <Link prefetch={false} href="/demo" className="text-slate-400 transition-colors hover:text-brand-light">
                   できること一覧
                 </Link>
               </li>
@@ -120,12 +121,12 @@ export function SiteFooter() {
           </p>
           <ul className="flex flex-wrap justify-center gap-6">
             <li>
-              <Link href="/company" className="transition-colors hover:text-slate-300">
+              <Link prefetch={false} href="/company" className="transition-colors hover:text-slate-300">
                 会社概要
               </Link>
             </li>
             <li>
-              <Link href="/privacy" className="transition-colors hover:text-slate-300">
+              <Link prefetch={false} href="/privacy" className="transition-colors hover:text-slate-300">
                 プライバシーポリシー
               </Link>
             </li>

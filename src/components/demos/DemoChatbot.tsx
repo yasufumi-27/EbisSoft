@@ -288,6 +288,7 @@ export default function DemoChatbot() {
                       {m.sources.slice(0, 2).map((h) =>
                         h.doc.href ? (
                           <Link
+                            prefetch={false}
                             key={h.doc.id}
                             href={h.doc.href}
                             className="rounded-md border border-gold/30 bg-gold/10 px-2 py-0.5 text-[11px] text-gold-light transition-colors hover:bg-gold/20"
@@ -383,6 +384,7 @@ export default function DemoChatbot() {
 
                       {m.widget === "done" ? (
                         <Link
+                          prefetch={false}
                           href="/contact"
                           className="inline-flex items-center gap-1.5 rounded-md border border-gold/40 bg-gold/10 px-3 py-1.5 text-[11px] font-semibold text-gold-light transition-colors hover:bg-gold/20"
                         >
@@ -395,6 +397,7 @@ export default function DemoChatbot() {
 
                   {m.unanswered && !m.streaming ? (
                     <Link
+                      prefetch={false}
                       href="/contact"
                       className="mt-2 inline-flex items-center gap-1.5 rounded-md border border-brand/40 bg-brand/10 px-3 py-1 text-[11px] font-semibold text-brand-light transition-colors hover:bg-brand/20"
                     >

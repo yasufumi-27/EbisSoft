@@ -46,6 +46,7 @@ export function ContactCta() {
 
           <div className="mt-10">
             <Link
+              prefetch={false}
               href="/contact"
               className="btn btn-primary inline-flex h-14 items-center px-10 text-base"
             >

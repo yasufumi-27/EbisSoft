@@ -6,6 +6,7 @@ import { siteConfig } from "@/lib/site";
 export function Logo() {
   return (
     <Link
+      prefetch={false}
       href="/"
       className="group inline-flex items-center gap-2.5"
       aria-label={`${siteConfig.name} ホームへ`}

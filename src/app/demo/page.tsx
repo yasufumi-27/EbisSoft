@@ -129,6 +129,7 @@ export default function DemoIndexPage() {
 
               <div className="mt-auto pt-6">
                 <Link
+                  prefetch={false}
                   href={`/demo/${c.slug}`}
                   className="btn btn-primary inline-flex h-11 items-center px-6 text-sm"
                 >

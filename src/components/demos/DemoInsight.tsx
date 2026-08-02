@@ -499,6 +499,7 @@ export default function DemoInsight() {
         </div>
 
         <Link
+          prefetch={false}
           href="/contact"
           className="mt-5 inline-flex items-center gap-1.5 text-xs font-bold text-brand-light transition-colors hover:text-white"
         >

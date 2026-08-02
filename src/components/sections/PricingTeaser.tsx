@@ -48,6 +48,7 @@ export function PricingTeaser() {
 
       <p className="mt-10 text-center" data-reveal>
         <Link
+          prefetch={false}
           href="/web#pricing"
           className="inline-flex items-center gap-2 text-sm font-bold text-brand-light transition-colors hover:text-white"
         >

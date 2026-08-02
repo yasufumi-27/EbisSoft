@@ -452,6 +452,7 @@ export default function DemoConfigurator() {
               この構成で見積もる
             </button>
             <Link
+              prefetch={false}
               href="/contact"
               className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/5 text-xs font-semibold text-slate-200 transition-colors hover:border-brand/50"
             >

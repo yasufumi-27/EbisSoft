@@ -235,6 +235,7 @@ export default async function DemoDetailPage({
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {others.map((o, i) => (
             <Link
+              prefetch={false}
               key={o.slug}
               href={`/demo/${o.slug}`}
               className="panel panel-hover flex flex-col p-5"

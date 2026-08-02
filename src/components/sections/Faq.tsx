@@ -57,6 +57,7 @@ export function Faq({
       {moreHref ? (
         <p className="mt-8 text-center" data-reveal>
           <Link
+            prefetch={false}
             href={moreHref}
             className="inline-flex items-center gap-2 text-sm font-bold text-brand-light transition-colors hover:text-white"
           >

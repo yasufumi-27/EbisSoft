@@ -179,7 +179,7 @@ export default function CompanyPage() {
 
         <p className="mt-6 text-sm text-slate-500" data-reveal>
           お電話・メールでのご連絡先は
-          <Link href="/contact" className="mx-1 text-brand-light underline-offset-4 hover:underline">
+          <Link prefetch={false} href="/contact" className="mx-1 text-brand-light underline-offset-4 hover:underline">
             お問い合わせページ
           </Link>
           に記載しています。
@@ -219,7 +219,7 @@ export default function CompanyPage() {
         </div>
         <p className="mt-10 text-center text-sm text-slate-500" data-reveal>
           AI活用の具体的な中身は
-          <Link href="/ai" className="mx-1 text-brand-light underline-offset-4 hover:underline">
+          <Link prefetch={false} href="/ai" className="mx-1 text-brand-light underline-offset-4 hover:underline">
             AI活用のページ
           </Link>
           にまとめています。
