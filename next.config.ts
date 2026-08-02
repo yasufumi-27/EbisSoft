@@ -8,6 +8,14 @@ import type { NextConfig } from "next";
 const isGithubPages = process.env.GITHUB_PAGES === "true";
 const repoBasePath = "/EbisSoft";
 
+/**
+ * 静的書き出し（output: "export"）にするかどうか。
+ * - さくらのレンタルサーバ（本番）：STATIC_EXPORT=true。サイト直下配信なので basePath なし
+ * - GitHub Pages（プレビュー）：GITHUB_PAGES=true。/EbisSoft 配下配信なので basePath あり
+ * どちらでもない場合（Vercel等のサーバ配信・ローカル開発）はサーバ機能つきでビルドする。
+ */
+const isStaticExport = isGithubPages || process.env.STATIC_EXPORT === "true";
+
 /** 全ルートに付与するセキュリティ系ヘッダー（信頼性・安全性の向上）。 */
 const securityHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
@@ -43,11 +51,11 @@ const nextConfig: NextConfig = {
     NEXT_PUBLIC_BASE_PATH: isGithubPages ? repoBasePath : "",
   },
 
-  ...(isGithubPages
+  ...(isStaticExport
     ? {
         output: "export" as const,
-        basePath: repoBasePath,
-        assetPrefix: repoBasePath,
+        // GitHub Pages のときだけサブパスを付ける（さくらはドメイン直下）
+        ...(isGithubPages ? { basePath: repoBasePath, assetPrefix: repoBasePath } : {}),
       }
     : {
         // headers() は静的書き出しでは使えないため通常ホスティング時のみ

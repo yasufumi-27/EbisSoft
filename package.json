@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "build:sakura": "STATIC_EXPORT=true NEXT_PUBLIC_SITE_URL=https://ebisusoft.sakura.ne.jp next build",
+    "build:pages": "GITHUB_PAGES=true NEXT_PUBLIC_SITE_URL=https://yasufumi-27.github.io/EbisSoft next build"
   },
   "dependencies": {
     "@types/three": "^0.185.1",

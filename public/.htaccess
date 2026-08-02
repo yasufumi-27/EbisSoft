@@ -1,0 +1,64 @@
+# さくらのレンタルサーバ（Apache）向け設定。
+# out/ 配下ごとアップロードされ、静的書き出しのサイトを正しく配信するために使う。
+# ※ GitHub Pages では無視されるため、置いてあっても害はない。
+
+Options +FollowSymLinks -MultiViews
+DirectoryIndex index.html
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # 拡張子なしのURL（/ai, /company など）を .html にマッピングする。
+  # Next.js の静的書き出しは trailingSlash: false のため ai.html の形で出力される。
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI}.html -f
+  RewriteRule ^(.+)$ /$1.html [L]
+
+  # 末尾スラッシュ付きでアクセスされたら、スラッシュなしへ正規化（canonical と揃える）
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^(.+)/$ /$1 [R=301,L]
+</IfModule>
+
+ErrorDocument 404 /404.html
+
+# ------------------------------------------------------------------
+# 転送量の削減（表示速度に直結する。Lighthouse はこの有無で大きく変わる）
+# ------------------------------------------------------------------
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css
+  AddOutputFilterByType DEFLATE application/javascript application/x-javascript
+  AddOutputFilterByType DEFLATE application/json application/xml
+  AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# ------------------------------------------------------------------
+# キャッシュ。ハッシュ付きの静的アセットは長期、HTML は都度確認。
+# ------------------------------------------------------------------
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault "access plus 1 hour"
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType font/woff2 "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 month"
+  ExpiresByType image/png "access plus 1 month"
+  ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
+
+<IfModule mod_headers.c>
+  # _next/static はファイル名にハッシュが入るため、内容が変われば別URLになる
+  <FilesMatch "\.(js|css|woff2)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "\.(html|txt|xml)$">
+    Header set Cache-Control "public, max-age=0, must-revalidate"
+  </FilesMatch>
+
+  # セキュリティヘッダー（静的書き出しでは next.config の headers() が効かないため、ここで付与）
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(self), microphone=(self), geolocation=()"
+  Header always set Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+</IfModule>

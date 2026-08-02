@@ -1,4 +1,5 @@
-# GitHub Pages への自動デプロイ。
+# GitHub Pages への自動デプロイ（プレビュー用）。
+# 本番はさくらのレンタルサーバ（deploy-sakura.yml）。
 # main へ push されるたびに静的書き出し（next build / output: export）して公開する。
 name: Deploy to GitHub Pages
 
@@ -30,7 +31,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm run build
+      - run: npm run build:pages
       - uses: actions/upload-pages-artifact@v3
         with:
           path: out

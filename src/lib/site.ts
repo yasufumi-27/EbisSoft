@@ -7,7 +7,11 @@
  * ★印は仮の値です。公開前に実際の情報へ差し替えてください。
  */
 
-const FALLBACK_URL = "https://www.ebisusoft.co.jp"; // ★ 本番ドメインに差し替え
+/**
+ * 本番ドメイン。NEXT_PUBLIC_SITE_URL が未設定のときに使われます。
+ * GitHub Pages（プレビュー）へのデプロイ時だけ、ワークフローが Pages の URL を渡します。
+ */
+const FALLBACK_URL = "https://ebisusoft.sakura.ne.jp";
 
 function normalizeUrl(url: string): string {
   return url.replace(/\/+$/, "");
@@ -78,8 +82,8 @@ export const siteConfig = {
       street: "久我石原町7-37", // 番地
       country: "JP",
     },
-    /** 緯度・経度（LocalBusiness の geo）。★おおよその座標のためGoogleマップで要確認 */
-    geo: { latitude: 34.9412, longitude: 135.7222 },
+    /** 緯度・経度（LocalBusiness の geo）。Googleマップで所在地を検索して取得した実座標 */
+    geo: { latitude: 34.949037, longitude: 135.724274 },
     /** 営業時間（schema.org openingHours 形式 / 表示用） */
     openingHoursDisplay: "平日 10:00〜19:00",
     openingHours: "Mo-Fr 10:00-19:00",

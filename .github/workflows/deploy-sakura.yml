@@ -1,0 +1,61 @@
+# さくらのレンタルサーバ（本番: https://ebisusoft.sakura.ne.jp）への公開。
+#
+# 静的書き出し（out/）を FTPS でアップロードする。
+# 認証情報は GitHub の Settings > Secrets and variables > Actions に登録すること：
+#   SAKURA_FTP_HOST     … 例) ebisusoft.sakura.ne.jp
+#   SAKURA_FTP_USER     … 例) ebisusoft
+#   SAKURA_FTP_PASSWORD … FTPパスワード
+#   SAKURA_FTP_DIR      … 公開ディレクトリ 例) /home/ebisusoft/www
+#
+# 初回は手動実行（Actions タブ > Deploy to Sakura > Run workflow）で確認し、
+# 問題なければ下の push トリガーのコメントを外して自動化する。
+name: Deploy to Sakura
+
+on:
+  workflow_dispatch:
+  # push:
+  #   branches: [main]
+
+concurrency:
+  group: sakura
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build:sakura
+
+      - name: Install lftp
+        run: sudo apt-get update && sudo apt-get install -y lftp
+
+      - name: Upload to Sakura via FTPS
+        env:
+          HOST: ${{ secrets.SAKURA_FTP_HOST }}
+          USER: ${{ secrets.SAKURA_FTP_USER }}
+          PASSWORD: ${{ secrets.SAKURA_FTP_PASSWORD }}
+          REMOTE_DIR: ${{ secrets.SAKURA_FTP_DIR }}
+        run: |
+          set -eu
+          # --reverse: ローカル→リモート、--delete: 消えたファイルはリモートからも削除
+          # .htaccess も対象にするため --exclude はディレクトリのみに限定する
+          lftp -c "
+            set ftp:ssl-force true;
+            set ftp:ssl-protect-data true;
+            set ssl:verify-certificate no;
+            open -u \"$USER\",\"$PASSWORD\" \"$HOST\";
+            mirror --reverse --delete --verbose --parallel=4 \
+              --exclude-glob .git/ \
+              out/ \"$REMOTE_DIR\";
+          "
+
+      - name: Verify
+        run: |
+          curl -sSf -o /dev/null -w "top: %{http_code}\n" https://ebisusoft.sakura.ne.jp/
+          curl -sSf -o /dev/null -w "ai:  %{http_code}\n" https://ebisusoft.sakura.ne.jp/ai
