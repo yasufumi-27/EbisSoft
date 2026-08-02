@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
+import { useSectionSpy } from "@/components/fx/useSectionSpy";
 
 /**
  * ページ内メニュー（スクロールしても画面上部に残る横並びナビ）。
@@ -10,34 +11,12 @@ import { useEffect, useRef, useState } from "react";
  * 端末を問わず常に見える主要導線として使います。
  *
  * - 実体は <a href="#id"> なので、JavaScriptが動かない環境でもリンクとして機能します。
- * - 現在地の判定は IntersectionObserver（スクロールイベントを使わない＝軽い）。
+ * - 現在地の判定は useSectionSpy（読み始めの線を最後に越えた節＝いま読んでいる節）。
  * - 背景に backdrop-filter は使いません（動く3D背景の上ではスクロールが重くなるため）。
  */
 export function PageNav({ items }: { items: { id: string; label: string }[] }) {
-  const [active, setActive] = useState(items[0]?.id ?? "");
+  const { active, lockTo } = useSectionSpy(items);
   const listRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const targets = items
-      .map((i) => document.getElementById(i.id))
-      .filter((el): el is HTMLElement => el !== null);
-    if (targets.length === 0) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-        if (visible) setActive(visible.target.id);
-      },
-      // ヘッダー＋このナビの高さ（約136px）を除いた領域で判定する
-      // （rootMargin は px か % しか受け付けない。rem を渡すと例外になる）
-      { rootMargin: "-136px 0px -55% 0px", threshold: [0, 0.15, 0.5, 1] },
-    );
-
-    targets.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, [items]);
 
   /* 狭い画面ではメニューが横スクロールになるため、現在地が画面外に出ないよう寄せる。
      ページ自体は動かさないよう、要素の scrollLeft だけを変える。 */
@@ -66,6 +45,7 @@ export function PageNav({ items }: { items: { id: string; label: string }[] }) {
             key={i.id}
             href={`#${i.id}`}
             className="pagenav-item"
+            onClick={() => lockTo(i.id)}
             data-current={active === i.id ? "" : undefined}
             aria-current={active === i.id ? "true" : undefined}
           >
