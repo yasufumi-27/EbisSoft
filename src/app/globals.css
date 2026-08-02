@@ -1128,8 +1128,8 @@
   position: relative;
   display: grid;
   place-items: center;
-  /* 絵は 18×24 なので、幅から高さを比率どおりに決める */
-  width: 3.6rem;
+  /* 絵は 20×24 なので、幅と高さを比率どおりに揃える */
+  width: 4rem;
   height: 4.8rem;
   border: 0;
   background: none;
@@ -1187,13 +1187,14 @@
     drop-shadow(0 0 9px rgba(34, 211, 238, 0.75))
     drop-shadow(0 4px 6px rgba(0, 0, 0, 0.8));
 }
+/* 待機中もじっとしていないよう、上下＋わずかな傾きを付ける */
 @keyframes mascot-bob {
   0%,
   100% {
-    transform: translateY(0);
+    transform: translateY(0) rotate(-1.2deg);
   }
   50% {
-    transform: translateY(-2.5px);
+    transform: translateY(-2.5px) rotate(1.2deg);
   }
 }
 @keyframes mascot-hop {
@@ -1208,11 +1209,11 @@
     transform: translateY(-2px) rotate(5deg);
   }
 }
-/* 「話しかけられます」を示す小さな光点（頭の右上に浮かべる） */
+/* 「話しかけられます」を示す小さな光点（挙げた手と重ならないよう頭の左上へ） */
 .assistant-launcher-ping {
   position: absolute;
-  top: 0.55rem;
-  right: 0.15rem;
+  top: 0.35rem;
+  left: 0.05rem;
   width: 0.45rem;
   height: 0.45rem;
   border-radius: 9999px;

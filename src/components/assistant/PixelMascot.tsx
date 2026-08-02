@@ -23,59 +23,63 @@ const COLORS: Record<string, string> = {
   s: "#9fb0ca", // 陰（右側に置いて立体感を出す）
   v: "#08121f", // バイザー（暗い画面）
   e: "#22d3ee", // 目（点滅させるので別記号）
+  w: "#ffffff", // 目のハイライト（これも目の一部として点滅させる）
+  p: "#f9a8c9", // 頬（ほんのり赤らむ）
   c: "#22d3ee", // シアンのアクセント（アンテナ・口・胸のモニタ・手）
   a: "#e2c078", // 金のアクセント（胸のランプ）
+  k: "#2b3c5e", // キャタピラの履帯（転輪のあいだ）
 };
 
 /**
- * 全身（18×24）。上からアンテナ → 頭 → 首 → 腕つきの胴体 → 脚 → 足。
- * 頭と胴体をわずかに左へ寄せ、目も左寄せにして「少し左向き」にしています。
+ * 全身（20×24）。上からアンテナ → 頭 → 首 → 胴体 → キャタピラ。
+ * 棒立ちにならないよう、右手（画面左）を頭の横まで挙げて手を振るポーズにしています。
+ * 頭・首・目を中心よりわずかに左へ寄せ、アンテナも左に傾けて「少し左向き」に。
  */
 const ART_FULL = [
-  "....cc............",
-  ".....o............",
-  ".....o............",
-  "..oooooooooooo....",
-  "..obbbbbbbbbso....",
-  "..obvvvvvvvvso....",
-  "..obeevveevvso....",
-  "..obeevveevvso....",
-  "..obvvvvvvvvso....",
-  "..obvccccvvvso....",
-  "..obvvvvvvvvso....",
-  "..obbbbbbbbbso....",
-  "..oooooooooooo....",
-  "......obbo........",
-  "...oooooooooo.....",
-  ".oboobbbbbbbbobo..",
-  ".oboobccccbabobo..",
-  ".oboobccccbbsobo..",
-  ".ccobbbbbbbsocc...",
-  "...obbbbbbbso.....",
-  "...oooooooooo.....",
-  "....obo...obo.....",
-  "....obo...obo.....",
-  "...ooooo.ooooo....",
+  "...cc...............",
+  "....o...............",
+  ".....o..............",
+  "...ooooooooooo......",
+  "..obbbbbbbbbbso.....",
+  "..obvvvvvvvvvso.ccc.",
+  "..obvwevvwevvso.ccc.",
+  "..obveevveevvso.obb.",
+  "..obpvvvvvvpvso.obb.",
+  "..obvcvvvcvvvso.obb.",
+  "..obvvcccvvvvso.obb.",
+  "..obbbbbbbbbbso.obb.",
+  "...ooooooooooo.obb..",
+  "......obbo....obb...",
+  "......oooooooobbo...",
+  "...obbobbbbbsobo....",
+  "...ob.obcccabo......",
+  "...ob.obcccbso......",
+  "...cc.obbbbbso......",
+  "......oooooooo......",
+  ".....oooooooooo.....",
+  "....obbkkbbkkbbo....",
+  "....obbkkbbkkbbo....",
+  ".....oooooooooo.....",
 ];
 
 /** 顔まわりだけ（16×16）。チャット内の小さなアイコン用。 */
 const ART_HEAD = [
-  ".....cc.........",
-  "......o.........",
-  "......o.........",
-  ".oooooooooooooo.",
-  ".obbbbbbbbbbbso.",
-  ".obvvvvvvvvvvso.",
-  ".obeevveevvvvso.",
-  ".obeevveevvvvso.",
-  ".obvvvvvvvvvvso.",
-  ".obvccccvvvvvso.",
-  ".obvvvvvvvvvvso.",
-  ".obbbbbbbbbbbso.",
-  ".oooooooooooooo.",
-  "......obbo......",
-  "..oooooooooooo..",
-  ".obbbbbbbbbbbbo.",
+  "..cc............",
+  "...o............",
+  "....o...........",
+  "..ooooooooooo...",
+  ".obbbbbbbbbbso..",
+  ".obvvvvvvvvvso..",
+  ".obvwevvwevvso..",
+  ".obveevveevvso..",
+  ".obpvvvvvvpvso..",
+  ".obvcvvvcvvvso..",
+  ".obvvcccvvvvso..",
+  ".obbbbbbbbbbso..",
+  "..ooooooooooo...",
+  ".....obbo.......",
+  "....oooooooo....",
+  "....obbbbbbo....",
 ];
 
 type Run = { x: number; y: number; w: number; ch: string };
@@ -114,8 +118,9 @@ function buildArt(rows: string[]): Art {
   return {
     width: rows[0].length,
     height: rows.length,
-    body: runs.filter((r) => r.ch !== "e"),
-    eyes: runs.filter((r) => r.ch === "e"),
+    // 目とそのハイライトだけ別グループ（まとめて瞬きさせる）
+    body: runs.filter((r) => r.ch !== "e" && r.ch !== "w"),
+    eyes: runs.filter((r) => r.ch === "e" || r.ch === "w"),
   };
 }
 
