@@ -9,7 +9,8 @@ AI活用型のWeb制作に加え、組み込みソフトウェア・IoT開発も
 ※ ディレクトリ名・GitHubリポジトリ名・basePath は歴史的経緯で `EbisSoft` のまま。
 **表記ルール**：本文・見出し・メタデータ・構造化データの社名は**カタカナの「エビスソフト」のみ**（`EbisuSoft` という綴りはどこにも使わない）。
 例外は**ロゴだけ** — ヘッダー/フッターのワードマーク・ファビコン・OG画像は名刺と揃えて `EBISU SOFT`（全角スペースなし・全大文字）を使う。
-**会社ロゴ画像**（透過済み・`public/logo/`）は `src/components/site/CompanyLogo.tsx` 経由で使う。
+**会社ロゴの正は3Dモデル**（`src/components/fx/logo3d.ts`。立体文字 EBISU ＋回るリング＋固定の Soft ＋飛ぶ光）。
+`public/logo/ebisu-soft-logo-3d-*.webp` はそのモデルを書き出した静止画で、`src/components/site/CompanyLogo.tsx` 経由で使う。
 ヘッダー/フッターのロゴ（`Logo.tsx`）は、この画像＋ワードマーク `EBISU SOFT` の組み合わせ。ファビコンだけは潰れないよう `EB` マークのまま。
 サイト背景の3D演出（`fx/ThreeBackground.tsx`）と3DCGデモ（`demos/Demo3dcg.tsx` の「会社ロゴ」形状）も同じ画像を参照している。
 

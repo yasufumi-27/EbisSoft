@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
+import { createLogo3d, LOGO_BLUE } from "./logo3d";
 
 /**
  * サイト全体の3D背景（Three.js）。
@@ -105,38 +106,38 @@ export default function ThreeBackground() {
     core.position.set(9, 2.5, -6);
     scene.add(core);
 
-    // ---- 会社ロゴ（透過テクスチャの板） -----------------------------------
-    // 背景の奥にごく薄く浮かべる。本文の可読性を落とさないよう、
-    // 画面左手（コンテンツ幅の外）に置き、不透明度も抑えている。
-    // 読み込みに失敗しても背景の他の要素は通常どおり動く（装飾のため握りつぶす）。
-    const LOGO_URL = `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/logo/ebisu-soft-logo-512.webp`;
-    let logo: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshBasicMaterial> | null = null;
-    let disposed = false;
-    new THREE.TextureLoader().load(
-      LOGO_URL,
-      (tex) => {
-        if (disposed) {
-          tex.dispose();
-          return;
-        }
-        tex.colorSpace = THREE.SRGBColorSpace;
-        tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
-        const w = 9.5;
-        logo = new THREE.Mesh(
-          new THREE.PlaneGeometry(w, (w * 410) / 512),
-          new THREE.MeshBasicMaterial({
-            map: tex,
-            transparent: true,
-            opacity: 0.34,
-            depthWrite: false,
-          })
-        );
-        logo.position.set(-12.5, 1.5, -8.5);
-        scene.add(logo);
-      },
-      undefined,
-      () => {}
-    );
+    // ---- 会社ロゴ（3Dモデル） ---------------------------------------------
+    // 立体文字「EBISU」＋固定の「Soft」＋周りを回るリング＋飛ぶ光。
+    // 背景なので、本文の可読性を落とさないよう画面左手（コンテンツ幅の外）に置き、
+    // 不透明度も落としている。素材の陰影用に控えめなライトを2つだけ足す。
+    scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+    const keyLight = new THREE.DirectionalLight(0x9fd8ff, 1.6);
+    keyLight.position.set(-6, 6, 8);
+    scene.add(keyLight);
+
+    // 背景シーンには環境マップがないため、金属マテリアルだと真っ黒に沈む。
+    // 弱く自己発光する非金属にして、暗い背景でも輪郭が分かるようにする。
+    const logo = createLogo3d({
+      lettersMaterial: new THREE.MeshStandardMaterial({
+        color: new THREE.Color(LOGO_BLUE),
+        emissive: new THREE.Color(0x14406e),
+        emissiveIntensity: 1,
+        metalness: 0.15,
+        roughness: 0.55,
+      }),
+    });
+    logo.group.traverse((o) => {
+      const m = (o as THREE.Mesh).material as THREE.Material | undefined;
+      if (m && !(m as THREE.PointsMaterial).isPointsMaterial) {
+        m.transparent = true;
+        m.opacity = 0.5;
+        m.depthWrite = false;
+      }
+    });
+    logo.group.scale.setScalar(1.9);
+    logo.group.position.set(-13, 1.2, -4);
+    logo.group.rotation.y = 0.32;
+    scene.add(logo.group);
 
     // ---- 床グリッド（遠近感の演出。フォグで水平線に溶ける） ---------------
     const grid = new THREE.GridHelper(160, 64, 0x155e75, 0x0f2942);
@@ -171,12 +172,10 @@ export default function ThreeBackground() {
       core.rotation.x = Math.sin(t * 0.18) * 0.25;
       inner.rotation.y = -t * 0.3;
       core.position.y = 2.5 + Math.sin(t * 0.5) * 0.5 - Math.min(sy * 0.0012, 4);
-      if (logo) {
-        // ゆっくり首を振りながら漂う（回しすぎると横向きで消えるので±0.3rad程度）
-        logo.rotation.y = 0.28 + Math.sin(t * 0.16) * 0.3;
-        logo.position.y = 1.5 + Math.sin(t * 0.35) * 0.6 - Math.min(sy * 0.0009, 3.5);
-        logo.material.opacity = 0.3 + Math.sin(t * 0.5) * 0.05;
-      }
+      // ロゴはリングと光だけが動き、文字はゆっくり漂わせる
+      logo.update(t);
+      logo.group.rotation.y = 0.32 + Math.sin(t * 0.14) * 0.2;
+      logo.group.position.y = 1.5 + Math.sin(t * 0.3) * 0.5 - Math.min(sy * 0.0009, 3.5);
       // マウスに緩やかに追従するパララックス
       camera.position.x += (mouse.x * 1.6 - camera.position.x) * 0.03;
       camera.position.y += (1.2 - mouse.y * 1.0 - camera.position.y) * 0.03;
@@ -215,7 +214,6 @@ export default function ThreeBackground() {
 
     return () => {
       running = false;
-      disposed = true;
       cancelAnimationFrame(rafId);
       window.removeEventListener("resize", onResize);
       window.removeEventListener("pointermove", onPointerMove);
@@ -230,11 +228,8 @@ export default function ThreeBackground() {
       (inner.material as THREE.Material).dispose();
       grid.geometry.dispose();
       (grid.material as THREE.Material).dispose();
-      if (logo) {
-        logo.geometry.dispose();
-        logo.material.map?.dispose();
-        logo.material.dispose();
-      }
+      logo.dispose();
+      (logo.letters.material as THREE.Material).dispose();
       renderer.dispose();
       mount.removeChild(renderer.domElement);
     };

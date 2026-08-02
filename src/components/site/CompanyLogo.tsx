@@ -1,33 +1,34 @@
 import { siteConfig } from "@/lib/site";
 
-/** ロゴ画像（透過処理済み）の置き場所。3D側（背景・デモ）からも参照します。 */
+/**
+ * ロゴ画像の置き場所。
+ *
+ * 画像は `src/components/fx/logo3d.ts` の**3Dモデルを書き出したもの**なので、
+ * ヘッダーの静止画・サイト背景・3DCGデモがすべて同じ形をしています。
+ * 背景は透過済み（暗い画面でも白い紙でもそのまま置けます）。
+ */
 export const LOGO_IMAGE = {
-  /** ヘッダー用（176×141・WebP） */
-  xs: "/logo/ebisu-soft-logo-176.webp",
-  /** ヘッダーの高解像度ディスプレイ用（352×282・WebP） */
-  sm: "/logo/ebisu-soft-logo-352.webp",
-  /** Three.js のテクスチャ用（512×410・WebP） */
-  texture: "/logo/ebisu-soft-logo-512.webp",
-  /** 大きく出すとき（976×781・WebP） */
-  webp: "/logo/ebisu-soft-logo.webp",
-  /** WebP非対応環境向けの控え（640×512・PNG） */
-  png: "/logo/ebisu-soft-logo.png",
-  width: 976,
-  height: 781,
+  /** 幅ごとのWebP（表示幅に応じてブラウザが選ぶ） */
+  webp: [176, 352, 512, 976].map((w) => ({ w, src: `/logo/ebisu-soft-logo-3d-${w}.webp` })),
+  /** WebP非対応環境向けの控え（640×257・PNG） */
+  png: "/logo/ebisu-soft-logo-3d.png",
+  /** 縦横比（レイアウトずれ＝CLS を防ぐために固定） */
+  width: 1375,
+  height: 551,
 } as const;
 
 const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 /**
- * 会社ロゴ（画像）。背景を透過したPNG/WebPで、暗い背景にも白い紙にも同じように載ります。
+ * 会社ロゴ（画像）。
  *
  * next/image を使っていないのは、
  * - 静的書き出し（output:"export"）では最適化が効かず素通しになる
  * - WebP と PNG を出し分ける <picture> を組みたい
- * ためです。寸法比を固定して読み込み時のレイアウトずれ（CLS）を防いでいます。
+ * ためです。
  *
- * `sizes` で表示幅を伝えると、176 / 352 / 512 / 976px の中から必要なものだけを取りに行きます。
- * ヘッダーは全ページで読み込むため、必ず小さい幅を渡してください（176px版は約21KB）。
+ * ヘッダーは全ページで読み込むため、必ず `sizes` に実寸を渡してください
+ * （176px版は約10KBです）。
  */
 export function CompanyLogo({
   className = "",
@@ -36,7 +37,7 @@ export function CompanyLogo({
   alt = `${siteConfig.legalName}のロゴ`,
 }: {
   className?: string;
-  /** 表示幅のヒント。小さく出す場所では "56px" のように渡して軽い方を選ばせる */
+  /** 表示幅のヒント。小さく出す場所では "110px" のように渡して軽い方を選ばせる */
   sizes?: string;
   /** ページ上部に出すときは true（遅延読み込みをやめる） */
   priority?: boolean;
@@ -47,12 +48,7 @@ export function CompanyLogo({
     <picture>
       <source
         type="image/webp"
-        srcSet={[
-          `${BASE}${LOGO_IMAGE.xs} 176w`,
-          `${BASE}${LOGO_IMAGE.sm} 352w`,
-          `${BASE}${LOGO_IMAGE.texture} 512w`,
-          `${BASE}${LOGO_IMAGE.webp} 976w`,
-        ].join(", ")}
+        srcSet={LOGO_IMAGE.webp.map((v) => `${BASE}${v.src} ${v.w}w`).join(", ")}
         sizes={sizes}
       />
       <img
