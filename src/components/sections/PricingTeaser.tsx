@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Section, SectionHeading } from "@/components/ui/Section";
 import { Icon } from "@/components/ui/icons";
 import { plans } from "@/lib/content";
+import { ja } from "@/lib/typography";
 
 /**
  * トップ用の料金ダイジェスト。
@@ -25,7 +26,7 @@ export function PricingTeaser() {
             style={{ "--reveal-delay": `${i * 0.1}s` } as React.CSSProperties}
           >
             <dt className="flex items-baseline justify-between gap-3">
-              <span className="text-lg font-bold text-white">{plan.name}</span>
+              <span className="text-lg font-bold text-white">{ja(plan.name)}</span>
               <span className={`text-xs ${plan.featured ? "text-gold-light" : "text-slate-500"}`}>
                 {plan.priceNote}
               </span>
@@ -39,7 +40,7 @@ export function PricingTeaser() {
                 {plan.price}
               </span>
               <span className="mt-3 block text-sm leading-relaxed text-slate-400">
-                {plan.description}
+                {ja(plan.description)}
               </span>
             </dd>
           </div>

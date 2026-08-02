@@ -23,6 +23,7 @@ import { DemoShowcase } from "@/components/sections/DemoShowcase";
 import { Faq } from "@/components/sections/Faq";
 import { RelatedPages } from "@/components/sections/RelatedPages";
 import { ContactCta } from "@/components/sections/ContactCta";
+import { ja } from "@/lib/typography";
 
 const title = "AI活用｜生成AIによる開発とAI機能の受託";
 const description =
@@ -107,9 +108,9 @@ export default function AiPage() {
         eyebrow="AI Utilization"
         title={
           <>
-            AIを<span className="text-gradient">使う側</span>であり、
+            <span className="text-gradient">AI活用</span>の
             <br />
-            <span className="text-gold">作る側</span>でもあります。
+            ソフトウェア開発
           </>
         }
         lead="生成AIを制作フローに組み込んで期間を約1/3に短縮し、納品物としてもAIチャットボットやAI機能を開発します。両方を自分たちでやっているからこそ、AIで何ができて何ができないかを具体的にお話しできます。"
@@ -130,8 +131,8 @@ export default function AiPage() {
       <Section id="two-sides">
         <SectionHeading
           eyebrow="Two Sides"
-          title="AI活用には、2つの意味があります。"
-          description="「AIで作る」と「AIを作る」。当社はその両方を担当します。"
+          title="AI活用の2つの側面"
+          description="AIで速くつくることと、AI機能そのものをつくること。エビスソフトはその両方を手がけています。"
         />
         <div className="mt-14 grid gap-6 lg:grid-cols-2">
           {twoSides.map((s, i) => (
@@ -149,15 +150,15 @@ export default function AiPage() {
                   {s.label}
                 </span>
               </div>
-              <h3 className="mt-5 text-xl font-bold text-white">{s.title}</h3>
+              <h3 className="mt-5 text-xl font-bold text-white">{ja(s.title)}</h3>
               <p className="speakable mt-3 flex-1 text-sm leading-relaxed text-slate-400">
-                {s.body}
+                {ja(s.body)}
               </p>
               <ul className="mt-5 space-y-2 border-t border-white/10 pt-5">
                 {s.facts.map((f) => (
                   <li key={f} className="flex items-start gap-2 text-sm text-slate-300">
                     <Icon name="check" className="mt-0.5 size-4 shrink-0 text-gold" />
-                    {f}
+                    <span className="min-w-0">{ja(f)}</span>
                   </li>
                 ))}
               </ul>
@@ -173,7 +174,7 @@ export default function AiPage() {
       <DemoShowcase
         slugs={aiDemoSlugs}
         eyebrow="AI Demos"
-        title="作れるAI機能は、動かして確かめられます。"
+        title="AI機能のデモ"
         description="チャットボット・音声AI・AIエージェント・レコメンド・行動解析。すべてこのサイト上で実際に動きます。"
       />
 

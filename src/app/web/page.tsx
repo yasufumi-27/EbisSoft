@@ -23,6 +23,7 @@ import { DemoShowcase } from "@/components/sections/DemoShowcase";
 import { Faq } from "@/components/sections/Faq";
 import { RelatedPages } from "@/components/sections/RelatedPages";
 import { ContactCta } from "@/components/sections/ContactCta";
+import { ja } from "@/lib/typography";
 
 const title = "Web制作｜AI開発プロセスでつくるホームページ";
 const description =
@@ -66,7 +67,7 @@ const webFaqs = faqs.filter((f) => f.category === "web" || f.category === "price
 const processPoints = [
   {
     icon: "sparkles" as const,
-    title: "構成案は、複数を同時に作って比べる",
+    title: "構成案は複数を同時に作って比べる",
     body: "ヒアリング内容をその場で構造化し、サイト構成とキーワード設計を複数パターン生成します。1案を練るのではなく、比較して決めるため、初回提案までが最短2営業日です。",
   },
   {
@@ -76,7 +77,7 @@ const processPoints = [
   },
   {
     icon: "gauge" as const,
-    title: "浮いた時間は、品質に戻す",
+    title: "短縮できた時間は品質に戻す",
     body: "短縮した時間は値引きではなく、表示速度・アクセシビリティ・文章の精度に再投資します。当サイト自身がその実装例で、Lighthouse 性能スコア100点で動いています。",
   },
   {
@@ -109,9 +110,9 @@ export default function WebPage() {
         eyebrow="Web Production"
         title={
           <>
-            <span className="text-gradient">AI開発のプロセス</span>で、
+            <span className="text-gradient">AI活用</span>の
             <br />
-            Webサイトをつくります。
+            Webサイト制作
           </>
         }
         lead="コーポレートサイト・LP・EC・Webアプリまで対応します。制作期間は従来の約1/3、小規模サイトなら最短5日で公開。SEO・AI検索対策・表示速度は追加オプションではなく、標準で作り込みます。"
@@ -132,7 +133,7 @@ export default function WebPage() {
       <Section id="ai-process">
         <SectionHeading
           eyebrow="How We Build"
-          title="なぜ、速くて、質が落ちないのか。"
+          title="速くても品質が落ちない理由"
           description="「AIを使っています」だけでは分からないので、具体的な進め方を開示します。"
         />
         <div className="mt-14 grid gap-5 sm:grid-cols-2">
@@ -146,8 +147,8 @@ export default function WebPage() {
               <span className="grid size-11 place-items-center rounded-xl border border-brand/30 bg-brand/10 text-brand-light">
                 <Icon name={p.icon} className="size-5" />
               </span>
-              <h3 className="mt-4 text-lg font-bold text-white">{p.title}</h3>
-              <p className="speakable mt-2 text-sm leading-relaxed text-slate-400">{p.body}</p>
+              <h3 className="mt-4 text-lg font-bold text-white">{ja(p.title)}</h3>
+              <p className="speakable mt-2 text-sm leading-relaxed text-slate-400">{ja(p.body)}</p>
             </article>
           ))}
         </div>
@@ -166,7 +167,7 @@ export default function WebPage() {
       <DemoShowcase
         slugs={webDemoSlugs}
         eyebrow="Live Demos"
-        title="サイトに載せられる機能は、実物で確認できます。"
+        title="サイトに載せられる機能のデモ"
         description="3DCG・アニメーション・商品カスタマイズ・料金シミュレーター・SNS連携・システム連携。"
       />
 

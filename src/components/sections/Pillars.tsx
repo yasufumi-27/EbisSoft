@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Section, SectionHeading } from "@/components/ui/Section";
 import { Icon } from "@/components/ui/icons";
 import { pillars } from "@/lib/content";
+import { ja } from "@/lib/typography";
 
 /**
  * トップページの3本柱（AI活用 / Web制作 / 組み込み開発）。
@@ -17,12 +18,10 @@ export function Pillars() {
         eyebrow="What We Do"
         title={
           <>
-            <span className="text-gradient">AI</span>を軸に、
-            <br className="sm:hidden" />
-            Webと機器の両方をつくります。
+            <span className="text-gradient">AI</span>を軸にした3つの事業
           </>
         }
-        description="3つの入口をご用意しました。気になる領域から詳細ページへお進みください。"
+        description="Web制作も組み込み開発も、AIをどう使うかという同じ軸の上にあります。気になる領域からご覧ください。"
       />
 
       <div className="mt-14 grid gap-6 lg:grid-cols-3">
@@ -50,23 +49,23 @@ export function Pillars() {
             <p className="eyebrow mt-5">{p.eyebrow}</p>
             <h3 className="mt-2 text-2xl font-bold text-white">
               <Link prefetch={false} href={p.href} className="after:absolute after:inset-0 after:content-['']">
-                {p.title}
+                {ja(p.title)}
               </Link>
             </h3>
-            <p className="speakable mt-3 font-medium text-slate-200">{p.lead}</p>
-            <p className="mt-3 text-sm leading-relaxed text-slate-400">{p.description}</p>
+            <p className="speakable mt-3 font-medium text-slate-200">{ja(p.lead)}</p>
+            <p className="mt-3 text-sm leading-relaxed text-slate-400">{ja(p.description)}</p>
 
             <ul className="mt-5 flex-1 space-y-2 border-t border-white/10 pt-5">
               {p.bullets.map((b) => (
                 <li key={b} className="flex items-start gap-2 text-sm text-slate-300">
                   <Icon name="check" className="mt-0.5 size-4 shrink-0 text-gold" />
-                  {b}
+                  <span className="min-w-0">{ja(b)}</span>
                 </li>
               ))}
             </ul>
 
             <span className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-brand-light transition-colors group-hover:text-white">
-              {p.cta}
+              {ja(p.cta)}
               <Icon name="arrowRight" className="size-4 transition-transform group-hover:translate-x-1" />
             </span>
           </article>

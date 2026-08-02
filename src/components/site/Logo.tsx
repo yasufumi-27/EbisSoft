@@ -14,7 +14,7 @@ export function Logo() {
       <span className="relative grid size-9 place-items-center overflow-hidden rounded-lg bg-gradient-to-br from-brand via-sky-500 to-accent text-ink shadow-[0_0_18px_rgba(34,211,238,0.45)] transition-shadow group-hover:shadow-[0_0_28px_rgba(34,211,238,0.7)]">
         <Icon name="rocket" className="size-5" />
       </span>
-      <span className="font-display text-lg font-bold tracking-[0.12em] text-white">
+      <span className="font-display text-lg font-bold tracking-[0.12em] whitespace-nowrap text-white">
         {siteConfig.name}
       </span>
     </Link>

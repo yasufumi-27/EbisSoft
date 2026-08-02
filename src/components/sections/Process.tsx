@@ -1,5 +1,6 @@
 import { Section, SectionHeading } from "@/components/ui/Section";
 import { steps } from "@/lib/content";
+import { ja } from "@/lib/typography";
 
 /** 制作の流れ。番号はディスプレイフォント＋グラデーションでHUD風に。 */
 export function Process() {
@@ -22,9 +23,9 @@ export function Process() {
               <span className="font-display grid size-11 shrink-0 place-items-center rounded-full border border-brand/40 bg-brand/10 text-base font-bold text-brand-light shadow-[0_0_18px_rgba(34,211,238,0.25)]">
                 {String(i + 1).padStart(2, "0")}
               </span>
-              <h3 className="text-lg font-bold text-white">{step.title}</h3>
+              <h3 className="text-lg font-bold text-white">{ja(step.title)}</h3>
             </div>
-            <p className="mt-3 text-sm leading-relaxed text-slate-400">{step.description}</p>
+            <p className="mt-3 text-sm leading-relaxed text-slate-400">{ja(step.description)}</p>
           </li>
         ))}
       </ol>

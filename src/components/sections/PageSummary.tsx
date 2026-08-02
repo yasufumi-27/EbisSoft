@@ -1,5 +1,6 @@
 import { Container } from "@/components/ui/Container";
 import type { PageSummary as PageSummaryItem } from "@/lib/content";
+import { ja } from "@/lib/typography";
 
 /**
  * ページ冒頭に置く「結論ファーストの答え」（AEO）。
@@ -21,7 +22,7 @@ export function PageSummary({
         <div className="panel panel-corners p-6 sm:p-8" data-reveal>
           <p className="eyebrow">Summary / 要点</p>
           <h2 id="page-summary" className="mt-3 text-xl font-bold tracking-tight text-white">
-            {title}
+            {ja(title)}
           </h2>
           <dl className="mt-6 grid gap-5 sm:grid-cols-2">
             {items.map((item) => (
@@ -29,8 +30,8 @@ export function PageSummary({
                 key={item.q}
                 className="border-l-2 border-brand/50 pl-4 transition-colors hover:border-gold"
               >
-                <dt className="font-semibold text-white">{item.q}</dt>
-                <dd className="speakable mt-1 text-sm leading-relaxed text-slate-400">{item.a}</dd>
+                <dt className="font-semibold text-white">{ja(item.q)}</dt>
+                <dd className="speakable mt-1 text-sm leading-relaxed text-slate-400">{ja(item.a)}</dd>
               </div>
             ))}
           </dl>

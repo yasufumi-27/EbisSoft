@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ja } from "@/lib/typography";
 
 import { JsonLd } from "@/components/JsonLd";
 import { breadcrumbJsonLd, capabilityJsonLd, webPageJsonLd } from "@/lib/jsonld";
@@ -117,7 +118,7 @@ export default async function DemoDetailPage({
                 {cap.howToUse.map((h) => (
                   <li key={h} className="flex gap-2 text-xs text-slate-400">
                     <Icon name="arrowRight" className="mt-0.5 size-3 shrink-0 text-brand" />
-                    {h}
+                    <span className="min-w-0">{ja(h)}</span>
                   </li>
                 ))}
               </ul>
@@ -131,7 +132,7 @@ export default async function DemoDetailPage({
                 </span>
                 どこまでが実装で、本番では何が変わるか
               </summary>
-              <p className="mt-3 text-xs leading-relaxed text-slate-400">{cap.demoNote}</p>
+              <p className="mt-3 text-xs leading-relaxed text-slate-400">{ja(cap.demoNote)}</p>
             </details>
           </div>
         </Container>
@@ -142,7 +143,7 @@ export default async function DemoDetailPage({
         <SectionHeading
           eyebrow="Business Impact"
           title="導入すると、何が変わるか"
-          description={cap.description}
+          description={ja(cap.description)}
         />
         <div className="mt-12 grid gap-5 md:grid-cols-3">
           {cap.businessValue.map((v, i) => (
@@ -155,8 +156,8 @@ export default async function DemoDetailPage({
               <span className="font-display text-3xl font-bold text-white/10">
                 {String(i + 1).padStart(2, "0")}
               </span>
-              <h3 className="mt-2 text-lg leading-snug font-bold text-white">{v.title}</h3>
-              <p className="speakable mt-3 text-sm leading-relaxed text-slate-400">{v.body}</p>
+              <h3 className="mt-2 text-lg leading-snug font-bold text-white">{ja(v.title)}</h3>
+              <p className="speakable mt-3 text-sm leading-relaxed text-slate-400">{ja(v.body)}</p>
             </article>
           ))}
         </div>
@@ -174,7 +175,7 @@ export default async function DemoDetailPage({
               {cap.bullets.map((b) => (
                 <li key={b} className="speakable flex gap-2.5 text-sm leading-relaxed text-slate-300">
                   <Icon name="check" className="mt-0.5 size-4 shrink-0 text-brand" />
-                  {b}
+                  <span className="min-w-0">{ja(b)}</span>
                 </li>
               ))}
             </ul>
@@ -193,7 +194,7 @@ export default async function DemoDetailPage({
               {cap.useCases.map((u) => (
                 <li key={u} className="flex gap-2.5 text-sm leading-relaxed text-slate-300">
                   <Icon name="arrowRight" className="mt-0.5 size-4 shrink-0 text-gold" />
-                  {u}
+                  <span className="min-w-0">{ja(u)}</span>
                 </li>
               ))}
             </ul>
@@ -219,7 +220,7 @@ export default async function DemoDetailPage({
               ))}
             </ul>
             <p className="mt-5 text-xs leading-relaxed text-slate-500">
-              案件の要件・既存環境に合わせて選定します。ライブラリを増やすことによる表示速度への影響も評価したうえでご提案します。
+              {ja("案件の要件・既存環境に合わせて選定します。ライブラリを増やすことによる表示速度への影響も評価したうえでご提案します。")}
             </p>
           </div>
         </div>
@@ -245,8 +246,8 @@ export default async function DemoDetailPage({
               <span className="grid size-10 place-items-center rounded-xl border border-white/10 bg-white/5 text-slate-400">
                 <Icon name={o.icon} className="size-5" />
               </span>
-              <h3 className="mt-4 font-bold text-white">{o.title}</h3>
-              <p className="mt-2 flex-1 text-sm leading-relaxed text-slate-400">{o.impact}</p>
+              <h3 className="mt-4 font-bold text-white">{ja(o.title)}</h3>
+              <p className="mt-2 flex-1 text-sm leading-relaxed text-slate-400">{ja(o.impact)}</p>
               <span className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-brand-light">
                 デモを見る
                 <Icon name="arrowRight" className="size-3" />
@@ -260,7 +261,7 @@ export default async function DemoDetailPage({
       <Section>
         <div className="panel panel-corners p-8 text-center sm:p-12" data-reveal>
           <h2 className="text-2xl font-bold text-white sm:text-3xl">
-            {cap.title}を、自社サイトでも。
+            {ja(cap.title)}を、自社サイトでも。
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-slate-400">
             「どこまでできるか」「いくらかかるか」だけでも構いません。初回のご相談・お見積もりは無料です。

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ja } from "@/lib/typography";
 
 import { JsonLd } from "@/components/JsonLd";
 import { breadcrumbJsonLd, webPageJsonLd } from "@/lib/jsonld";
@@ -54,22 +55,22 @@ const profile: { label: string; value: string }[] = [
 const principles = [
   {
     icon: "sparkles" as const,
-    title: "AIは、作業に使う。判断には使わない",
+    title: "AIに任せるのは作業、判断は人が行います",
     body: "解析・実装・テストなど量産できる作業にはAIを使い倒します。一方で設計方針、コードレビュー、納品可否の判断は必ず人が行います。Webでも組み込みでも、この線引きは変えません。",
   },
   {
     icon: "bolt" as const,
-    title: "速さは、手段であって目的ではない",
+    title: "短縮できた時間は品質に回します",
     body: "AIで短縮した時間はそのまま利益にせず、品質・検証・文章の精度に再投資します。速いだけの安い納品物は作りません。",
   },
   {
     icon: "check" as const,
-    title: "できること／できないことを、正直に言う",
+    title: "できないことも正直にお伝えします",
     body: "本サイトのデモにも、どこまでが実装かを明記しています。組み込みでもお引き受けできない範囲を先に開示します。受注のために「できます」と言って後から詰まる進め方はしません。",
   },
   {
     icon: "gauge" as const,
-    title: "品質は、計測できる形で示す",
+    title: "品質は計測結果でご確認いただけます",
     body: "Webは Lighthouse の計測結果を、組み込みは実機での検証結果とテストを添えてお渡しします。主観ではなく記録で確認いただけます。",
   },
 ];
@@ -121,12 +122,12 @@ export default function CompanyPage() {
         eyebrow="Company"
         title={
           <>
-            {siteConfig.contact.address.locality}から、
+            {siteConfig.contact.address.locality}の
             <br />
-            <span className="text-gradient">AI</span>でソフトウェアをつくる。
+            <span className="text-gradient">AI</span>ソフトウェア開発事業者
           </>
         }
-        lead={`${contact.address.locality}を拠点とするソフトウェア開発事業者です（京都商工会所属）。AIを「開発プロセス」と「成果物」の両方に使うことを事業の軸にしており、その適用先としてWebサイト制作と組み込みソフトウェア開発の両方を手がけています。分野で分けるのではなく、AIで何をどこまで速く・確かにできるかで考えます。`}
+        lead={`${contact.address.locality}を拠点とするソフトウェア開発事業者です（京都商工会所属）。AIを開発プロセスと成果物の両方に使うことを、事業の軸にしています。適用先はWebサイト制作と組み込みソフトウェア開発の2つです。分野で分けるのではなく、AIで何をどこまで速く・確かにできるかで考えます。`}
       >
         <div className="mt-8 flex flex-wrap gap-3">
           <ButtonLink href="/contact" withArrow>
@@ -142,7 +143,7 @@ export default function CompanyPage() {
       <Section id="profile">
         <SectionHeading
           eyebrow="Profile"
-          title="会社概要"
+          title="基本情報"
           description="お取引・お問い合わせの際にご確認ください。"
           align="left"
         />
@@ -152,7 +153,7 @@ export default function CompanyPage() {
               <div key={row.label} className="grid gap-1 px-6 py-5 sm:grid-cols-4 sm:gap-4">
                 <dt className="text-sm font-bold text-slate-400">{row.label}</dt>
                 <dd className="speakable text-sm leading-relaxed text-slate-200 sm:col-span-3">
-                  {row.value}
+                  {ja(row.value)}
                 </dd>
               </div>
             ))}
@@ -173,7 +174,7 @@ export default function CompanyPage() {
               <Icon name="globe" className="size-4 text-gold" />
               対応エリア
             </p>
-            <p className="mt-2 text-sm leading-relaxed text-slate-200">{siteConfig.areaServed}</p>
+            <p className="mt-2 text-sm leading-relaxed text-slate-200">{ja(siteConfig.areaServed)}</p>
           </div>
         </div>
 
@@ -191,7 +192,7 @@ export default function CompanyPage() {
       <Section id="ai-identity">
         <SectionHeading
           eyebrow="Our Core"
-          title="私たちは、AIの使い方で仕事をしています。"
+          title="AI活用の3つの側面"
           description="Web制作も組み込み開発も、AIをどう使うかという同じ軸の上にあります。"
         />
         <div className="mt-14 grid gap-6 lg:grid-cols-3">
@@ -210,9 +211,9 @@ export default function CompanyPage() {
                   {a.label}
                 </span>
               </div>
-              <h3 className="mt-5 text-lg font-bold text-white">{a.title}</h3>
+              <h3 className="mt-5 text-lg font-bold text-white">{ja(a.title)}</h3>
               <p className="speakable mt-3 flex-1 text-sm leading-relaxed text-slate-400">
-                {a.body}
+                {ja(a.body)}
               </p>
             </article>
           ))}
@@ -230,7 +231,7 @@ export default function CompanyPage() {
       <Section bg="deep">
         <SectionHeading
           eyebrow="Our Principles"
-          title="私たちが、約束できること"
+          title="お約束していること"
           description="Web制作は形が見えにくい買い物です。だからこそ、判断の材料になる約束を先に開示します。"
         />
         <div className="mt-12 grid gap-5 sm:grid-cols-2">
@@ -244,8 +245,8 @@ export default function CompanyPage() {
               <span className="grid size-11 place-items-center rounded-xl border border-brand/30 bg-brand/10 text-brand-light">
                 <Icon name={p.icon} className="size-5" />
               </span>
-              <h3 className="mt-4 text-lg font-bold text-white">{p.title}</h3>
-              <p className="speakable mt-2 text-sm leading-relaxed text-slate-400">{p.body}</p>
+              <h3 className="mt-4 text-lg font-bold text-white">{ja(p.title)}</h3>
+              <p className="speakable mt-2 text-sm leading-relaxed text-slate-400">{ja(p.body)}</p>
             </article>
           ))}
         </div>
@@ -261,8 +262,8 @@ export default function CompanyPage() {
                 <li key={s.slug} className="flex gap-3">
                   <Icon name="check" className="mt-1 size-4 shrink-0 text-brand" />
                   <span className="text-sm text-slate-300">
-                    <span className="font-bold text-white">{s.title}</span>
-                    <span className="mt-0.5 block text-slate-500">{s.features.join("／")}</span>
+                    <span className="font-bold text-white">{ja(s.title)}</span>
+                    <span className="mt-0.5 block text-slate-500">{ja(s.features.join("／"))}</span>
                   </span>
                 </li>
               ))}
@@ -283,15 +284,14 @@ export default function CompanyPage() {
                 ))}
               </ul>
               <p className="mt-5 text-xs leading-relaxed text-slate-500">
-                案件ごとに最適な構成を選定します。特定のCMSやフレームワークに縛られた提案はしません。
+                {ja("案件ごとに最適な構成を選定します。特定のCMSやフレームワークに縛られた提案はしません。")}
               </p>
             </div>
 
             <div className="panel p-7" data-reveal>
               <h2 className="text-xl font-bold text-white">対応エリア</h2>
               <p className="mt-4 text-sm leading-relaxed text-slate-400">
-                下記の府県は対面での打ち合わせに伺います。
-                打ち合わせはオンライン会議でも完結できます。
+                {ja("下記の府県は対面での打ち合わせに伺います。打ち合わせはオンライン会議でも完結できます。")}
               </p>
               <ul className="mt-4 flex flex-wrap gap-2">
                 {siteConfig.localAreas.map((a) => (
@@ -304,7 +304,7 @@ export default function CompanyPage() {
                 ))}
               </ul>
               <p className="mt-4 text-xs leading-relaxed text-slate-500">
-                {siteConfig.localAreasNote}
+                {ja(siteConfig.localAreasNote)}
               </p>
             </div>
           </div>

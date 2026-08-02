@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/icons";
 import { relatedPages } from "@/lib/content";
+import { ja } from "@/lib/typography";
 
 /**
  * ページ末尾の「次に見るページ」。
@@ -32,14 +33,14 @@ export function RelatedPages({ hrefs }: { hrefs: string[] }) {
               </span>
               <span className="min-w-0">
                 <span className="flex items-center gap-1.5 font-bold text-white">
-                  {p.title}
+                  {ja(p.title)}
                   <Icon
                     name="arrowRight"
                     className="size-3.5 text-slate-500 transition-transform group-hover:translate-x-1 group-hover:text-brand-light"
                   />
                 </span>
                 <span className="mt-1 block text-sm leading-relaxed text-slate-400">
-                  {p.description}
+                  {ja(p.description)}
                 </span>
               </span>
             </Link>

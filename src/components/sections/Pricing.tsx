@@ -2,6 +2,7 @@ import { Section, SectionHeading } from "@/components/ui/Section";
 import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/icons";
 import { plans } from "@/lib/content";
+import { ja } from "@/lib/typography";
 
 /** 料金プラン。人気プランはゴールドの縁とグローで格上げ。 */
 export function Pricing() {
@@ -31,7 +32,7 @@ export function Pricing() {
                   人気No.1
                 </span>
               ) : null}
-              <h3 className="text-lg font-bold text-white">{plan.name}</h3>
+              <h3 className="text-lg font-bold text-white">{ja(plan.name)}</h3>
               <p className={`mt-1 text-sm ${featured ? "text-gold-light" : "text-slate-500"}`}>
                 {plan.priceNote}
               </p>
@@ -44,7 +45,7 @@ export function Pricing() {
                   )}
                 </span>
               </p>
-              <p className="mt-3 text-sm leading-relaxed text-slate-400">{plan.description}</p>
+              <p className="mt-3 text-sm leading-relaxed text-slate-400">{ja(plan.description)}</p>
               <ul className="mt-6 space-y-3">
                 {plan.features.map((f) => (
                   <li key={f} className="flex items-start gap-2.5 text-sm text-slate-300">
@@ -52,7 +53,7 @@ export function Pricing() {
                       name="check"
                       className={`mt-0.5 size-4 shrink-0 ${featured ? "text-gold" : "text-brand"}`}
                     />
-                    {f}
+                    <span className="min-w-0">{ja(f)}</span>
                   </li>
                 ))}
               </ul>

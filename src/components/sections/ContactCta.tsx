@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/icons";
 import { siteConfig } from "@/lib/site";
+import { ja } from "@/lib/typography";
 
 const benefits = [
   "初回相談・お見積もりは無料",
@@ -34,14 +35,15 @@ export function ContactCta() {
           <p className="eyebrow justify-center">Contact</p>
 
           <h2 className="mt-5 text-3xl leading-tight font-bold tracking-tight text-white sm:text-5xl">
-            やりたいことを、
+            まずは、やりたいことだけ
             <br className="sm:hidden" />
-            ひとこと聞かせてください。
+            お聞かせください
           </h2>
 
           <p className="speakable mx-auto mt-6 max-w-xl leading-relaxed text-slate-300">
-            決まっているのが「なんとなくの方向性」だけでも大丈夫です。
-            ご予算・ページ数・必要な機能は、選択式でざっくり選ぶだけ。
+            {ja(
+              "決まっているのが「なんとなくの方向性」だけでも大丈夫です。ご予算・ページ数・必要な機能は、選択式でざっくり選ぶだけ。",
+            )}
           </p>
 
           <div className="mt-10">
@@ -62,7 +64,7 @@ export function ContactCta() {
                 <span className="grid size-5 shrink-0 place-items-center rounded-full bg-gradient-to-br from-brand to-accent text-ink">
                   <Icon name="check" className="size-3.5" />
                 </span>
-                {b}
+                <span className="min-w-0">{ja(b)}</span>
               </li>
             ))}
           </ul>

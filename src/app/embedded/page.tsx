@@ -21,6 +21,7 @@ import { PageSummary } from "@/components/sections/PageSummary";
 import { Faq } from "@/components/sections/Faq";
 import { RelatedPages } from "@/components/sections/RelatedPages";
 import { ContactCta } from "@/components/sections/ContactCta";
+import { ja } from "@/lib/typography";
 
 const title = "組み込み開発｜ファームウェア・IoTの受託";
 const description =
@@ -95,9 +96,9 @@ export default function EmbeddedPage() {
         eyebrow="Embedded Systems"
         title={
           <>
-            <span className="text-gradient">機器の中で動く</span>
+            マイコンの
             <br />
-            ソフトウェアを、つくります。
+            <span className="text-gradient">組み込みソフトウェア</span>開発
           </>
         }
         lead="マイコンのファームウェア開発を受託します。C / C++での新規開発、既存コードの改修・移植、センサー制御、省電力設計、BLE・Wi-Fi などの通信実装、実機での検証まで。組み込み単体のご依頼が中心で、技術調査だけのご相談も歓迎です。"
@@ -132,15 +133,15 @@ export default function EmbeddedPage() {
               <span className="grid size-12 place-items-center rounded-xl bg-gradient-to-br from-brand/80 to-accent/80 text-ink shadow-[0_0_22px_rgba(34,211,238,0.35)]">
                 <Icon name={d.icon} className="size-6" />
               </span>
-              <h3 className="mt-5 text-xl font-bold text-white">{d.title}</h3>
+              <h3 className="mt-5 text-xl font-bold text-white">{ja(d.title)}</h3>
               <p className="speakable mt-3 text-sm leading-relaxed text-slate-400">
-                {d.description}
+                {ja(d.description)}
               </p>
               <ul className="mt-5 space-y-2 border-t border-white/10 pt-5">
                 {d.items.map((item) => (
                   <li key={item} className="flex items-start gap-2 text-sm text-slate-300">
                     <Icon name="check" className="mt-0.5 size-4 shrink-0 text-gold" />
-                    {item}
+                    <span className="min-w-0">{ja(item)}</span>
                   </li>
                 ))}
               </ul>
@@ -153,7 +154,7 @@ export default function EmbeddedPage() {
       <Section id="options">
         <SectionHeading
           eyebrow="Optional"
-          title="必要なら、ここまで広げられます。"
+          title="任意で追加できる範囲"
           description="以下はすべて任意です。組み込み単体で完結するご依頼が基本で、要らない場合は含めません。"
         />
         <div className="mt-14 grid gap-6 lg:grid-cols-3">
@@ -167,15 +168,15 @@ export default function EmbeddedPage() {
               <span className="grid size-11 place-items-center rounded-xl border border-gold/30 bg-gold/10 text-gold-light">
                 <Icon name={o.icon} className="size-5" />
               </span>
-              <h3 className="mt-4 text-lg font-bold text-white">{o.title}</h3>
+              <h3 className="mt-4 text-lg font-bold text-white">{ja(o.title)}</h3>
               <p className="speakable mt-2 flex-1 text-sm leading-relaxed text-slate-400">
-                {o.description}
+                {ja(o.description)}
               </p>
               <ul className="mt-4 space-y-2 border-t border-white/10 pt-4">
                 {o.items.map((item) => (
                   <li key={item} className="flex items-start gap-2 text-sm text-slate-300">
                     <Icon name="check" className="mt-0.5 size-4 shrink-0 text-gold" />
-                    {item}
+                    <span className="min-w-0">{ja(item)}</span>
                   </li>
                 ))}
               </ul>
@@ -207,7 +208,7 @@ export default function EmbeddedPage() {
               style={{ "--reveal-delay": `${i * 0.06}s` } as React.CSSProperties}
             >
               <Icon name="chat" className="mt-0.5 size-5 shrink-0 text-brand-light" />
-              <span className="speakable text-sm leading-relaxed">{e}</span>
+              <span className="speakable text-sm leading-relaxed">{ja(e)}</span>
             </li>
           ))}
         </ul>
@@ -217,7 +218,7 @@ export default function EmbeddedPage() {
       <Section id="strengths">
         <SectionHeading
           eyebrow="Why Us"
-          title="組み込み単体でも、その先まででも。"
+          title="組み込み開発の強み"
           description="機器の中で完結する開発をきちんとやり切ったうえで、必要になれば外側まで伸ばせます。"
         />
         <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -231,8 +232,8 @@ export default function EmbeddedPage() {
               <span className="grid size-12 place-items-center rounded-xl border border-brand/30 bg-brand/10 text-brand-light shadow-[0_0_20px_rgba(34,211,238,0.2)]">
                 <Icon name={s.icon} className="size-6" />
               </span>
-              <h3 className="mt-5 text-lg font-bold text-white">{s.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-slate-400">{s.description}</p>
+              <h3 className="mt-5 text-lg font-bold text-white">{ja(s.title)}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-slate-400">{ja(s.description)}</p>
             </div>
           ))}
         </div>
@@ -257,9 +258,9 @@ export default function EmbeddedPage() {
                 <span className="font-display grid size-11 shrink-0 place-items-center rounded-full border border-brand/40 bg-brand/10 text-base font-bold text-brand-light shadow-[0_0_18px_rgba(34,211,238,0.25)]">
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <h3 className="text-lg font-bold text-white">{step.title}</h3>
+                <h3 className="text-lg font-bold text-white">{ja(step.title)}</h3>
               </div>
-              <p className="mt-3 text-sm leading-relaxed text-slate-400">{step.description}</p>
+              <p className="mt-3 text-sm leading-relaxed text-slate-400">{ja(step.description)}</p>
             </li>
           ))}
         </ol>
@@ -268,7 +269,9 @@ export default function EmbeddedPage() {
         <details className="demo-note mt-10" data-reveal>
           <summary>お引き受けできない範囲について</summary>
           <p className="speakable mt-3 text-sm leading-relaxed text-slate-400">
-            電気回路・基板の設計、筐体の機構設計、量産管理、電波法・安全規格などの認証取得代行は行っていません。ソフトウェア（ファームウェア・通信・クラウド・Web）に専念し、ハードウェア側は貴社または専門の協力先と分担する形をご提案します。対応できない場合は、その旨を最初にお伝えします。
+            {ja(
+              "電気回路・基板の設計、筐体の機構設計、量産管理、電波法・安全規格などの認証取得代行は行っていません。ソフトウェア（ファームウェア・通信・クラウド・Web）に専念し、ハードウェア側は貴社または専門の協力先と分担する形をご提案します。対応できない場合は、その旨を最初にお伝えします。",
+            )}
           </p>
         </details>
       </Section>

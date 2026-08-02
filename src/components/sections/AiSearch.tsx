@@ -2,6 +2,7 @@ import { Container } from "@/components/ui/Container";
 import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/icons";
 import { aeo } from "@/lib/content";
+import { ja } from "@/lib/typography";
 
 /** サブパス配信（GitHub Pages）でも 404 にしないためのプレフィックス。 */
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
@@ -30,14 +31,14 @@ export function AiSearch() {
             AEO / LLMO 特化
           </p>
           <h2 className="mt-5 text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            AI検索時代のWeb集客に、
+            AI検索（AEO / LLMO）に
             <br className="hidden sm:block" />
             <span className="text-gradient">最初から対応</span>します
           </h2>
           <p className="speakable mt-5 text-lg leading-relaxed text-slate-300">
             これからの集客は、
             <strong className="font-semibold text-white">「答えを返すAI」に引用・推薦されること</strong>
-            が鍵になります。制作の最初から、その設計を組み込みます。
+            {ja("が鍵になります。制作の最初から、その設計を組み込みます。")}
           </p>
         </div>
 
@@ -54,9 +55,9 @@ export function AiSearch() {
                 <span className="font-display text-2xl font-bold tracking-wider">
                   <span className="text-gradient">{d.term}</span>
                 </span>
-                <span className="text-sm text-slate-500">{d.full}</span>
+                <span className="text-sm text-slate-500">{ja(d.full)}</span>
               </div>
-              <p className="speakable mt-3 text-slate-300">{d.description}</p>
+              <p className="speakable mt-3 text-slate-300">{ja(d.description)}</p>
             </div>
           ))}
         </div>
@@ -76,17 +77,17 @@ export function AiSearch() {
               <span className="grid size-11 place-items-center rounded-xl bg-gradient-to-br from-brand to-accent text-ink shadow-[0_0_20px_rgba(139,92,246,0.4)]">
                 <Icon name={t.icon} className="size-5" />
               </span>
-              <h4 className="mt-4 font-bold text-white">{t.title}</h4>
-              <p className="mt-2 text-sm leading-relaxed text-slate-400">{t.description}</p>
+              <h4 className="mt-4 font-bold text-white">{ja(t.title)}</h4>
+              <p className="mt-2 text-sm leading-relaxed text-slate-400">{ja(t.description)}</p>
             </div>
           ))}
         </div>
 
         {/* このサイト自体での実装状況（主張ではなく、その場で確認できる一次情報） */}
         <div className="panel panel-corners mt-12 p-6 sm:p-8" data-reveal>
-          <h3 className="text-lg font-bold text-white">このサイト自体が、実装例です。</h3>
+          <h3 className="text-lg font-bold text-white">このサイトでの実装状況</h3>
           <p className="speakable mt-2 text-sm leading-relaxed text-slate-400">
-            下記はすべて、いま見ているこのサイトで動いているものです。リンクから中身をそのまま確認できます。
+            {ja("下記はすべて、いま見ているこのサイトで動いているものです。リンクから中身をそのまま確認できます。")}
           </p>
           <ul className="mt-5 flex flex-wrap gap-2.5">
             {aeo.selfImplementation.map((item) => (
@@ -97,7 +98,7 @@ export function AiSearch() {
                   className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs text-slate-300 transition-colors hover:border-brand/50 hover:text-white"
                 >
                   <Icon name="check" className="size-3.5 text-gold" />
-                  {item.label}
+                  {ja(item.label)}
                 </a>
               </li>
             ))}

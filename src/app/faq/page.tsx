@@ -10,6 +10,7 @@ import { ButtonLink } from "@/components/ui/Button";
 import { Section, SectionHeading } from "@/components/ui/Section";
 import { RelatedPages } from "@/components/sections/RelatedPages";
 import { ContactCta } from "@/components/sections/ContactCta";
+import { ja } from "@/lib/typography";
 
 const title = "よくある質問";
 const description =
@@ -94,9 +95,9 @@ export default function FaqPage() {
         eyebrow="FAQ"
         title={
           <>
-            聞かれることには、
+            よくある
             <br />
-            <span className="text-gradient">先に答えておきます。</span>
+            <span className="text-gradient">ご質問</span>
           </>
         }
         lead={`ご相談前によくいただく質問をまとめました。${faqs.length}件あります。ここにない疑問も、お気軽にお問い合わせください。`}
@@ -133,7 +134,7 @@ export default function FaqPage() {
                   className="group px-6 transition-colors open:bg-white/[0.03] [&_summary::-webkit-details-marker]:hidden"
                 >
                   <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-5 font-semibold text-slate-100 transition-colors hover:text-brand-light">
-                    {faq.question}
+                    <span className="min-w-0">{ja(faq.question)}</span>
                     <svg
                       width="20"
                       height="20"
@@ -149,7 +150,7 @@ export default function FaqPage() {
                     </svg>
                   </summary>
                   <p className="speakable pb-5 text-sm leading-relaxed text-slate-400">
-                    {faq.answer}
+                    {ja(faq.answer)}
                   </p>
                 </details>
               ))}

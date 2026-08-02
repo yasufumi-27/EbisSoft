@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Container } from "@/components/ui/Container";
+import { jaNode } from "@/lib/typography";
 
 /** 下層ページ共通のページヘッダー（英字ラベル＋H1＋リード文）。 */
 export function PageHeader({
@@ -28,11 +29,11 @@ export function PageHeader({
         <div className="max-w-3xl">
           <p className="eyebrow">{eyebrow}</p>
           <h1 className="mt-5 text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
-            {title}
+            {jaNode(title)}
           </h1>
           {lead ? (
             <p className="speakable mt-6 text-base leading-relaxed text-slate-300 sm:text-lg">
-              {lead}
+              {jaNode(lead)}
             </p>
           ) : null}
           {children}

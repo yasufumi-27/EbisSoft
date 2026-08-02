@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ja } from "@/lib/typography";
 
 import { JsonLd } from "@/components/JsonLd";
 import { breadcrumbJsonLd, capabilitiesJsonLd, webPageJsonLd } from "@/lib/jsonld";
@@ -59,12 +60,12 @@ export default function DemoIndexPage() {
         eyebrow="Capabilities"
         title={
           <>
-            こんなことが、できます。
+            実際に動かせる
             <br />
-            <span className="text-gradient">全部、動かせます。</span>
+            <span className="text-gradient">15領域のデモ</span>
           </>
         }
-        lead="Web制作会社の「できます」ほど当てにならないものはありません。だから15領域すべてを、実際に触れるデモとして公開しています。しかもこの15個は、AIを活用して合計約3時間で実装したものです。"
+        lead="「できます」という説明だけでは判断できないと思うので、15領域すべてをその場で触れるデモにして公開しています。この15個は、AIを活用して合計約3時間で実装したものです。"
       >
         <div className="mt-8 flex flex-wrap gap-3">
           <ButtonLink href="/contact" withArrow>
@@ -93,25 +94,25 @@ export default function DemoIndexPage() {
                 </span>
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                    <h2 className="text-xl font-bold text-white">{c.title}</h2>
+                    <h2 className="text-xl font-bold text-white">{ja(c.title)}</h2>
                     <span className="font-display rounded-md border border-gold/30 bg-gold/10 px-2 py-0.5 text-[10px] font-bold tracking-wider text-gold-light">
                       実装 {c.buildTime}
                     </span>
                   </div>
-                  <p className="mt-1 text-sm text-brand-light">{c.tagline}</p>
+                  <p className="mt-1 text-sm text-brand-light">{ja(c.tagline)}</p>
                 </div>
               </div>
 
               {/* 事業インパクトを先に、技術の話は後に */}
               <p className="speakable mt-5 text-base leading-relaxed font-medium text-slate-200">
-                {c.impact}
+                {ja(c.impact)}
               </p>
 
               <ul className="mt-5 space-y-2">
                 {c.businessValue.map((v) => (
                   <li key={v.title} className="flex gap-2.5 text-sm text-slate-300">
                     <Icon name="check" className="mt-0.5 size-4 shrink-0 text-brand" />
-                    {v.title}
+                    <span className="min-w-0">{ja(v.title)}</span>
                   </li>
                 ))}
               </ul>
@@ -145,7 +146,7 @@ export default function DemoIndexPage() {
       <Section bg="deep">
         <div className="panel panel-corners mx-auto max-w-3xl p-8 text-center sm:p-12" data-reveal>
           <h2 className="text-2xl font-bold text-white sm:text-3xl">
-            ここにないことも、たいていできます。
+            ここにない機能もご相談ください
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-slate-400">
             「こんなことはできますか？」のご相談は、実現方法・概算費用・期間まで無料でお答えします。

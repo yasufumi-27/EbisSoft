@@ -9,6 +9,7 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { Icon } from "@/components/ui/icons";
 import { InquiryForm } from "@/components/sections/InquiryForm";
+import { ja } from "@/lib/typography";
 
 const title = "お問い合わせ・無料相談";
 const description =
@@ -53,9 +54,7 @@ export default function ContactPage() {
         eyebrow="Contact"
         title={
           <>
-            まずは<span className="text-gradient">やりたいこと</span>を、
-            <br />
-            ひとことだけ。
+            <span className="text-gradient">お問い合わせ</span>
           </>
         }
         lead="細かい仕様が決まっていなくても大丈夫です。ご予算は目安で構いません。実現方法と費用のすり合わせは、打ち合わせで一緒に行います。"
@@ -64,7 +63,7 @@ export default function ContactPage() {
           {inquiryNotes.map((n) => (
             <li key={n} className="flex gap-2.5 text-sm text-slate-300">
               <Icon name="check" className="mt-0.5 size-4 shrink-0 text-brand" />
-              {n}
+              <span className="min-w-0">{ja(n)}</span>
             </li>
           ))}
         </ul>
@@ -83,7 +82,7 @@ export default function ContactPage() {
               <div className="panel panel-corners p-6">
                 <h2 className="text-base font-bold text-white">直接ご連絡いただいても</h2>
                 <p className="mt-2 text-xs leading-relaxed text-slate-500">
-                  フォームが面倒な場合は、こちらへ直接どうぞ。
+                  {ja("フォームが面倒な場合は、こちらへ直接どうぞ。")}
                 </p>
 
                 <a
@@ -131,14 +130,14 @@ export default function ContactPage() {
                         {i + 1}
                       </span>
                       <span>
-                        <span className="block text-sm font-bold text-white">{t}</span>
-                        <span className="block text-xs text-slate-500">{b}</span>
+                        <span className="block text-sm font-bold text-white">{ja(t)}</span>
+                        <span className="block text-xs text-slate-500">{ja(b)}</span>
                       </span>
                     </li>
                   ))}
                 </ol>
                 <p className="mt-5 border-t border-white/10 pt-4 text-xs leading-relaxed text-slate-500">
-                  ここまですべて無料です。お見積もりの内容にご納得いただけない場合、お断りいただいて構いません。
+                  {ja("ここまですべて無料です。お見積もりの内容にご納得いただけない場合、お断りいただいて構いません。")}
                 </p>
               </div>
             </aside>

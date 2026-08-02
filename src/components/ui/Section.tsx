@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Container } from "@/components/ui/Container";
+import { jaNode } from "@/lib/typography";
 
 /** セクション見出し（英字アイ・キャッチ＋発光ライン＋H2＋リード文）。 */
 export function SectionHeading({
@@ -27,7 +28,7 @@ export function SectionHeading({
           <span aria-hidden className="h-px w-8 bg-gradient-to-l from-transparent to-brand/70" />
         </p>
       ) : null}
-      <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">{title}</h2>
+      <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">{jaNode(title)}</h2>
       {/* 見出し下のライン。対応ブラウザではスクロールに合わせて引かれる（JS不使用） */}
       <span
         aria-hidden
@@ -36,7 +37,7 @@ export function SectionHeading({
         }`}
       />
       {description ? (
-        <p className="mt-5 text-base leading-relaxed text-slate-400 sm:text-lg">{description}</p>
+        <p className="mt-5 text-base leading-relaxed text-slate-400 sm:text-lg">{jaNode(description)}</p>
       ) : null}
     </div>
   );

@@ -6,6 +6,7 @@ import { CountUp } from "@/components/fx/CountUp";
 import { Tilt } from "@/components/fx/Tilt";
 import { stats } from "@/lib/content";
 import { siteConfig } from "@/lib/site";
+import { ja } from "@/lib/typography";
 
 /**
  * ファーストビュー。ページ内で唯一の <h1> を置き、主要キーワードを含めます。
@@ -35,7 +36,9 @@ export function Hero() {
           <div className="flex flex-wrap items-center gap-2">
             <p className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-4 py-1.5 text-sm font-semibold text-brand-light shadow-[0_0_18px_rgba(34,211,238,0.18)] backdrop-blur">
               <Icon name="pin" className="size-4" />
-              {siteConfig.contact.address.locality}のWeb制作・組み込み開発 {siteConfig.name}
+              {/* 語の途中で折れないよう、意味のまとまりごとに折り返す（改行＝空白になるため1行で書く） */}
+              {/* prettier-ignore */}
+              <span>{siteConfig.contact.address.locality}の<span className="nb-strict">Web制作</span>・<span className="nb-strict">組み込み開発</span> <span className="nb-strict">{siteConfig.name}</span></span>
             </p>
             <p className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-4 py-1.5 text-sm font-semibold text-gold-light backdrop-blur">
               <Icon name="sparkles" className="size-4 animate-pulse-glow" />
@@ -54,29 +57,29 @@ export function Hero() {
           {/* 行ごとに立ち上がる見出し（文字は分割していないので折り返し・読み上げに影響なし） */}
           {/* [word-break:keep-all] は語の途中で折らないぶん、狭い端末では1行が伸びる。
               画面幅に追従する clamp で字送りを決め、どの端末でも見切れないようにする。 */}
-          <h1 className="mt-4 text-[clamp(1.75rem,8.2vw,2.25rem)] font-bold leading-[1.16] tracking-tight text-white [word-break:keep-all] sm:text-5xl lg:text-[3.5rem]">
+          <h1 className="mt-4 text-[clamp(1.6rem,7.6vw,2.25rem)] font-bold leading-[1.16] tracking-tight text-white [word-break:keep-all] sm:text-5xl lg:text-[3.5rem]">
             <span className="hero-line">
               <span style={{ "--line-delay": "0.08s" } as React.CSSProperties}>
-                <span className="text-gradient">AI活用</span>のWeb制作と、
+                <span className="text-gradient">AI活用</span>のWeb制作と
               </span>
             </span>
             <span className="hero-line">
               <span style={{ "--line-delay": "0.26s" } as React.CSSProperties}>
-                <span className="text-gold">組み込み</span>開発。
+                <span className="text-gold">組み込み</span>開発
               </span>
             </span>
           </h1>
 
           <p className="speakable mt-6 max-w-lg text-lg leading-relaxed text-slate-300">
             {siteConfig.name}は、{siteConfig.contact.address.locality}
-            のソフトウェア開発事業者です。生成AIを制作フロー全体に組み込み、
+            {ja("のソフトウェア開発事業者です。生成AIを制作フロー全体に組み込み、")}
             <strong className="font-bold text-white">制作期間は従来の約1/3、最短5日で公開</strong>
-            。マイコン・IoT機器の組み込みソフトウェア開発もお引き受けします。
+            {ja("。マイコン・IoT機器の組み込みソフトウェア開発もお引き受けします。")}
           </p>
 
           {/* トップは要約に徹し、詳細は各ページへ送る */}
           <p className="mt-4 max-w-lg text-sm leading-relaxed text-slate-400">
-            AIチャットボット・3DCG・AR・システム連携など15領域は、実際に動くデモで確かめられます。
+            {ja("AIチャットボット・3DCG・AR・システム連携など15領域は、実際に動くデモで確かめられます。")}
           </p>
 
           <div className="mt-10 flex flex-col gap-3 sm:flex-row">
@@ -89,7 +92,7 @@ export function Hero() {
           </div>
 
           <p className="mt-5 text-sm text-slate-500">
-            初回相談・お見積もりは無料です。まずはお気軽にご相談ください。
+            初回のご相談・お見積もりは無料です。
           </p>
         </div>
 
@@ -108,7 +111,7 @@ export function Hero() {
             </span>
             <span className="text-sm">
               <span className="block font-bold text-white">表示速度 100点</span>
-              <span className="block text-slate-400">Core Web Vitals最適化</span>
+              <span className="block whitespace-nowrap text-slate-400">Core Web Vitals最適化</span>
             </span>
           </div>
         </div>
@@ -128,7 +131,7 @@ export function Hero() {
                 <span className="font-display block text-2xl font-bold tracking-tight text-white sm:text-3xl">
                   <CountUp value={s.value} className="text-gradient" />
                 </span>
-                <span className="mt-2 block text-sm text-slate-400">{s.label}</span>
+                <span className="mt-2 block text-sm text-slate-400">{ja(s.label)}</span>
               </dd>
             </div>
           ))}

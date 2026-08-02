@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Section, SectionHeading } from "@/components/ui/Section";
 import { Icon } from "@/components/ui/icons";
 import { capabilities, capabilitiesBySlug } from "@/lib/content";
+import { ja } from "@/lib/typography";
 
 /**
  * 実動デモの抜粋カード（トップ・各詳細ページ用）。
@@ -12,8 +13,8 @@ import { capabilities, capabilitiesBySlug } from "@/lib/content";
 export function DemoShowcase({
   slugs,
   eyebrow = "Live Demos",
-  title = "「できます」ではなく、動かして確かめてください。",
-  description = "主要な領域は、実際にブラウザで操作できるデモとして公開しています。",
+  title = "その場で動かせるデモ",
+  description = "主要な領域は、ブラウザでそのまま操作できるデモとして公開しています。",
   bg = "transparent",
 }: {
   /** 掲載するデモ（省略時は先頭6件） */
@@ -52,11 +53,11 @@ export function DemoShowcase({
 
             <h3 className="mt-4 text-base font-bold text-white">
               <Link prefetch={false} href={`/demo/${c.slug}`} className="after:absolute after:inset-0 after:content-['']">
-                {c.title}
+                {ja(c.title)}
               </Link>
             </h3>
-            <p className="mt-1 text-sm text-brand-light">{c.tagline}</p>
-            <p className="mt-3 flex-1 text-sm leading-relaxed text-slate-400">{c.impact}</p>
+            <p className="mt-1 text-sm text-brand-light">{ja(c.tagline)}</p>
+            <p className="mt-3 flex-1 text-sm leading-relaxed text-slate-400">{ja(c.impact)}</p>
 
             <span className="mt-4 inline-flex items-center gap-1.5 border-t border-white/10 pt-4 text-xs font-bold text-slate-500 transition-colors group-hover:text-brand-light">
               <Icon name="play" className="size-3.5" />

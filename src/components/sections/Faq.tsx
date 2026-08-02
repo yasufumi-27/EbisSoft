@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Section, SectionHeading } from "@/components/ui/Section";
 import { Icon } from "@/components/ui/icons";
 import { faqs, type Faq as FaqItem } from "@/lib/content";
+import { ja } from "@/lib/typography";
 
 /**
  * よくある質問。JSなしの <details>/<summary> でアコーディオン化。
@@ -34,7 +35,7 @@ export function Faq({
             className="group px-6 transition-colors open:bg-white/[0.03] [&_summary::-webkit-details-marker]:hidden"
           >
             <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-5 font-semibold text-slate-100 transition-colors hover:text-brand-light">
-              {faq.question}
+              <span className="min-w-0">{ja(faq.question)}</span>
               <svg
                 width="20"
                 height="20"
@@ -49,7 +50,7 @@ export function Faq({
                 <path d="m6 9 6 6 6-6" />
               </svg>
             </summary>
-            <p className="speakable pb-5 text-sm leading-relaxed text-slate-400">{faq.answer}</p>
+            <p className="speakable pb-5 text-sm leading-relaxed text-slate-400">{ja(faq.answer)}</p>
           </details>
         ))}
       </div>

@@ -1,6 +1,7 @@
 import { Section, SectionHeading } from "@/components/ui/Section";
 import { Icon } from "@/components/ui/icons";
 import { strengths } from "@/lib/content";
+import { ja } from "@/lib/typography";
 
 /** 選ばれる理由（強み）。 */
 export function Strengths() {
@@ -8,8 +9,8 @@ export function Strengths() {
     <Section id="strengths">
       <SectionHeading
         eyebrow="Why エビスソフト"
-        title="速い。強い。そして、確かめられる。"
-        description="AIを使いこなす制作体制と、AIそのものを作る技術力。エビスソフトが選ばれる4つの理由です。"
+        title="エビスソフトの強み"
+        description="AIを使いこなす制作体制と、AI機能そのものを開発できる技術力。この2つが土台になっています。"
       />
       <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {strengths.map((s, i) => (
@@ -22,8 +23,8 @@ export function Strengths() {
             <span className="grid size-12 place-items-center rounded-xl border border-brand/30 bg-brand/10 text-brand-light shadow-[0_0_20px_rgba(34,211,238,0.2)]">
               <Icon name={s.icon} className="size-6" />
             </span>
-            <h3 className="mt-5 text-lg font-bold text-white">{s.title}</h3>
-            <p className="mt-2 text-sm leading-relaxed text-slate-400">{s.description}</p>
+            <h3 className="mt-5 text-lg font-bold text-white">{ja(s.title)}</h3>
+            <p className="mt-2 text-sm leading-relaxed text-slate-400">{ja(s.description)}</p>
           </div>
         ))}
       </div>

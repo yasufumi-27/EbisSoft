@@ -5,6 +5,7 @@ import { nav, subNav } from "@/lib/nav";
 import { capabilities } from "@/lib/content";
 import { Logo } from "@/components/site/Logo";
 import { Icon } from "@/components/ui/icons";
+import { ja } from "@/lib/typography";
 
 const year = new Date().getFullYear();
 
@@ -27,9 +28,11 @@ export function SiteFooter() {
             <Logo />
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-slate-400">
               {siteConfig.legalName}は、{siteConfig.contact.address.locality}
-              のAI活用型Web制作・組み込みソフトウェア開発事業者です（
+              {ja("のAI活用型Web制作・組み込みソフトウェア開発事業者です（")}
               {siteConfig.memberOf.map((m) => m.name).join("・")}
-              所属）。生成AIを制作フローに組み込み、最速で高性能なサイトを構築。3DCG・AIチャットボット・システム連携から、マイコン・IoT機器の開発まで対応します。
+              {ja(
+                "所属）。生成AIを制作フローに組み込み、最速で高性能なサイトを構築。3DCG・AIチャットボット・システム連携から、マイコン・IoT機器の開発まで対応します。",
+              )}
             </p>
           </div>
 

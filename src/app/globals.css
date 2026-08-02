@@ -81,6 +81,42 @@
     text-wrap: pretty;
   }
 
+  /* ---------------------------------------------------------------
+   * 語の途中で改行させない（src/lib/typography.tsx の ja() が付ける）。
+   * word-break: keep-all で語中の折り返しを禁止し、
+   * 1行に置いても収まらない長い語だけ overflow-wrap が逃がす
+   * （anywhere ではなく break-word。anywhere は行の残り幅に入らないだけで
+   *   語を割ってしまい、次の行へ送るという判断をしてくれない）。
+   * ------------------------------------------------------------- */
+  .nb {
+    display: inline-block;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+  /* Wi-Fi・N-gram のような記号を含む短い英数字。keep-all では記号での改行を止められない。
+     inline-block にしているのは、素の nowrap だと前後の地の文まで巻き込んで
+     行の最小幅（min-content）を押し上げ、カード全体が狭い画面で横に膨らむため。 */
+  .nb-strict {
+    display: inline-block;
+    white-space: nowrap;
+  }
+
+  /* 対応ブラウザ（Chrome / Edge）では、文節単位で折り返す。
+     「つくり／ます」のような不自然な切れ方が減る。非対応環境では従来どおり。 */
+  @supports (word-break: auto-phrase) {
+    p,
+    li,
+    dd,
+    dt,
+    summary,
+    h1,
+    h2,
+    h3,
+    h4 {
+      word-break: auto-phrase;
+    }
+  }
+
   /* ディスプレイフォントの数値は等幅に（カウントアップや価格が横に揺れない） */
   .font-display {
     font-variant-numeric: tabular-nums;
@@ -170,6 +206,10 @@
    * ------------------------------------------------------------- */
   .panel {
     position: relative;
+    /* グリッド／フレックスの子は既定（min-width:auto）だと中身の最小幅まで広がる。
+       折り返し禁止の語（.nb）を含む行はChromeが最小幅を大きめに見積もるため、
+       狭い端末でカードがトラック幅を超えて横スクロールが出ていた。 */
+    min-width: 0;
     border-radius: 1rem;
     border: 1px solid var(--color-line);
     background:

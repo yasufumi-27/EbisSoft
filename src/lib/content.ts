@@ -35,7 +35,7 @@ export const pillars: Pillar[] = [
     href: "/ai",
     eyebrow: "AI Utilization",
     title: "AI活用",
-    lead: "AIを「使う側」であり、「作る側」でもあります。",
+    lead: "AIを使う側であり、作る側でもあります。",
     description:
       "生成AIを制作フローに組み込んで期間を約1/3に短縮し、納品物としてもRAG構成のAIチャットボットやAI機能を開発します。AI検索（AEO / LLMO）への最適化も、作る側の理解で実装します。",
     bullets: [
@@ -134,7 +134,7 @@ export const capabilities: Capability[] = [
   {
     slug: "3dcg",
     title: "3DCG・WebGL演出",
-    tagline: "製品を、持ち込まずに見せる。",
+    tagline: "現物がなくても製品を見せられる",
     impact: "現物を送らなくても、質感・サイズ・全カラーが伝わる。",
     description:
       "Three.js / WebGL で、ブラウザ上を回せる3D製品ビューアやブランド演出を実装します。写真では伝わらない立体感を、スマートフォンでも滑らかに動く軽さで届けます。",
@@ -178,7 +178,7 @@ export const capabilities: Capability[] = [
   {
     slug: "configurator",
     title: "商品カスタマイズ・見える化",
-    tagline: "選ばせると、欲しくなる。",
+    tagline: "その場で組み立てられる商品ページ",
     impact: "自分仕様に組み立てる体験そのものが、購買の動機になる。",
     description:
       "色・素材・サイズ・オプションを選ぶと、見た目・価格・納期がその場で変わる注文画面をつくります。迷いを「選ぶ楽しさ」に変え、単価の高い構成へ自然に導きます。",
@@ -223,7 +223,7 @@ export const capabilities: Capability[] = [
   {
     slug: "animation",
     title: "Web内アニメーション",
-    tagline: "読まれない説明を、見てもらえる情報に。",
+    tagline: "文章では伝わらない仕組みを動きで説明",
     impact: "複雑なサービスが数秒で伝わり、離脱が止まる。",
     description:
       "スクロール連動の演出、図解アニメーション、操作に反応するマイクロインタラクションを設計・実装します。装飾ではなく、視線を導き、理解を助けるための動きです。",
@@ -274,7 +274,7 @@ export const capabilities: Capability[] = [
   {
     slug: "ai-chatbot",
     title: "AIチャットボット",
-    tagline: "夜間・休日の問い合わせを、取りこぼさない。",
+    tagline: "夜間・休日の問い合わせにも自動で回答",
     impact: "定型質問の一次対応が自動化され、人を増やさず窓口が24時間になる。",
     description:
       "自社の資料・FAQ・サービス情報を知識源に、訪問者の質問へ自動で答えるAIを構築します。根拠を示し、知識源にないことは答えない設計で、誤回答のリスクを抑えます。",
@@ -324,7 +324,7 @@ export const capabilities: Capability[] = [
   {
     slug: "simulator",
     title: "料金シミュレーター・自動診断",
-    tagline: "「いくら？」を、待たせずに答える。",
+    tagline: "概算費用をその場で提示",
     impact: "見積もり待ちで消えていた見込み客が、その場で問い合わせに変わる。",
     description:
       "条件を選ぶだけで、概算金額・期間・おすすめプランがその場で出る診断をつくります。価格が分からない不安を即時に解消し、条件が固まった状態の問い合わせだけを受け取れます。",
@@ -369,7 +369,7 @@ export const capabilities: Capability[] = [
   {
     slug: "recommend",
     title: "AIレコメンド（回遊・客単価）",
-    tagline: "見ているうちに、次が出てくる。",
+    tagline: "一人ひとりに合う商品を自動で提案",
     impact: "1人あたりの閲覧数と購入点数が増え、同じ集客で売上が伸びる。",
     description:
       "閲覧・クリックの履歴から関心を推定し、次に見せるものを自動で並べ替えます。人が手作業で「おすすめ」を組む必要がなく、商品が増えても精度が落ちません。",
@@ -419,7 +419,7 @@ export const capabilities: Capability[] = [
   {
     slug: "ar",
     title: "AR（実物大で置いてみる）",
-    tagline: "買う前に、自分の部屋に置ける。",
+    tagline: "スマホのカメラで実物大に置いてみる",
     impact: "サイズ違いの返品と「思ってたのと違う」が激減する。",
     description:
       "スマートフォンのカメラ越しに、商品を実物大でその場に表示します。アプリのインストールは不要。3Dモデルがあれば、同じ資産をそのままARに転用できます。",
@@ -470,7 +470,7 @@ export const capabilities: Capability[] = [
   {
     slug: "voice",
     title: "音声AI（話して聞ける）",
-    tagline: "文字を打たなくても、話せば答える。",
+    tagline: "話しかけると音声で答える",
     impact: "電話が減り、キーボードが苦手な層の問い合わせを拾える。",
     description:
       "マイクに話しかけると、その場で聞き取って音声で回答します。ブラウザの音声認識・音声合成を使うため、電話の一次対応をWeb上で代替できます。",
@@ -520,7 +520,7 @@ export const capabilities: Capability[] = [
   {
     slug: "multilingual",
     title: "多言語・インバウンド対応",
-    tagline: "京都に来る前から、探されている。",
+    tagline: "多言語表示とインバウンド検索への対応",
     impact: "海外からの検索・予約を、翻訳の手間なく取り込める。",
     description:
       "日本語で書いた内容をAIで翻訳し、人がレビューして公開します。hreflangの設計まで含めて、各言語が正しく検索される状態をつくります。",
@@ -565,7 +565,7 @@ export const capabilities: Capability[] = [
   {
     slug: "ai-agent",
     title: "AIエージェント対応",
-    tagline: "訪問者は、人間だけではなくなる。",
+    tagline: "AIが読み取れる形で情報を公開",
     impact: "ChatGPTなどのAIが代理で調べ、比較し、連絡してくる時代に備える。",
     description:
       "AIが読み取れる形でサイトの情報を公開します。llms.txt・構造化データ・エージェント向けAPIを整え、AIが情報源として選び、行動できる状態をつくります。",
@@ -610,7 +610,7 @@ export const capabilities: Capability[] = [
   {
     slug: "personalize",
     title: "AIパーソナライズ",
-    tagline: "来た人によって、見せるものを変える。",
+    tagline: "訪問者の業種に合わせて表示を変更",
     impact: "同じ1ページで、業種ごとに刺さる訴求を出し分けられる。",
     description:
       "流入元・検索キーワード・過去の閲覧から訪問者の関心を推定し、見出し・実績・CTAを出し分けます。ページを何本も作らずに、訴求の精度だけを上げられます。",
@@ -655,7 +655,7 @@ export const capabilities: Capability[] = [
   {
     slug: "insight",
     title: "行動解析・A/Bテスト",
-    tagline: "勘で直すのを、やめる。",
+    tagline: "クリックの実データで改善点を特定",
     impact: "どこで離脱しているかが見え、改善が「当たったか」を数字で言い切れる。",
     description:
       "クリック位置・スクロール到達率を記録して可視化し、2案を同時に出して勝ち負けを統計的に判定します。デザインの好みの議論を、数字の議論に変えます。",
@@ -705,7 +705,7 @@ export const capabilities: Capability[] = [
   {
     slug: "pwa",
     title: "アプリ化（PWA）・通知",
-    tagline: "ホーム画面に置かれ、通知で戻ってくる。",
+    tagline: "ホーム画面に追加できて通知も送れる",
     impact: "アプリを作らずに、アプリと同じ再訪導線を持てる。",
     description:
       "Webサイトをホーム画面に追加でき、通信が不安定でも開けるようにします。通知を送れば、SNSや広告に頼らず直接ユーザーを呼び戻せます。",
@@ -750,7 +750,7 @@ export const capabilities: Capability[] = [
   {
     slug: "sns",
     title: "SNS連携",
-    tagline: "更新の手間なく、動いているサイトを保つ。",
+    tagline: "SNSの投稿をサイトに自動掲載",
     impact: "SNSを更新すればサイトも更新され、放置感による信頼低下を防げる。",
     description:
       "Instagram・X・YouTube の投稿をサイトへ自動掲載し、あわせてシェア時に表示されるOGPカードを設計します。発信からサイト、問い合わせまでを一本につなぎます。",
@@ -801,7 +801,7 @@ export const capabilities: Capability[] = [
   {
     slug: "integration",
     title: "他システムとの連携",
-    tagline: "二重入力と転記ミスを、まとめて消す。",
+    tagline: "既存システムとデータを自動でやりとり",
     impact: "在庫・予約・顧客データが自動で同期し、人を増やさず処理量を増やせる。",
     description:
       "基幹システム・在庫管理・予約・CRM・決済など、すでに社内で動いているシステムとWebサイトをAPIで接続します。認証・リトライ・エラー通知まで含めた、止まらない連携設計が本領です。",
@@ -1097,25 +1097,25 @@ export const aiImpacts: { label: string; before: string; after: string }[] = [
 export type Strength = { title: string; description: string; icon: IconKey };
 export const strengths: Strength[] = [
   {
-    title: "AIを駆使して、圧倒的に速く",
+    title: "制作期間は従来の約1/3",
     description:
       "設計・実装・テストの全工程にAIエージェントを組み込みます。Web制作は従来の約1/3（最短5日）、組み込みでも既存コードの解析や検証にAIを効かせて工数を圧縮します。",
     icon: "rocket",
   },
   {
-    title: "速いだけでなく、高性能",
+    title: "Lighthouse 性能スコア100点",
     description:
       "AIで浮いた時間は、すべて品質に再投資します。その結果がこのサイト自身で、Lighthouse 性能スコア100点で動いています。",
     icon: "gauge",
   },
   {
-    title: "AIを使う側であり、作る側",
+    title: "AI機能そのものを開発している",
     description:
       "RAGチャットボットや異常検知などAI機能そのものを開発しています。だからこそ、生成AIに引用・推薦される設計（AEO / LLMO）も内側から分かります。",
     icon: "sparkles",
   },
   {
-    title: "できることを、実物で見せる",
+    title: "15領域すべてを実動デモで公開",
     description:
       "3DCG・AR・料金シミュレーター・AIレコメンド・AIチャットボットほか、15領域すべてを触れるデモとして公開しています。合計約3時間で実装したものです。",
     icon: "cube",
@@ -1724,13 +1724,13 @@ export const embeddedStrengths: Strength[] = [
     icon: "check",
   },
   {
-    title: "必要になったら、外まで広げられる",
+    title: "クラウド連携は任意で追加できます",
     description:
       "クラウド連携やAIを使った開発効率化・異常検知は、必要なときだけ追加できます。使わない選択も当然できます。",
     icon: "sparkles",
   },
   {
-    title: "できないことは、先に言う",
+    title: "対応できない範囲を先にお伝えします",
     description:
       "量産設計・電気回路の設計や認証取得の代行は行いません。対応できる範囲を最初に明示し、必要なら専門の協力先と組む形をご提案します。",
     icon: "shield",

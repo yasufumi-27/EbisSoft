@@ -6,6 +6,7 @@ import { siteConfig } from "@/lib/site";
 import { Section } from "@/components/ui/Section";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
+import { ja } from "@/lib/typography";
 
 const title = "プライバシーポリシー";
 const description = `${siteConfig.legalName}における個人情報の取り扱い、利用目的、第三者提供、アクセス解析ツールの利用についてご説明します。`;
@@ -112,13 +113,13 @@ export default function PrivacyPage() {
           <div className="space-y-9">
             {sections.map((s) => (
               <section key={s.heading}>
-                <h2 className="text-lg font-bold text-white">{s.heading}</h2>
+                <h2 className="text-lg font-bold text-white">{ja(s.heading)}</h2>
                 {s.body.map((p) => (
                   <p
                     key={p.slice(0, 20)}
                     className="mt-3 text-sm leading-relaxed whitespace-pre-line text-slate-400"
                   >
-                    {p}
+                    {ja(p)}
                   </p>
                 ))}
               </section>

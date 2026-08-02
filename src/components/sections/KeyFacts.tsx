@@ -1,5 +1,6 @@
 import { Container } from "@/components/ui/Container";
 import { keyFacts } from "@/lib/content";
+import { ja } from "@/lib/typography";
 
 /**
  * 「30秒でわかるエビスソフト」要点ブロック。
@@ -21,8 +22,8 @@ export function KeyFacts() {
                 key={f.q}
                 className="border-l-2 border-brand/50 pl-4 transition-colors hover:border-gold"
               >
-                <dt className="font-semibold text-white">{f.q}</dt>
-                <dd className="speakable mt-1 text-slate-400">{f.a}</dd>
+                <dt className="font-semibold text-white">{ja(f.q)}</dt>
+                <dd className="speakable mt-1 text-slate-400">{ja(f.a)}</dd>
               </div>
             ))}
           </dl>
