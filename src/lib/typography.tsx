@@ -108,7 +108,18 @@ export function ja(text: string): React.ReactNode {
   if (parts.length === 0) return text;
   if (last < text.length) parts.push(text.slice(last));
 
-  return parts.map((p, i) => <Fragment key={i}>{p}</Fragment>);
+  /* 全体をひとつの span にまとめる。
+     ボタンのように親が flex（gap つき）だと、切り分けた語がそれぞれ flex の子になり、
+     語と語のあいだすべてに gap ぶんの隙間が空いてしまうため
+     （「AI活用の中身を見る」で 8px × 3 = 24px の無駄な空白が入っていた）。
+     display は inline なので、文章の流し込みと折り返しには影響しない。 */
+  return (
+    <span className="ja">
+      {parts.map((p, i) => (
+        <Fragment key={i}>{p}</Fragment>
+      ))}
+    </span>
+  );
 }
 
 /**
@@ -124,7 +135,10 @@ export function jaNode(node: React.ReactNode): React.ReactNode {
   if (Array.isArray(node)) {
     return Children.map(node, (child) => jaNode(child));
   }
-  if (isValidElement<{ children?: React.ReactNode }>(node)) {
+  if (isValidElement<{ children?: React.ReactNode; className?: string }>(node)) {
+    // すでに ja() を通した部分は、二重に包まない
+    const className = node.props.className;
+    if (className === "ja" || className === "nb") return node;
     const children = node.props.children;
     // 子を持たない要素（<br /> や <Icon />）はそのまま
     if (children === undefined || children === null) return node;
