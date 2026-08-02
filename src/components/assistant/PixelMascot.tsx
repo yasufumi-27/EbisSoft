@@ -57,9 +57,9 @@ const ART_FULL = [
   "...cc.obbbbbso......",
   "......oooooooo......",
   ".....oooooooooo.....",
-  "....okbbkkkkbbko....",
-  "....obbbkkkkbbbo....",
-  "....okbbkkkkbbko....",
+  "....obbkkkkkkbbo....",
+  "....obbkkkkkkbbo....",
+  "....obbkkkkkkbbo....",
   ".....oooooooooo.....",
 ];
 
