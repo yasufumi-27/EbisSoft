@@ -88,7 +88,7 @@ export function SiteAssistant() {
         </div>
       ) : null}
 
-      {/* 起動ボタン（ドット絵キャラクター） */}
+      {/* 起動ボタン（ドット絵ロボットの輪郭そのものがボタン。枠は描かない） */}
       <button
         type="button"
         onClick={toggle}
@@ -96,7 +96,7 @@ export function SiteAssistant() {
         aria-label={open ? "AIアシスタントを閉じる" : "AIアシスタントに質問する"}
         className="assistant-launcher"
       >
-        <PixelMascot className="assistant-launcher-art" />
+        <PixelMascot variant="full" className="assistant-launcher-art" />
         <span className="assistant-launcher-ping" aria-hidden="true" />
       </button>
     </div>

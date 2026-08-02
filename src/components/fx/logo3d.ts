@@ -80,7 +80,7 @@ export function createLogo3d(options: { lettersMaterial?: THREE.Material } = {})
     roughness: 0.35,
   });
   const soft = new THREE.Mesh(softGeo, softMat);
-  soft.position.set(textWidth / 2 - 0.62, -0.74, 0.02);
+  soft.position.set(textWidth / 2 - 0.62, -0.95, 0.02);
   group.add(soft);
   disposables.push(softGeo, softMat);
 
@@ -108,10 +108,53 @@ export function createLogo3d(options: { lettersMaterial?: THREE.Material } = {})
     bead.position.set(Math.cos(a) * ringRadius, Math.sin(a) * ringRadius, 0);
     ringA.add(bead);
   }
+  /* --- リングの帯（原画のリボン。言葉はこの上に乗る） --- */
+  const bandGeo = new THREE.RingGeometry(ringRadius * 0.9, ringRadius * 1.1, 128);
+  const bandMat = new THREE.MeshBasicMaterial({
+    color: new THREE.Color(0x3ea8d8),
+    transparent: true,
+    opacity: 0.22,
+    side: THREE.DoubleSide,
+    depthWrite: false,
+  });
+  ringA.add(new THREE.Mesh(bandGeo, bandMat));
+  disposables.push(bandGeo, bandMat);
+
+  /* --- リングに乗る言葉（原画と同じ5語・同じ並び） ---
+     リングの面に寝かせて置く（＝帯に書かれている状態）。ringA の子なので一緒に回る。
+     上半分／下半分で向きを反転させ、静止時は原画と同じように読める向きにしている。 */
+  const RING_WORDS: { text: string; deg: number }[] = [
+    { text: "AI", deg: 302 },
+    { text: "SECURITY", deg: 78 },
+    { text: "CLOUD", deg: 140 },
+    { text: "NETWORKS", deg: 250 },
+    { text: "GLOBAL", deg: 345 },
+  ];
+  const wordMat = new THREE.MeshStandardMaterial({
+    color: new THREE.Color(0xdff6ff),
+    emissive: new THREE.Color(0x9fe8ff),
+    emissiveIntensity: 0.85,
+    metalness: 0.3,
+    roughness: 0.35,
+  });
+  disposables.push(wordMat);
+  for (const w of RING_WORDS) {
+    const { geo } = makeText(w.text, 0.24, 0.02);
+    const mesh = new THREE.Mesh(geo, wordMat);
+    const rad = (w.deg * Math.PI) / 180;
+    mesh.position.set(Math.cos(rad) * ringRadius, Math.sin(rad) * ringRadius, 0.05);
+    const upper = w.deg > 0 && w.deg < 180;
+    mesh.rotation.z = rad + (upper ? -Math.PI / 2 : Math.PI / 2);
+    // 帯に完全に寝かせると真横から見ることになり読めないので、少しだけ手前へ起こす
+    mesh.rotateX(-0.8);
+    ringA.add(mesh);
+    disposables.push(geo);
+  }
+
   ring.add(ringA, ringB);
-  // 楕円の軌道に見えるよう寝かせる
-  ring.rotation.x = 1.02;
-  ring.rotation.z = -0.2;
+  // 原画と同じ角度に寝かせる（楕円の縦横比 175/430 ≒ 66度の傾き、面内の回転 -17度）
+  ring.rotation.x = 1.15;
+  ring.rotation.z = -0.3;
   group.add(ring);
   disposables.push(ringGeoA, ringGeoB, ringMat, beadGeo, beadMat);
 
@@ -141,12 +184,19 @@ export function createLogo3d(options: { lettersMaterial?: THREE.Material } = {})
   });
   const sparks = new THREE.Points(sparkGeo, sparkMat);
   group.add(sparks);
+
+  // 全体をわずかに前傾させる（リングの楕円が見え、正方形の枠に収まりよく入る）
+  group.rotation.x = -0.18;
   disposables.push(sparkGeo, sparkMat);
 
-  const triangles = [textGeo, softGeo, ringGeoA, ringGeoB].reduce((n, g) => {
+  // 実際にシーンへ出ているメッシュ（文字・Soft・リング・帯・リングの言葉）の合計
+  let triangles = 0;
+  group.traverse((o) => {
+    const g = (o as THREE.Mesh).geometry as THREE.BufferGeometry | undefined;
+    if (!g || !(o as THREE.Mesh).isMesh) return;
     const idx = g.getIndex();
-    return n + (idx ? idx.count / 3 : g.getAttribute("position").count / 3);
-  }, 0);
+    triangles += idx ? idx.count / 3 : g.getAttribute("position").count / 3;
+  });
 
   const update = (t: number) => {
     // リングだけが回る（EBISU と Soft は回さない）

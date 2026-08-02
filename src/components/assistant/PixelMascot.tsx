@@ -1,5 +1,5 @@
 /**
- * サイト内AIアシスタントのドット絵キャラクター（16×16）。
+ * サイト内AIアシスタントのドット絵ロボット。
  *
  * 画像ファイルは使わず、ドットの並びを文字列で持ってSVGの矩形に展開しています。
  *   - 追加のネットワーク取得が発生しない（初期表示に影響しない）
@@ -7,43 +7,76 @@
  *   - 色をブランドカラーに合わせて1か所で変えられる
  *
  * 横に連続する同色ドットは1本の矩形にまとめているため、
- * 256個ではなく数十個の <rect> にしかなりません。
+ * 数百個ではなく数十個の <rect> にしかなりません。
+ *
+ * 2種類の絵を持ちます。
+ *   full … 全身（右下の起動ボタン用。輪郭そのものがボタンになる）
+ *   head … 顔まわりだけ（チャット内のアイコン用。小さくても潰れない）
+ * どちらも「正面よりわずかに左を向いている」構図で、
+ * 目を左寄せ・アンテナを左側に付けることで向きを出しています。
  */
 
 /** ドットの記号 → 色。"." は透明（＝描画しない）。 */
 const COLORS: Record<string, string> = {
   o: "#3c5580", // 輪郭（背景にも本体にも埋もれない中間色）
   b: "#e3ebf7", // 本体（明るいメタル）
-  s: "#9fb0ca", // 陰
+  s: "#9fb0ca", // 陰（右側に置いて立体感を出す）
   v: "#08121f", // バイザー（暗い画面）
   e: "#22d3ee", // 目（点滅させるので別記号）
-  c: "#22d3ee", // シアンのアクセント（アンテナ・口・胸）
+  c: "#22d3ee", // シアンのアクセント（アンテナ・口・胸のモニタ・手）
+  a: "#e2c078", // 金のアクセント（胸のランプ）
 };
 
 /**
- * ドット絵の本体。1文字＝1ドット、16文字×16行。
- * 上からアンテナ → 頭（バイザーに目と口）→ 腕つきの胴体。
+ * 全身（18×24）。上からアンテナ → 頭 → 首 → 腕つきの胴体 → 脚 → 足。
+ * 頭と胴体をわずかに左へ寄せ、目も左寄せにして「少し左向き」にしています。
  */
-const ART = [
-  ".......oo.......",
-  "......occo......",
-  ".......oo.......",
-  "..oooooooooooo..",
-  ".obbbbbbbbbbbso.",
-  ".oboooooooooobo.",
-  ".oboveevveevobo.",
-  ".oboveevveevobo.",
-  ".obovvvvvvvvobo.",
-  ".obovvccccvvobo.",
-  ".oboooooooooobo.",
-  ".obbbbbbbbbbbso.",
-  "..oooooooooooo..",
-  ".obobbbbbbbbobo.",
-  ".obobbccccbbobo.",
-  ".oooooooooooooo.",
+const ART_FULL = [
+  "....cc............",
+  ".....o............",
+  ".....o............",
+  "..oooooooooooo....",
+  "..obbbbbbbbbso....",
+  "..obvvvvvvvvso....",
+  "..obeevveevvso....",
+  "..obeevveevvso....",
+  "..obvvvvvvvvso....",
+  "..obvccccvvvso....",
+  "..obvvvvvvvvso....",
+  "..obbbbbbbbbso....",
+  "..oooooooooooo....",
+  "......obbo........",
+  "...oooooooooo.....",
+  ".oboobbbbbbbbobo..",
+  ".oboobccccbabobo..",
+  ".oboobccccbbsobo..",
+  ".ccobbbbbbbsocc...",
+  "...obbbbbbbso.....",
+  "...oooooooooo.....",
+  "....obo...obo.....",
+  "....obo...obo.....",
+  "...ooooo.ooooo....",
 ];
 
-const SIZE = 16;
+/** 顔まわりだけ（16×16）。チャット内の小さなアイコン用。 */
+const ART_HEAD = [
+  ".....cc.........",
+  "......o.........",
+  "......o.........",
+  ".oooooooooooooo.",
+  ".obbbbbbbbbbbso.",
+  ".obvvvvvvvvvvso.",
+  ".obeevveevvvvso.",
+  ".obeevveevvvvso.",
+  ".obvvvvvvvvvvso.",
+  ".obvccccvvvvvso.",
+  ".obvvvvvvvvvvso.",
+  ".obbbbbbbbbbbso.",
+  ".oooooooooooooo.",
+  "......obbo......",
+  "..oooooooooooo..",
+  ".obbbbbbbbbbbbo.",
+];
 
 type Run = { x: number; y: number; w: number; ch: string };
 
@@ -67,22 +100,49 @@ function toRuns(rows: string[]): Run[] {
   return runs;
 }
 
-const RUNS = toRuns(ART);
-/** 目だけは別グループにして、まばたきのアニメーションを掛ける。 */
-const EYE_RUNS = RUNS.filter((r) => r.ch === "e");
-const BODY_RUNS = RUNS.filter((r) => r.ch !== "e");
+type Art = {
+  width: number;
+  height: number;
+  /** 目以外（まばたきさせないもの） */
+  body: Run[];
+  /** 目だけ別グループにして、まばたきのアニメーションを掛ける */
+  eyes: Run[];
+};
 
-export function PixelMascot({ className = "" }: { className?: string }) {
+function buildArt(rows: string[]): Art {
+  const runs = toRuns(rows);
+  return {
+    width: rows[0].length,
+    height: rows.length,
+    body: runs.filter((r) => r.ch !== "e"),
+    eyes: runs.filter((r) => r.ch === "e"),
+  };
+}
+
+const ARTS: Record<"full" | "head", Art> = {
+  full: buildArt(ART_FULL),
+  head: buildArt(ART_HEAD),
+};
+
+export function PixelMascot({
+  className = "",
+  variant = "head",
+}: {
+  className?: string;
+  /** full＝全身（起動ボタン）／head＝顔まわり（チャット内アイコン） */
+  variant?: "full" | "head";
+}) {
+  const art = ARTS[variant];
   return (
     <svg
-      viewBox={`0 0 ${SIZE} ${SIZE}`}
+      viewBox={`0 0 ${art.width} ${art.height}`}
       className={`mascot ${className}`}
       shapeRendering="crispEdges"
       aria-hidden="true"
       focusable="false"
     >
       <g className="mascot-body">
-        {BODY_RUNS.map((r) => (
+        {art.body.map((r) => (
           <rect
             key={`${r.x}-${r.y}`}
             x={r.x}
@@ -94,7 +154,7 @@ export function PixelMascot({ className = "" }: { className?: string }) {
         ))}
       </g>
       <g className="mascot-eyes">
-        {EYE_RUNS.map((r) => (
+        {art.eyes.map((r) => (
           <rect
             key={`e-${r.x}-${r.y}`}
             x={r.x}

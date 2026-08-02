@@ -28,8 +28,8 @@ export function Logo() {
       <CompanyLogo
         alt=""
         priority
-        sizes="(min-width: 640px) 120px, 96px"
-        className="mr-2 h-9 w-auto shrink-0 transition-[filter] group-hover:brightness-110 sm:mr-3 sm:h-11"
+        sizes="(min-width: 640px) 56px, 44px"
+        className="mr-2 h-11 w-auto shrink-0 transition-[filter] group-hover:brightness-110 sm:mr-2.5 sm:h-14"
       />
       <span
         aria-hidden

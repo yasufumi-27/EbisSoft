@@ -10,11 +10,11 @@ import { siteConfig } from "@/lib/site";
 export const LOGO_IMAGE = {
   /** 幅ごとのWebP（表示幅に応じてブラウザが選ぶ） */
   webp: [176, 352, 512, 976].map((w) => ({ w, src: `/logo/ebisu-soft-logo-3d-${w}.webp` })),
-  /** WebP非対応環境向けの控え（640×257・PNG） */
+  /** WebP非対応環境向けの控え（640×640・PNG） */
   png: "/logo/ebisu-soft-logo-3d.png",
-  /** 縦横比（レイアウトずれ＝CLS を防ぐために固定） */
-  width: 1375,
-  height: 551,
+  /** 縦横比（正方形。レイアウトずれ＝CLS を防ぐために固定） */
+  width: 1446,
+  height: 1446,
 } as const;
 
 const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
