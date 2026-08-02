@@ -10,8 +10,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
  * さらに、アンカー移動後の位置（scroll-margin-top）と判定帯の上端がちょうど重なるため、
  * 画面の高さによって「1つ前のセクション」が選ばれる、という不安定さがありました。
  *
- * ここでは面積を使わず、「読み始めの線（＝固定ヘッダーの下端）を最後に越えたセクション」を
- * 現在地とします。人が読んでいる位置と一致し、画面サイズにも左右されません。
+ * ここでは面積を使わず、「読み始めの線（＝アンカーで移動したときに止まる位置）を
+ * 最後に越えたセクション」を現在地とします。メニューの移動先と判定基準が同じ線になるため、
+ * 画面サイズによって結果が変わることがありません。
  *
  * - 監視は passive なスクロールイベント＋requestAnimationFrame（1フレームに1回だけ計算）。
  * - メニューをクリックした直後は、自動スクロールが終わるまで判定を止めます
@@ -21,16 +22,19 @@ import { useCallback, useEffect, useRef, useState } from "react";
 /**
  * 各セクションの「読み始めの線」（画面上端からの px）。
  *
- * アンカーで移動したときにそのセクションが止まる位置＝ CSS の scroll-margin-top です。
- * 同じ値を判定にも使うことで、「クリックで移動したのに、別の節が光る」ずれをなくします。
- * 指定が無いページのために、固定ヘッダー類の高さを控えとして使います。
+ * アンカーで移動したとき、そのセクションが止まる位置と同じ値を使います。
+ * 止まる位置は、ページ側の scroll-padding-top と要素側の scroll-margin-top の合計です。
+ * 判定にも同じ線を使うことで、「クリックで移動したのに、別の節が光る」ずれがなくなります。
+ * どちらも指定が無いページのために、固定ヘッダー類の高さを控えとして使います。
  */
-function lineFor(el: HTMLElement) {
-  const specified = parseFloat(getComputedStyle(el).scrollMarginTop);
-  if (specified > 0) return specified;
+function linesFor(targets: HTMLElement[]) {
+  const padding = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
   const headerH = document.querySelector<HTMLElement>("header")?.offsetHeight ?? 64;
   const navH = document.querySelector<HTMLElement>(".pagenav")?.offsetHeight ?? 0;
-  return headerH + navH;
+  return targets.map((el) => {
+    const margin = parseFloat(getComputedStyle(el).scrollMarginTop) || 0;
+    return padding + margin > 0 ? padding + margin : headerH + navH;
+  });
 }
 
 /** 判定の遊び（px）。ちょうど境界のときに現在地が揺れないようにする。 */
@@ -60,11 +64,12 @@ export function useSectionSpy(items: { id: string; label: string }[]) {
     if (targets.length === 0) return;
 
     let frame = 0;
-    // 線の位置はレイアウトが変わらない限り一定なので、毎フレーム計算し直さない
-    let lines = targets.map(lineFor);
 
     const measure = () => {
       frame = 0;
+      // 線の位置はスタイルの読み込みや画面幅で変わるため、そのつど測り直す
+      // （1フレームに1回だけの計算なので、スクロールの負荷にはならない）
+      const lines = linesFor(targets);
 
       // 目標セクションが線の位置まで来たら、クリックによる一時停止を解除する
       if (lockedTo.current) {
@@ -98,18 +103,13 @@ export function useSectionSpy(items: { id: string; label: string }[]) {
       frame = requestAnimationFrame(measure);
     };
 
-    const onResize = () => {
-      lines = targets.map(lineFor);
-      schedule();
-    };
-
     measure();
     window.addEventListener("scroll", schedule, { passive: true });
-    window.addEventListener("resize", onResize);
+    window.addEventListener("resize", schedule);
     return () => {
       if (frame) cancelAnimationFrame(frame);
       window.removeEventListener("scroll", schedule);
-      window.removeEventListener("resize", onResize);
+      window.removeEventListener("resize", schedule);
     };
   }, [items]);
 

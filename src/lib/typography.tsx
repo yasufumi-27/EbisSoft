@@ -16,11 +16,23 @@ import { Fragment } from "react";
 
 /**
  * 折り返したくない語のパターン。
- * 1. カタカナ（小書き・ヴ含む）と長音記号の連なり。中黒（・）は区切りなので含めない。
+ * 1. スラッシュで並べた略語（SEO / AEO / LLMO、BLE / Wi-Fi / MQTT）。
+ *    区切りの前後で改行されると「（AEO /」で行が終わり「LLMO）」だけが次の行に残る。
  * 2. ハイフン・ドット・スラッシュでつながる英数字（Wi-Fi / N-gram / llms.txt / Three.js）。
  *    これらの記号の直後はブラウザが改行可能とみなすため、語が割れてしまう。
+ * 3. カタカナ（小書き・ヴ含む）と長音記号の連なり。中黒（・）は区切りなので含めない。
+ *    直前・直後に続く英数字も一続きの語として扱う（AIチャットボット・PWA対応の「AI」など。
+ *    別々に包むと、その境目で改行できてしまい「AI／チャットボット」と割れる）。
  */
-const KATAKANA_RUN = /[ァ-ヺー]{2,}|[A-Za-z][A-Za-z0-9+#]*(?:[-./][A-Za-z0-9+#]+)+/g;
+const KATAKANA_RUN =
+  /[A-Za-z][A-Za-z0-9+#]*(?: \/ [A-Za-z0-9+#]+)+|[A-Za-z][A-Za-z0-9+#]*(?:[-./][A-Za-z0-9+#]+)+|[A-Za-z0-9]*[ァ-ヺー]{2,}[A-Za-z0-9]*/g;
+
+/**
+ * これより長い語は、包むと狭い画面で行から溢れるため、そのままにする。
+ * 英数字は全角のおよそ半分の幅なので、上限も倍に取る。
+ */
+const MAX_KATAKANA = 14;
+const MAX_LATIN = 20;
 
 /** 文字列中のカタカナ語を、折り返し禁止の span で包んで返します。 */
 export function ja(text: string): React.ReactNode {
@@ -34,14 +46,12 @@ export function ja(text: string): React.ReactNode {
   while ((match = KATAKANA_RUN.exec(text)) !== null) {
     if (match.index > last) parts.push(text.slice(last, match.index));
     const word = match[0];
-    // カタカナは keep-all で守れるが、ハイフン等の記号での改行は keep-all では止まらない。
-    // 短い英数字トークン（Wi-Fi など）だけ nowrap で完全に固定する。
-    const isLatin = /^[A-Za-z]/.test(word);
-    if (isLatin && word.length > 16) {
+    const hasKatakana = /[ァ-ヺー]/.test(word);
+    if (word.length > (hasKatakana ? MAX_KATAKANA : MAX_LATIN)) {
       parts.push(word); // 長すぎるものは固定すると溢れるので、そのまま
     } else {
       parts.push(
-        <span key={`${match.index}-${word}`} className={isLatin ? "nb-strict" : "nb"}>
+        <span key={`${match.index}-${word}`} className={hasKatakana ? "nb" : "nb-strict"}>
           {word}
         </span>,
       );
