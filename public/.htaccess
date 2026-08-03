@@ -18,17 +18,23 @@ DirectoryIndex index.html
 
   # 【重要】事前圧縮（.br / .gz）の出し分けは、さくらでは動かないことが確認済み。
   #
-  #   さくらは nginx がフロントに立つ構成で、その nginx が Accept-Encoding ヘッダーを
-  #   Apache に渡していない。そのため下の RewriteCond %{HTTP:Accept-Encoding} は
-  #   常に不成立になり、圧縮版は一切選ばれない（2026-08-03 に実測して確認）。
+  #   犯人は前段のWAF（レスポンスヘッダー Via: ss20xx.guard.sakura.ne.jp /
+  #   EG Secure Solutions siteguard_http_01）。これが Accept-Encoding だけを
+  #   狙って削除しており、Apache には届かない。WAFが本文を検査するために
+  #   平文を要求する、よくある挙動。mod_deflate が効かなかった原因も同じ。
+  #   そのため下の RewriteCond %{HTTP:Accept-Encoding} は常に不成立になり、
+  #   圧縮版は一切選ばれない（2026-08-03 に実測して確認）。
   #
-  #   確認方法：条件なしの `RewriteRule ^_ae-none$ /index.html.br [L]` は 200 を返すのに、
-  #   %{HTTP:Accept-Encoding} を条件に足した途端 404 になる（＝ヘッダーが空）。
+  #   確認方法：_hdrprobe.php を一時的に置いて $_SERVER をダンプすると、
+  #   HTTP_ACCEPT_ENCODING だけが存在しない（HTTP_ACCEPT や独自の X-Test は届く）。
+  #   HTTP/1.1・HTTP/2、ブラウザUA、いずれでも同じ。
   #
-  #   .br ファイル自体は直接URLを叩けば AddEncoding が効いて正しく配信されるので、
-  #   ルールは将来 nginx 側の設定が変わったときのために残してあるが、
-  #   **今は効いていない**。転送量を減らしたいなら、さくらのコントロールパネル側に
-  #   gzip/Brotli の設定がないかを当たること（.htaccess では解決できない）。
+  #   .br ファイル自体は直接URLを叩けば AddEncoding が効いて
+  #   Content-Encoding: br 付きで正しく配信されることまで確認済み。
+  #   → **さくらのコントロールパネルで WAF を無効化すれば、下のルールはそのまま動く。**
+  #     （このサイトは完全な静的配信でPHPもDBも無く、WAFの守る対象がない）
+  #     WAFを有効のままにするなら .htaccess では解決できないので、
+  #     圧縮は諦めて HTML/JS 自体を削るしかない。
   #
   # 【重要】このサーバーでは多段リライトも当てにしないこと。
   # /ai → /ai.html → /ai.html.br のように段階的に解決させる書き方は動かない
