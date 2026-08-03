@@ -1123,11 +1123,11 @@
   --launcher-w: 4rem;
   --launcher-h: 4.8rem;
 }
-/* PCなど広い画面ではロボットを1.2倍に（スマホの見え方は変えない） */
+/* PCなど広い画面ではロボットを1.5倍に（スマホの見え方は変えない） */
 @media (min-width: 1024px) {
   .assistant-root {
-    --launcher-w: 4.8rem;
-    --launcher-h: 5.76rem;
+    --launcher-w: 6rem;
+    --launcher-h: 7.2rem;
   }
 }
 
