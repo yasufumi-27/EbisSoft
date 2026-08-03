@@ -2,19 +2,21 @@
 #
 # 静的書き出し（out/）を FTPS でアップロードする。
 # 認証情報は GitHub の Settings > Secrets and variables > Actions に登録すること：
-#   SAKURA_FTP_HOST     … 例) ebisusoft.sakura.ne.jp
-#   SAKURA_FTP_USER     … 例) ebisusoft
-#   SAKURA_FTP_PASSWORD … FTPパスワード
-#   SAKURA_FTP_DIR      … 公開ディレクトリ 例) /home/ebisusoft/www
+#   SAKURA_FTP_HOST     … ebisusoft.sakura.ne.jp
+#   SAKURA_FTP_USER     … ebisusoft
+#   SAKURA_FTP_PASSWORD … サーバーパスワード（さくらの会員パスワードとは別物）
+#   SAKURA_FTP_DIR      … /www
+#     ↑ FTPはchrootされていて、ログイン直後の / が既に /home/ebisusoft。
+#       /home/ebisusoft/www と書くと /home/ebisusoft/home/ebisusoft/www が
+#       新規作成されてそこに置かれてしまう（転送は成功するので気づきにくい）。
 #
-# 初回は手動実行（Actions タブ > Deploy to Sakura > Run workflow）で確認し、
-# 問題なければ下の push トリガーのコメントを外して自動化する。
+# 初回デプロイ済み（2026-08-03）。Secrets登録済みで、main への push で自動デプロイされる。
 name: Deploy to Sakura
 
 on:
   workflow_dispatch:
-  # push:
-  #   branches: [main]
+  push:
+    branches: [main]
 
 concurrency:
   group: sakura

@@ -2,21 +2,32 @@
 # out/ 配下ごとアップロードされ、静的書き出しのサイトを正しく配信するために使う。
 # ※ GitHub Pages では無視されるため、置いてあっても害はない。
 
-Options +FollowSymLinks -MultiViews
+# ※ さくらのレンタルサーバは .htaccess での Options ディレクティブを許可しておらず、
+#   書くと 500 になる（AllowOverride に Options が含まれていない）。絶対に足さないこと。
 DirectoryIndex index.html
+
+# RSCペイロード用に ai/ や demo/3dcg/ といった同名ディレクトリが出力されるため、
+# これを切らないと mod_dir が /ai → /ai/ へ301し、index.html が無いので403になる。
+# 切ったうえで下の RewriteRule に ai.html を返させる。
+<IfModule mod_dir.c>
+  DirectorySlash Off
+</IfModule>
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
   # 拡張子なしのURL（/ai, /company など）を .html にマッピングする。
   # Next.js の静的書き出しは trailingSlash: false のため ai.html の形で出力される。
-  RewriteCond %{REQUEST_FILENAME} !-d
+  # ※ ai.html と並んで RSCペイロード用の ai/ ディレクトリも出力されるため、
+  #   !-d（ディレクトリでない）を条件にすると /ai がリライトされず mod_dir が
+  #   /ai/ へ301 → index.html が無く403になる。よってディレクトリでも .html を優先する。
+  # ※ さくらは nginx がフロントに立つ構成のため %{DOCUMENT_ROOT} が期待どおり解決されない。
+  #   実パスが取れる %{REQUEST_FILENAME} を使うこと。
   RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI}.html -f
+  RewriteCond %{REQUEST_FILENAME}.html -f
   RewriteRule ^(.+)$ /$1.html [L]
 
   # 末尾スラッシュ付きでアクセスされたら、スラッシュなしへ正規化（canonical と揃える）
-  RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule ^(.+)/$ /$1 [R=301,L]
 </IfModule>
 
