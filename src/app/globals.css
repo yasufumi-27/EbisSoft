@@ -1118,6 +1118,17 @@
   bottom: max(1rem, env(safe-area-inset-bottom));
   /* ヘッダー(50)・ドットナビ(40)より上、スクロール進捗(60)と同列 */
   z-index: 60;
+  /* 起動ボタンの寸法（絵が 20×24 なので 5:6）。
+     スマホではこの大きさが最適なので基準にし、広い画面だけ下で拡大する。 */
+  --launcher-w: 4rem;
+  --launcher-h: 4.8rem;
+}
+/* PCなど広い画面ではロボットを1.2倍に（スマホの見え方は変えない） */
+@media (min-width: 1024px) {
+  .assistant-root {
+    --launcher-w: 4.8rem;
+    --launcher-h: 5.76rem;
+  }
 }
 
 /* ---- 起動ボタン（ドット絵ロボットの全身。四角い枠は持たせない） ----
@@ -1128,9 +1139,8 @@
   position: relative;
   display: grid;
   place-items: center;
-  /* 絵は 20×24 なので、幅と高さを比率どおりに揃える */
-  width: 4rem;
-  height: 4.8rem;
+  width: var(--launcher-w);
+  height: var(--launcher-h);
   border: 0;
   background: none;
   transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.3, 1);
@@ -1151,7 +1161,8 @@
   position: absolute;
   left: 50%;
   bottom: -0.15rem;
-  width: 2.6rem;
+  /* ボタン幅に対する比率にしておくと、拡大時も足元の影がずれない */
+  width: 65%;
   height: 0.5rem;
   transform: translateX(-50%);
   border-radius: 50%;
@@ -1212,8 +1223,8 @@
 /* 「話しかけられます」を示す小さな光点（挙げた手と重ならないよう頭の左上へ） */
 .assistant-launcher-ping {
   position: absolute;
-  top: 0.35rem;
-  left: 0.05rem;
+  top: 7%;
+  left: 1%;
   width: 0.45rem;
   height: 0.45rem;
   border-radius: 9999px;
@@ -1276,7 +1287,7 @@
 .assistant-slot {
   position: absolute;
   right: 0;
-  bottom: calc(4.8rem + 0.85rem);
+  bottom: calc(var(--launcher-h) + 0.85rem);
   width: min(23rem, calc(100vw - 2rem));
   height: min(32rem, calc(100dvh - 9.5rem));
   transform-origin: bottom right;
