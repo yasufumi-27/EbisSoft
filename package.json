@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "build:sakura": "STATIC_EXPORT=true NEXT_PUBLIC_SITE_URL=https://ebisusoft.sakura.ne.jp next build && npm run precompress",
+    "deploy:sakura": "bash scripts/deploy-sakura.sh",
     "precompress": "node scripts/precompress.mjs",
     "build:pages": "GITHUB_PAGES=true NEXT_PUBLIC_SITE_URL=https://yasufumi-27.github.io/EbisSoft next build",
     "size": "node scripts/bundle-size.mjs",

@@ -10,13 +10,27 @@
 #       /home/ebisusoft/www と書くと /home/ebisusoft/home/ebisusoft/www が
 #       新規作成されてそこに置かれてしまう（転送は成功するので気づきにくい）。
 #
-# 初回デプロイ済み（2026-08-03）。Secrets登録済みで、main への push で自動デプロイされる。
+# ------------------------------------------------------------------
+# 【重要】このワークフローは現状**使えない**（2026-08-03 実測）。
+#
+# さくらの「国外IPアドレスフィルタ」が国外からのFTP接続を遮断しており、
+# GitHub Actions の runner（米国IP）は接続すら確立できない。
+# lftp が `mirror: Fatal error: max-retries exceeded` で落ちる。
+# （タイムアウトを指定していなかった初回は、そのまま3時間ハングした）
+#
+# → **通常は日本国内のローカルから `npm run deploy:sakura` を使うこと。**
+#   ビルド・アップロード・疎通確認まで一括で行う（scripts/deploy-sakura.sh）。
+#
+# このワークフローは、将来さくら側で国外IPフィルタを解除した場合に備えて残してある。
+# 解除したら push トリガーのコメントを外せばそのまま動く（Secretsは登録済み）。
+# ただしFTPが全世界から到達可能になる点は理解したうえで判断すること。
+# ------------------------------------------------------------------
 name: Deploy to Sakura
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
+  # push:
+  #   branches: [main]
 
 concurrency:
   group: sakura
