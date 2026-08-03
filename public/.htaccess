@@ -16,6 +16,11 @@ DirectoryIndex index.html
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
+  # ルートは index.html を明示的に指す。
+  # mod_dir の DirectoryIndex に任せるとファイル名が確定するのが後段になり、
+  # 下の「事前圧縮ファイルの配信」で index.html.br を選べなくなるため。
+  RewriteRule ^$ /index.html [L]
+
   # 拡張子なしのURL（/ai, /company など）を .html にマッピングする。
   # Next.js の静的書き出しは trailingSlash: false のため ai.html の形で出力される。
   # ※ ai.html と並んで RSCペイロード用の ai/ ディレクトリも出力されるため、
@@ -29,6 +34,26 @@ DirectoryIndex index.html
 
   # 末尾スラッシュ付きでアクセスされたら、スラッシュなしへ正規化（canonical と揃える）
   RewriteRule ^(.+)/$ /$1 [R=301,L]
+
+  # --- 事前圧縮ファイルの配信 -------------------------------------
+  # さくらには mod_deflate / mod_brotli が無く、サーバー側で圧縮できない
+  # （下の mod_deflate 節は素通りする）。そこで scripts/precompress.mjs が
+  # ビルド時に .br / .gz を作っておき、ここで Accept-Encoding に応じて差し替える。
+  #
+  # ※ 上の .html マッピングより後に置くこと。mod_rewrite は per-directory 文脈では
+  #   URLが変化しなくなるまでルールセットを繰り返すため、/ai → /ai.html → /ai.html.br
+  #   の順に段階的に解決される。
+  # ※ Content-Type / Content-Encoding は下の AddEncoding が付ける（.br を無視して
+  #   .html から text/html を決め、encoding だけ足す）ので、ここでは触らない。
+  RewriteCond %{HTTP:Accept-Encoding} (^|,)\s*br($|[,;])
+  RewriteCond %{REQUEST_FILENAME} -f
+  RewriteCond %{REQUEST_FILENAME}.br -f
+  RewriteRule ^(.+)$ /$1.br [L]
+
+  RewriteCond %{HTTP:Accept-Encoding} (^|,)\s*gzip($|[,;])
+  RewriteCond %{REQUEST_FILENAME} -f
+  RewriteCond %{REQUEST_FILENAME}.gz -f
+  RewriteRule ^(.+)$ /$1.gz [L]
 </IfModule>
 
 ErrorDocument 404 /404.html
@@ -36,6 +61,23 @@ ErrorDocument 404 /404.html
 # ------------------------------------------------------------------
 # 転送量の削減（表示速度に直結する。Lighthouse はこの有無で大きく変わる）
 # ------------------------------------------------------------------
+# 事前圧縮ファイル（index.html.br など）に Content-Encoding を付ける。
+# mod_mime は拡張子を右から解釈し、知らない .br / .gz は型判定では無視するため、
+# Content-Type は元の拡張子（.html → text/html）のまま encoding だけが足される。
+<IfModule mod_mime.c>
+  AddEncoding br .br
+  AddEncoding gzip .gz
+</IfModule>
+
+# 同じURLが Accept-Encoding によって別の中身を返すので、キャッシュに必ず知らせる。
+<IfModule mod_headers.c>
+  Header merge Vary Accept-Encoding
+</IfModule>
+
+# さくらには mod_deflate が入っていないため、この節は実際には効かない
+# （Content-Encoding が返らないことを初回デプロイで確認済み）。
+# 将来モジュールが有効化された場合や他サーバーへ移した場合の保険として残す。
+# 実際の圧縮は上の「事前圧縮ファイルの配信」が担当する。
 <IfModule mod_deflate.c>
   AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css
   AddOutputFilterByType DEFLATE application/javascript application/x-javascript
@@ -59,10 +101,12 @@ ErrorDocument 404 /404.html
 
 <IfModule mod_headers.c>
   # _next/static はファイル名にハッシュが入るため、内容が変われば別URLになる
-  <FilesMatch "\.(js|css|woff2)$">
+  # ※ 実際に配信されるのは事前圧縮した .js.br / .css.br なので、
+  #   (\.(br|gz))? を付けて圧縮版にも同じキャッシュ指定が効くようにする。
+  <FilesMatch "\.(js|css|woff2)(\.(br|gz))?$">
     Header set Cache-Control "public, max-age=31536000, immutable"
   </FilesMatch>
-  <FilesMatch "\.(html|txt|xml)$">
+  <FilesMatch "\.(html|txt|xml)(\.(br|gz))?$">
     Header set Cache-Control "public, max-age=0, must-revalidate"
   </FilesMatch>
 
