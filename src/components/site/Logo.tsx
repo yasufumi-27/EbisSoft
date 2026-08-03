@@ -6,9 +6,9 @@ import { CompanyLogo } from "@/components/site/CompanyLogo";
  * ロゴ（シンボル＋ワードマーク）。ヘッダー/フッターで共用。
  *
  * デザイン方針：
- * - シンボルは**会社ロゴの3Dモデルを書き出した画像**（背景を透過したWebP／`public/logo/`）。
- *   サイト背景と3DCGデモに出るモデルと同じ形。全ページで読むので、`sizes` で
- *   最小の176px版（約10KB）だけを取りに行かせる。
+ * - シンボルは**2Dのフラットなロゴ**（インラインSVG／`CompanyLogo.tsx`）。
+ *   立体文字はやめ、リング上の文字（CLOUD/SECURITY/… ）も無し。
+ *   サイト背景と3DCGデモの3Dモデルはそのまま（ここだけ2D）。
  * - ワードマークは `EBISU`（白）＋ `SOFT`（シアン）。画像は小さいと文字が読めないため、
  *   社名が確実に伝わるよう文字は残す（画像だけにすると潰れて読めない）。
  * - 読み上げ・SEO上の社名は日本語の「エビスソフト」なので、リンクの aria-label で補い、
@@ -27,8 +27,6 @@ export function Logo() {
     >
       <CompanyLogo
         alt=""
-        priority
-        sizes="(min-width: 640px) 56px, 44px"
         className="mr-2 h-11 w-auto shrink-0 transition-[filter] group-hover:brightness-110 sm:mr-2.5 sm:h-14"
       />
       <span

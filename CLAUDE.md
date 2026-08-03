@@ -10,9 +10,11 @@ AI活用型のWeb制作に加え、組み込みソフトウェア・IoT開発も
 **表記ルール**：本文・見出し・メタデータ・構造化データの社名は**カタカナの「エビスソフト」のみ**（`EbisuSoft` という綴りはどこにも使わない）。
 例外は**ロゴだけ** — ヘッダー/フッターのワードマーク・ファビコン・OG画像は名刺と揃えて `EBISU SOFT`（全角スペースなし・全大文字）を使う。
 **会社ロゴの正は3Dモデル**（`src/components/fx/logo3d.ts`。立体文字 EBISU ＋回るリング＋固定の Soft ＋飛ぶ光）。
-`public/logo/ebisu-soft-logo-3d-*.webp` はそのモデルを書き出した静止画で、`src/components/site/CompanyLogo.tsx` 経由で使う。
-ヘッダー/フッターのロゴ（`Logo.tsx`）は、この画像＋ワードマーク `EBISU SOFT` の組み合わせ。ファビコンだけは潰れないよう `EB` マークのまま。
-サイト背景の3D演出（`fx/ThreeBackground.tsx`）と3DCGデモ（`demos/Demo3dcg.tsx` の「会社ロゴ」形状）も同じ画像を参照している。
+ただし**ヘッダー（サイトタイトル）とフッターのロゴだけは2Dのフラット版**（`src/components/site/CompanyLogo.tsx` のインラインSVG。
+べた塗りの平面文字＋文字を乗せないリング。3Dモデルと同じ Geist Black の輪郭をパス化してある）。
+`Logo.tsx` はこの2Dロゴ＋ワードマーク `EBISU SOFT` の組み合わせ。ファビコンだけは潰れないよう `EB` マークのまま。
+サイト背景の3D演出（`fx/ThreeBackground.tsx`）と3DCGデモ（`demos/Demo3dcg.tsx` の「会社ロゴ」形状）は**3Dのまま**（触らない）。
+`public/logo/ebisu-soft-logo-3d-*.webp` は3Dモデルの書き出し静止画。現在サイト内では未使用（名刺・資料用に残してある）。
 
 **作業前に必ず `docs/引き継ぎ.md` を読むこと**
 （現在の進捗・公開までのTODO・環境の注意点・将来構想がまとまっています）。
