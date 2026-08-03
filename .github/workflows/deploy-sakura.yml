@@ -25,6 +25,8 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    # FTPが詰まったまま何時間も回り続けるのを防ぐ（実測では転送は数分で終わる）。
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -47,17 +49,34 @@ jobs:
           set -eu
           # --reverse: ローカル→リモート、--delete: 消えたファイルはリモートからも削除
           # .htaccess も対象にするため --exclude はディレクトリのみに限定する
+          #
+          # ※ タイムアウト類は必ず指定すること。無指定だと接続が詰まったときに
+          #   lftp が延々とリトライし続け、ジョブが3時間以上ハングした実績がある。
+          # ※ さくらは同時接続数に制限があるため --parallel は控えめに。
           lftp -c "
             set ftp:ssl-force true;
             set ftp:ssl-protect-data true;
             set ssl:verify-certificate no;
+            set ftp:passive-mode true;
+            set net:timeout 15;
+            set net:max-retries 3;
+            set net:reconnect-interval-base 5;
+            set net:persist-retries 3;
+            set cmd:fail-exit true;
             open -u \"$USER\",\"$PASSWORD\" \"$HOST\";
-            mirror --reverse --delete --verbose --parallel=4 \
+            mirror --reverse --delete --verbose --parallel=2 \
               --exclude-glob .git/ \
               out/ \"$REMOTE_DIR\";
           "
 
       - name: Verify
         run: |
-          curl -sSf -o /dev/null -w "top: %{http_code}\n" https://ebisusoft.sakura.ne.jp/
-          curl -sSf -o /dev/null -w "ai:  %{http_code}\n" https://ebisusoft.sakura.ne.jp/ai
+          set -eu
+          for p in "" ai web embedded company contact faq request privacy demo demo/3dcg \
+                   sitemap.xml robots.txt llms.txt; do
+            curl -sSf -o /dev/null -w "%{http_code}  /$p\n" "https://ebisusoft.sakura.ne.jp/$p"
+          done
+          # 事前圧縮（.br）が配信されているか。無ければ Content-Encoding が付かない。
+          echo -n "brotli: "
+          curl -sS -o /dev/null -D- -H 'Accept-Encoding: br' https://ebisusoft.sakura.ne.jp/ \
+            | grep -i '^content-encoding' || echo "（未適用）"

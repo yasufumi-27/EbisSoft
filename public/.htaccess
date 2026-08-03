@@ -16,35 +16,61 @@ DirectoryIndex index.html
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
-  # ルートは index.html を明示的に指す。
-  # mod_dir の DirectoryIndex に任せるとファイル名が確定するのが後段になり、
-  # 下の「事前圧縮ファイルの配信」で index.html.br を選べなくなるため。
+  # 【重要】事前圧縮（.br / .gz）の出し分けは、さくらでは動かないことが確認済み。
+  #
+  #   さくらは nginx がフロントに立つ構成で、その nginx が Accept-Encoding ヘッダーを
+  #   Apache に渡していない。そのため下の RewriteCond %{HTTP:Accept-Encoding} は
+  #   常に不成立になり、圧縮版は一切選ばれない（2026-08-03 に実測して確認）。
+  #
+  #   確認方法：条件なしの `RewriteRule ^_ae-none$ /index.html.br [L]` は 200 を返すのに、
+  #   %{HTTP:Accept-Encoding} を条件に足した途端 404 になる（＝ヘッダーが空）。
+  #
+  #   .br ファイル自体は直接URLを叩けば AddEncoding が効いて正しく配信されるので、
+  #   ルールは将来 nginx 側の設定が変わったときのために残してあるが、
+  #   **今は効いていない**。転送量を減らしたいなら、さくらのコントロールパネル側に
+  #   gzip/Brotli の設定がないかを当たること（.htaccess では解決できない）。
+  #
+  # 【重要】このサーバーでは多段リライトも当てにしないこと。
+  # /ai → /ai.html → /ai.html.br のように段階的に解決させる書き方は動かない
+  # （per-directory 文脈の2巡目に進まない）。下のルールはすべて
+  # 「1回のリライトで最終ファイルまで到達させる」形にしてある。
+  #
+  # Content-Type / Content-Encoding は下の AddEncoding が付ける（.br を無視して
+  # .html から text/html を決め、encoding だけ足す）ので、ここでは触らない。
+
+  # --- ルート ---
+  RewriteCond %{HTTP:Accept-Encoding} (^|,)\s*br($|[,;])
+  RewriteCond %{REQUEST_FILENAME}index.html.br -f
+  RewriteRule ^$ /index.html.br [L]
+
+  RewriteCond %{HTTP:Accept-Encoding} (^|,)\s*gzip($|[,;])
+  RewriteCond %{REQUEST_FILENAME}index.html.gz -f
+  RewriteRule ^$ /index.html.gz [L]
+
   RewriteRule ^$ /index.html [L]
 
-  # 拡張子なしのURL（/ai, /company など）を .html にマッピングする。
+  # --- 拡張子なしのURL（/ai, /company など）---
   # Next.js の静的書き出しは trailingSlash: false のため ai.html の形で出力される。
   # ※ ai.html と並んで RSCペイロード用の ai/ ディレクトリも出力されるため、
   #   !-d（ディレクトリでない）を条件にすると /ai がリライトされず mod_dir が
   #   /ai/ へ301 → index.html が無く403になる。よってディレクトリでも .html を優先する。
   # ※ さくらは nginx がフロントに立つ構成のため %{DOCUMENT_ROOT} が期待どおり解決されない。
   #   実パスが取れる %{REQUEST_FILENAME} を使うこと。
+  RewriteCond %{HTTP:Accept-Encoding} (^|,)\s*br($|[,;])
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME}.html.br -f
+  RewriteRule ^(.+)$ /$1.html.br [L]
+
+  RewriteCond %{HTTP:Accept-Encoding} (^|,)\s*gzip($|[,;])
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME}.html.gz -f
+  RewriteRule ^(.+)$ /$1.html.gz [L]
+
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME}.html -f
   RewriteRule ^(.+)$ /$1.html [L]
 
-  # 末尾スラッシュ付きでアクセスされたら、スラッシュなしへ正規化（canonical と揃える）
-  RewriteRule ^(.+)/$ /$1 [R=301,L]
-
-  # --- 事前圧縮ファイルの配信 -------------------------------------
-  # さくらには mod_deflate / mod_brotli が無く、サーバー側で圧縮できない
-  # （下の mod_deflate 節は素通りする）。そこで scripts/precompress.mjs が
-  # ビルド時に .br / .gz を作っておき、ここで Accept-Encoding に応じて差し替える。
-  #
-  # ※ 上の .html マッピングより後に置くこと。mod_rewrite は per-directory 文脈では
-  #   URLが変化しなくなるまでルールセットを繰り返すため、/ai → /ai.html → /ai.html.br
-  #   の順に段階的に解決される。
-  # ※ Content-Type / Content-Encoding は下の AddEncoding が付ける（.br を無視して
-  #   .html から text/html を決め、encoding だけ足す）ので、ここでは触らない。
+  # --- 実ファイル（.js / .css / .txt など）を圧縮版に差し替える ---
   RewriteCond %{HTTP:Accept-Encoding} (^|,)\s*br($|[,;])
   RewriteCond %{REQUEST_FILENAME} -f
   RewriteCond %{REQUEST_FILENAME}.br -f
@@ -54,6 +80,9 @@ DirectoryIndex index.html
   RewriteCond %{REQUEST_FILENAME} -f
   RewriteCond %{REQUEST_FILENAME}.gz -f
   RewriteRule ^(.+)$ /$1.gz [L]
+
+  # 末尾スラッシュ付きでアクセスされたら、スラッシュなしへ正規化（canonical と揃える）
+  RewriteRule ^(.+)/$ /$1 [R=301,L]
 </IfModule>
 
 ErrorDocument 404 /404.html
