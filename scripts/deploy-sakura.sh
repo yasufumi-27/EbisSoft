@@ -84,17 +84,16 @@ if [ "$fail" != "0" ]; then
 fi
 
 # 圧縮（Brotli）が効いているか。効いていない＝前段のWAF（SiteGuard）が
-# リクエストの Accept-Encoding を削っている状態。コントロールパネルで
-# WAF を無効化すると、事前圧縮した .br がそのまま配信されるようになる。
-# 転送量が5倍以上変わるので、警告はするがデプロイ自体は成功扱いにする。
+# リクエストの Accept-Encoding を削っている状態。
+# 2026-08-04 に「WAF を有効のまま運用する」と決めたため、圧縮なしが想定どおり。
+# クローラへの到達性を優先した判断（詳細は docs/引き継ぎ.md）。状態を表示するだけにする。
 echo "▶ 圧縮の確認"
 enc=$(curl -sS -o /dev/null -D - -H 'Accept-Encoding: br, gzip' --max-time 25 "${SITE}/" \
       | tr -d '\r' | awk 'tolower($1) == "content-encoding:" { print $2 }')
 if [ -n "$enc" ]; then
-  echo "  ✓ Content-Encoding: ${enc}"
+  echo "  ✓ Content-Encoding: ${enc}（WAFが無効化されている状態）"
 else
-  echo "  ⚠ 圧縮が効いていません（WAFが Accept-Encoding を削っている可能性）。" >&2
-  echo "    コントロールパネル > セキュリティ > WAF設定 を無効にしてから、再度この確認を行ってください。" >&2
+  echo "  ・圧縮なし（WAF有効のため想定どおり。WAFが Accept-Encoding を削っている）"
 fi
 
 echo "✓ デプロイ完了: ${SITE}"

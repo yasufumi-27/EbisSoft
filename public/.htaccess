@@ -31,10 +31,12 @@ DirectoryIndex index.html
   #
   #   .br ファイル自体は直接URLを叩けば AddEncoding が効いて
   #   Content-Encoding: br 付きで正しく配信されることまで確認済み。
-  #   → **さくらのコントロールパネルで WAF を無効化すれば、下のルールはそのまま動く。**
-  #     （このサイトは完全な静的配信でPHPもDBも無く、WAFの守る対象がない）
-  #     WAFを有効のままにするなら .htaccess では解決できないので、
-  #     圧縮は諦めて HTML/JS 自体を削るしかない。
+  #   → さくらのコントロールパネルで WAF を無効化すれば、下のルールはそのまま動く。
+  #
+  # 【運用方針・2026-08-04 決定】**WAF は有効のまま運用する**。
+  #   そのため下の圧縮ルールは常に不成立で、実際には無圧縮で配信されている
+  #   （トップHTMLで約 422KB）。転送量を減らすには HTML/JS 自体を削るしかない。
+  #   ルール本体は、WAFを外した場合やサーバー移設時にそのまま効くよう残してある。
   #
   # 【重要】このサーバーでは多段リライトも当てにしないこと。
   # /ai → /ai.html → /ai.html.br のように段階的に解決させる書き方は動かない
@@ -77,12 +79,20 @@ DirectoryIndex index.html
   RewriteRule ^(.+)$ /$1.html [L]
 
   # --- 実ファイル（.js / .css / .txt など）を圧縮版に差し替える ---
+  # ※ sitemap.xml と robots.txt だけは常に素のまま返す。
+  #   クローラ向けのファイルは配信経路を単純に保つほうが事故が少なく、
+  #   数KBなので圧縮しなくても転送量に影響しない。
+  #   （過去に sitemap.xml.gz が application/x-gzip で配信され、GSCが
+  #     「サイトマップを読み込めませんでした」になった経緯がある。
+  #     下の RemoveType .gz で解消済みだが、再発の芽を残さない。）
   RewriteCond %{HTTP:Accept-Encoding} (^|,)\s*br($|[,;])
+  RewriteCond %{REQUEST_URI} !^/(sitemap\.xml|robots\.txt)$
   RewriteCond %{REQUEST_FILENAME} -f
   RewriteCond %{REQUEST_FILENAME}.br -f
   RewriteRule ^(.+)$ /$1.br [L]
 
   RewriteCond %{HTTP:Accept-Encoding} (^|,)\s*gzip($|[,;])
+  RewriteCond %{REQUEST_URI} !^/(sitemap\.xml|robots\.txt)$
   RewriteCond %{REQUEST_FILENAME} -f
   RewriteCond %{REQUEST_FILENAME}.gz -f
   RewriteRule ^(.+)$ /$1.gz [L]

@@ -42,7 +42,8 @@ export async function generateMetadata({
   if (!site) return {};
 
   return {
-    title: `${site.brand}｜${site.brandNote}`,
+    // お客様のサイトそのものに見せるため、当社名を付ける共通テンプレートを打ち消す
+    title: { absolute: `${site.brand}｜${site.brandNote}` },
     description: `${site.lead}※これは${siteConfig.name}が制作したデモサイトです。実在の事業者ではありません。`,
     alternates: { canonical: `/demosite/${site.industry}` },
     // 架空の事業者のページなので、検索結果には出さない
