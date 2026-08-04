@@ -14,13 +14,24 @@
 
 import { faqs, keyFacts, services, capabilities, plans, aiImpacts, businessLines } from "@/lib/content";
 import { siteConfig } from "@/lib/site";
+import { columns } from "@/lib/columns";
+import { industries } from "@/lib/showcaseData";
 
 export type KbDoc = {
   id: string;
   /** 出典の表示名 */
   source: string;
   /** 出典のカテゴリ */
-  category: "FAQ" | "要点" | "サービス" | "できること" | "料金" | "会社情報" | "スピード";
+  category:
+    | "FAQ"
+    | "要点"
+    | "サービス"
+    | "できること"
+    | "料金"
+    | "会社情報"
+    | "スピード"
+    | "コラム"
+    | "職種別";
   /** 検索対象テキスト（質問文・見出しなど） */
   key: string;
   /** 回答本文 */
@@ -90,6 +101,49 @@ function buildDocs(): KbDoc[] {
     });
   });
 
+  // 職種別デモサイト。「うちは飲食店だけど何ができる？」に答えられるようにする。
+  industries.forEach((i) => {
+    docs.push({
+      id: `industry-${i.slug}`,
+      source: `${i.name}向けのデモサイト`,
+      category: "職種別",
+      key: `${i.name} ${i.tagline} ${i.customer} ${i.challenges.join(" ")} ${i.picks
+        .map((p) => p.title)
+        .join(" ")}`,
+      answer: `${i.name}では、${i.picks
+        .map((p) => p.title)
+        .join("／")}といった使い方ができます。それぞれ実際に動くデモを職種別のデモサイトに用意しています。`,
+      href: `/showcase/${i.slug}`,
+    });
+  });
+
+  // コラム記事。記事本体は質問に対する答えの形で書いてあるので、
+  // 見出し（論点）と記事内FAQもキーに含めて拾えるようにする。
+  columns.forEach((c) => {
+    docs.push({
+      id: `column-${c.slug}`,
+      source: `コラム：${c.title}`,
+      category: "コラム",
+      key: `${c.question} ${c.keywords.join(" ")} ${c.body
+        .filter((b) => b.type === "h2")
+        .map((b) => b.text)
+        .join(" ")}`,
+      answer: `${c.answer}\n\n詳しくはコラム「${c.title}」で解説しています。`,
+      href: `/columns/${c.slug}`,
+    });
+
+    c.faqs.forEach((f, i) => {
+      docs.push({
+        id: `column-${c.slug}-faq-${i}`,
+        source: f.question,
+        category: "コラム",
+        key: f.question,
+        answer: f.answer,
+        href: `/columns/${c.slug}`,
+      });
+    });
+  });
+
   plans.forEach((p) => {
     docs.push({
       id: `plan-${p.name}`,
@@ -156,9 +210,9 @@ function buildDocs(): KbDoc[] {
     id: "sitemap",
     source: "サイトの案内（ページ一覧）",
     category: "会社情報",
-    key: "サイト ページ 一覧 どこ 見たい 探して メニュー 目次 案内 構成 リンク どのページ",
+    key: "サイト ページ 一覧 どこ 見たい 探して メニュー 目次 案内 構成 リンク どのページ 業種 職種",
     answer:
-      "このサイトは次のページで構成されています。\n・AI活用（/ai）… AIで作る／AI機能をつくる、AEO・LLMO対策\n・Web制作（/web）… サービス内容・制作の流れ\n・組み込み開発（/embedded）… ファームウェア・IoT連携\n・できること（/demo）… 実際に動くデモ15種\n・ご依頼・ご相談（/request）… 料金・お見積もり\n・よくある質問（/faq）／会社概要（/company）／お問い合わせ（/contact）\n気になるページがあれば、そのまま質問してください。",
+      "このサイトは次のページで構成されています。\n・AI活用（/ai）… AIで作る／AI機能をつくる、AEO・LLMO対策\n・Web制作（/web）… サービス内容・制作の流れ\n・組み込み開発（/embedded）… ファームウェア・IoT連携\n・できること（/demo）… 実際に動くデモ15種\n・デモサイト（/showcase）… 職種別に「この機能をこう使えます」を実演。18職種＋その場で組み立てる自動生成\n・コラム（/columns）… AI活用のWeb制作を実測で解説\n・ご依頼・ご相談（/request）… 料金・お見積もり\n・よくある質問（/faq）／会社概要（/company）／お問い合わせ（/contact）\n気になるページがあれば、そのまま質問してください。",
     href: "/demo",
   });
 
@@ -292,6 +346,12 @@ const CONTENT_TERM_DF_RATIO = 0.25;
  * @param topK 返す件数
  */
 export function searchKb(query: string, topK = 3): SearchHit[] {
+  return searchIn(INDEX, query, topK);
+}
+
+/** 任意の索引に対して BM25 検索を行う（`searchKb` の中身） */
+function searchIn(index: ReturnType<typeof buildIndex>, query: string, topK: number): SearchHit[] {
+  const INDEX = index;
   const terms = tokenize(query);
   if (terms.length === 0) return [];
 
@@ -348,6 +408,46 @@ export const FOCUS_THRESHOLD = 0.4;
 
 export function isConfident(hit: SearchHit | undefined): hit is SearchHit {
   return !!hit && hit.score >= CONFIDENCE_THRESHOLD && hit.focus >= FOCUS_THRESHOLD;
+}
+
+/* ------------------------------------------------------------------
+ * 知識源を差し替えて使う（職種別デモサイト用）
+ * ---------------------------------------------------------------- */
+
+/**
+ * 別の知識源で同じ検索エンジンを動かす。
+ *
+ * 職種別デモサイト（`/demosite/<職種>`）のチャットボットは、
+ * 当社の情報ではなく**そのお店・その医院のよくある質問**に答える必要があります。
+ * 仕組み（BM25・根拠の表示・答えられないときは答えない）はそのままに、
+ * 読ませる文書だけを入れ替えられるようにしたものです。
+ *
+ * 【小さな知識源での判定】
+ * 文書が十数件しかないと BM25 のスコアは全体的に小さく出るため、
+ * 大きな知識源向けに調整した `CONFIDENCE_THRESHOLD` は使えません。
+ * 代わりに「質問に含まれる内容語のうち、その文書に何割入っていたか」で判定します。
+ */
+export function createKbSearch(docs: KbDoc[]) {
+  const index = buildIndex(docs);
+
+  return {
+    docCount: docs.length,
+    search: (query: string, topK = 3) => searchIn(index, query, topK),
+    /** 小さな知識源向けの「答えてよいか」判定 */
+    isConfident: (hit: SearchHit | undefined, query: string): hit is SearchHit => {
+      if (!hit || hit.score <= 0) return false;
+      const terms = Array.from(new Set(tokenize(query)));
+      if (terms.length === 0) return false;
+      const contentDfLimit = index.total * CONTENT_TERM_DF_RATIO;
+      // 珍しい語（内容語）だけを対象に、どれだけ一致したかを見る
+      const content = terms.filter((t) => (index.df.get(t) ?? 0) <= contentDfLimit);
+      const target = content.length > 0 ? content : terms;
+      const indexed = index.indexed.find((d) => d.doc.id === hit.doc.id);
+      if (!indexed) return false;
+      const matched = target.filter((t) => indexed.tf.has(t)).length;
+      return matched / target.length >= 0.35;
+    },
+  };
 }
 
 /** チャット欄に出すサジェスト質問 */

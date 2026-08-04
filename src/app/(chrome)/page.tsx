@@ -70,7 +70,9 @@ export default function Home() {
         description="ご相談前によくいただく質問です。ほかの質問は一覧ページにまとめています。"
         moreHref="/faq"
       />
-      <RelatedPages hrefs={["/ai", "/web", "/embedded", "/demo", "/request", "/faq"]} />
+      <RelatedPages
+        hrefs={["/ai", "/web", "/embedded", "/demo", "/showcase", "/columns", "/request", "/faq"]}
+      />
       <ContactCta />
     </>
   );

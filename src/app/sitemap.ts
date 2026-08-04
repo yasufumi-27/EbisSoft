@@ -1,6 +1,8 @@
 import type { MetadataRoute } from "next";
 import { siteConfig, absoluteUrl } from "@/lib/site";
 import { capabilities } from "@/lib/content";
+import { columnsByDate } from "@/lib/columns";
+import { industries } from "@/lib/showcaseData";
 
 // output: "export"（GitHub Pages）でも静的生成できるよう明示
 export const dynamic = "force-static";
@@ -68,6 +70,39 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified,
       changeFrequency: "monthly" as const,
       priority: 0.8,
+    })),
+    // 職種別デモサイト（職種名 × 機能の組み合わせで、業種ワードの受け皿になる）
+    {
+      url: absoluteUrl("/showcase"),
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.85,
+    },
+    ...industries.map((i) => ({
+      url: absoluteUrl(`/showcase/${i.slug}`),
+      lastModified,
+      changeFrequency: "monthly" as const,
+      priority: 0.75,
+    })),
+    {
+      url: absoluteUrl("/showcase/generate"),
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
+    // コラム（記事は更新日を実際の更新日で申告する。毎ビルドの現在時刻を入れると
+    // 「常に全ページが更新されている」という誤った申告になり、信用されなくなる）
+    {
+      url: absoluteUrl("/columns"),
+      lastModified: new Date(columnsByDate[0]?.updated ?? lastModified),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    ...columnsByDate.map((c) => ({
+      url: absoluteUrl(`/columns/${c.slug}`),
+      lastModified: new Date(c.updated),
+      changeFrequency: "monthly" as const,
+      priority: 0.75,
     })),
     {
       url: absoluteUrl("/company"),

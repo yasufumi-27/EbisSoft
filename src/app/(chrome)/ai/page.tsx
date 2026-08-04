@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { JsonLd } from "@/components/JsonLd";
 import {
@@ -179,6 +180,27 @@ export default function AiPage() {
             </article>
           ))}
         </div>
+
+        {/* 詳しい解説記事への内部リンク（キーワードをそのままアンカーテキストにする） */}
+        <p className="mt-8 text-sm text-slate-400">
+          {ja("AIに任せられる工程と人が判断する工程の境界は、コラム")}
+          <Link
+            prefetch={false}
+            href="/columns/ai-web-seisaku"
+            className="mx-1 font-bold text-brand-light underline underline-offset-4 hover:text-brand"
+          >
+            {ja("AIでWeb制作はどこまでできるのか")}
+          </Link>
+          {ja("にまとめています。AI検索対策の実装内容は")}
+          <Link
+            prefetch={false}
+            href="/columns/ai-kensaku-taisaku-aeo-llmo"
+            className="mx-1 font-bold text-brand-light underline underline-offset-4 hover:text-brand"
+          >
+            {ja("AI検索に引用されるサイトの作り方")}
+          </Link>
+          {ja("をご覧ください。")}
+        </p>
       </Section>
 
       {/* AIをどう使って速くしているか（工程ごとの分担・一次情報） */}
@@ -212,7 +234,7 @@ export default function AiPage() {
         moreHref="/faq"
       />
 
-      <RelatedPages hrefs={["/web", "/embedded", "/demo", "/request"]} />
+      <RelatedPages hrefs={["/web", "/columns", "/demo", "/request"]} />
       <ContactCta />
     </>
   );

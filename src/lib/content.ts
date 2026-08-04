@@ -128,6 +128,25 @@ export type Capability = {
   demoNote: string;
   /** デモの操作説明 */
   howToUse: string[];
+  /**
+   * 検索されている言葉に寄せた見出し（H1・<title> に使う）。
+   * 機能名（例：「AR」）ではなく、検索窓に打ち込まれる言葉（例：「WebAR 制作 費用」）を
+   * 主語にすること。15本のデモページを、そのまま15本の検索入口にするための項目です。
+   */
+  searchTitle: string;
+  /** 上の見出しに添える1行（検索意図への即答） */
+  searchLead: string;
+  /** このページで受ける検索語（keywords と本文の言い回しの基準） */
+  searchTerms: string[];
+  /**
+   * 費用の目安に使うプラン帯（金額そのものは `plans` を単一情報源とする）。
+   * ⚠️ ここで新しい金額を作らないこと。実在しない価格を書くと信用を損ないます。
+   */
+  priceBand: "standard" | "premium";
+  /** 金額が動く要因（「費用」で検索した人への即答） */
+  costFactors: string[];
+  /** 実装期間の目安（実績ではなく目安として表示する） */
+  leadTime: string;
 };
 
 export const capabilities: Capability[] = [
@@ -135,6 +154,17 @@ export const capabilities: Capability[] = [
     slug: "3dcg",
     title: "3DCG・WebGL演出",
     tagline: "現物がなくても製品を見せられる",
+    // 検索語に寄せた見出しと、費用・期間の即答（詳細は Capability 型のコメント）
+    searchTitle: "3DCG・WebGL制作の費用と実例",
+    searchLead: "商品や建物をブラウザ上で回して見せる3Dを、いくらで・どのくらいの期間で作れるか",
+    searchTerms: ["3DCG 制作 費用", "WebGL 制作 会社", "商品 3D ビューア 導入", "Three.js 開発 依頼", "3D 商品 表示 ホームページ"],
+    priceBand: "premium",
+    leadTime: "2〜4週間（3Dモデルの用意状況による）",
+    costFactors: [
+      "3Dモデルを新規に作るか、既存のCAD・3Dデータを使えるか",
+      "見せる商品の点数と、色・素材のバリエーション数",
+      "スマートフォンでの動作をどこまで軽くするか（ポリゴン数の最適化）",
+    ],
     impact: "現物を送らなくても、質感・サイズ・全カラーが伝わる。",
     description:
       "Three.js / WebGL で、ブラウザ上を回せる3D製品ビューアやブランド演出を実装します。写真では伝わらない立体感を、スマートフォンでも滑らかに動く軽さで届けます。",
@@ -179,6 +209,17 @@ export const capabilities: Capability[] = [
     slug: "configurator",
     title: "商品カスタマイズ・見える化",
     tagline: "その場で組み立てられる商品ページ",
+    // 検索語に寄せた見出しと、費用・期間の即答（詳細は Capability 型のコメント）
+    searchTitle: "商品カスタマイズ機能（コンフィギュレーター）の開発費用と実例",
+    searchLead: "色や仕様を選ぶと見た目と価格が変わる注文画面の、費用と作り方",
+    searchTerms: ["商品カスタマイズ 機能 開発", "コンフィギュレーター 制作 費用", "オーダーメイド 注文 システム", "色 選べる 商品ページ 制作"],
+    priceBand: "premium",
+    leadTime: "3〜5週間（選択肢の数と価格ルールによる）",
+    costFactors: [
+      "選択肢の数（色・素材・サイズ・オプションの組み合わせ数）",
+      "価格・納期の計算ルールをどこまで作り込むか",
+      "在庫や価格表を基幹システム・Shopify等と連携させるか",
+    ],
     impact: "自分仕様に組み立てる体験そのものが、購買の動機になる。",
     description:
       "色・素材・サイズ・オプションを選ぶと、見た目・価格・納期がその場で変わる注文画面をつくります。迷いを「選ぶ楽しさ」に変え、単価の高い構成へ自然に導きます。",
@@ -224,6 +265,17 @@ export const capabilities: Capability[] = [
     slug: "animation",
     title: "Web内アニメーション",
     tagline: "文章では伝わらない仕組みを動きで説明",
+    // 検索語に寄せた見出しと、費用・期間の即答（詳細は Capability 型のコメント）
+    searchTitle: "ホームページのアニメーション制作費用と実例",
+    searchLead: "スクロールで動くサイトを、いくらで・どのくらいの期間で作れるか",
+    searchTerms: ["ホームページ アニメーション 制作 費用", "Web アニメーション 制作会社", "スクロール アニメーション 実装", "動きのあるサイト 制作"],
+    priceBand: "standard",
+    leadTime: "1〜3週間（既存サイトへの追加なら1週間程度から）",
+    costFactors: [
+      "動かす箇所の数と、1つあたりの作り込みの深さ",
+      "図解やイラストを新規に作るか、既存素材を使うか",
+      "表示速度を落とさないための最適化をどこまで行うか",
+    ],
     impact: "複雑なサービスが数秒で伝わり、離脱が止まる。",
     description:
       "スクロール連動の演出、図解アニメーション、操作に反応するマイクロインタラクションを設計・実装します。装飾ではなく、視線を導き、理解を助けるための動きです。",
@@ -275,6 +327,17 @@ export const capabilities: Capability[] = [
     slug: "ai-chatbot",
     title: "AIチャットボット",
     tagline: "夜間・休日の問い合わせにも自動で回答",
+    // 検索語に寄せた見出しと、費用・期間の即答（詳細は Capability 型のコメント）
+    searchTitle: "AIチャットボット導入の費用と実例（RAG構築）",
+    searchLead: "自社の資料に沿って答えるチャットボットを、いくらで・どのくらいの期間で導入できるか",
+    searchTerms: ["AIチャットボット 導入 費用", "チャットボット 制作 会社", "RAG 構築 依頼", "問い合わせ 自動応答 導入", "社内文書 AI 検索"],
+    priceBand: "premium",
+    leadTime: "2〜4週間（知識源の整理状況による）",
+    costFactors: [
+      "読み込ませる資料の量と、整理されているかどうか",
+      "予約・見積もりなど、回答の先で行う処理をどこまでつなぐか",
+      "使用するAIモデルと、月あたりの想定会話数（運用費に影響します）",
+    ],
     impact: "定型質問の一次対応が自動化され、人を増やさず窓口が24時間になる。",
     description:
       "自社の資料・FAQ・サービス情報を知識源に、訪問者の質問へ自動で答えるAIを構築します。根拠を示し、知識源にないことは答えない設計で、誤回答のリスクを抑えます。",
@@ -325,6 +388,17 @@ export const capabilities: Capability[] = [
     slug: "simulator",
     title: "料金シミュレーター・自動診断",
     tagline: "概算費用をその場で提示",
+    // 検索語に寄せた見出しと、費用・期間の即答（詳細は Capability 型のコメント）
+    searchTitle: "料金シミュレーター制作の費用と実例",
+    searchLead: "条件を選ぶと概算金額が出る診断を、いくらで・どのくらいの期間で作れるか",
+    searchTerms: ["料金シミュレーター 制作", "見積もり 自動計算 ホームページ", "診断コンテンツ 制作 費用", "自動見積もり システム 開発"],
+    priceBand: "standard",
+    leadTime: "1〜3週間（料金ルールが固まっていれば1週間程度から）",
+    costFactors: [
+      "質問の数と、金額の計算ルールの複雑さ",
+      "結果を問い合わせフォーム・CRMへ引き継ぐかどうか",
+      "料金表の更新を自社で行えるようにするか",
+    ],
     impact: "見積もり待ちで消えていた見込み客が、その場で問い合わせに変わる。",
     description:
       "条件を選ぶだけで、概算金額・期間・おすすめプランがその場で出る診断をつくります。価格が分からない不安を即時に解消し、条件が固まった状態の問い合わせだけを受け取れます。",
@@ -370,6 +444,17 @@ export const capabilities: Capability[] = [
     slug: "recommend",
     title: "AIレコメンド（回遊・客単価）",
     tagline: "一人ひとりに合う商品を自動で提案",
+    // 検索語に寄せた見出しと、費用・期間の即答（詳細は Capability 型のコメント）
+    searchTitle: "AIレコメンド機能の導入費用と実例",
+    searchLead: "一人ひとりに合う商品を自動で薦める仕組みを、いくらで導入できるか",
+    searchTerms: ["AIレコメンド 導入 費用", "レコメンド機能 開発", "おすすめ商品 表示 EC", "パーソナライズ おすすめ 実装"],
+    priceBand: "premium",
+    leadTime: "2〜4週間（商品データの整備状況による）",
+    costFactors: [
+      "商品点数と、商品データ（特徴・タグ）の整備状況",
+      "閲覧履歴だけで薦めるか、購買データまで使うか",
+      "既存のECカート・在庫システムとの連携範囲",
+    ],
     impact: "1人あたりの閲覧数と購入点数が増え、同じ集客で売上が伸びる。",
     description:
       "閲覧・クリックの履歴から関心を推定し、次に見せるものを自動で並べ替えます。人が手作業で「おすすめ」を組む必要がなく、商品が増えても精度が落ちません。",
@@ -420,6 +505,17 @@ export const capabilities: Capability[] = [
     slug: "ar",
     title: "AR（実物大で置いてみる）",
     tagline: "スマホのカメラで実物大に置いてみる",
+    // 検索語に寄せた見出しと、費用・期間の即答（詳細は Capability 型のコメント）
+    searchTitle: "WebAR制作の費用と実例（アプリ不要）",
+    searchLead: "スマホのカメラで実物大に置いてみられるARを、いくらで・どのくらいの期間で作れるか",
+    searchTerms: ["WebAR 制作 費用", "AR 制作 会社", "家具 AR 導入", "スマホ AR ホームページ", "AR 試着 実装"],
+    priceBand: "premium",
+    leadTime: "2〜4週間（3Dモデルの用意状況による）",
+    costFactors: [
+      "AR用の3Dモデルを新規に作るか、既存データを変換できるか",
+      "AR対応させる商品の点数",
+      "iOS（USDZ）とAndroid（glTF）の両対応と、非対応端末の代替表示",
+    ],
     impact: "サイズ違いの返品と「思ってたのと違う」が激減する。",
     description:
       "スマートフォンのカメラ越しに、商品を実物大でその場に表示します。アプリのインストールは不要。3Dモデルがあれば、同じ資産をそのままARに転用できます。",
@@ -471,6 +567,17 @@ export const capabilities: Capability[] = [
     slug: "voice",
     title: "音声AI（話して聞ける）",
     tagline: "話しかけると音声で答える",
+    // 検索語に寄せた見出しと、費用・期間の即答（詳細は Capability 型のコメント）
+    searchTitle: "音声AI導入の費用と実例（話して聞けるサイト）",
+    searchLead: "話しかけて操作でき、読み上げで返すサイトを、いくらで導入できるか",
+    searchTerms: ["音声AI 導入 費用", "音声認識 ホームページ 実装", "読み上げ 対応 サイト 制作", "ボイスボット 開発"],
+    priceBand: "premium",
+    leadTime: "2〜3週間",
+    costFactors: [
+      "ブラウザ標準の音声機能で足りるか、外部の音声AIを使うか",
+      "対応する言語の数",
+      "音声で操作させる範囲（検索だけか、予約・注文まで進めるか）",
+    ],
     impact: "電話が減り、キーボードが苦手な層の問い合わせを拾える。",
     description:
       "マイクに話しかけると、その場で聞き取って音声で回答します。ブラウザの音声認識・音声合成を使うため、電話の一次対応をWeb上で代替できます。",
@@ -521,6 +628,17 @@ export const capabilities: Capability[] = [
     slug: "multilingual",
     title: "多言語・インバウンド対応",
     tagline: "多言語表示とインバウンド検索への対応",
+    // 検索語に寄せた見出しと、費用・期間の即答（詳細は Capability 型のコメント）
+    searchTitle: "多言語サイト制作の費用と実例（インバウンド対応）",
+    searchLead: "英語版・多言語版のホームページを、いくらで・どのくらいの期間で作れるか",
+    searchTerms: ["多言語サイト 制作 費用", "英語版 ホームページ 制作", "インバウンド 対策 Webサイト", "hreflang 実装", "海外向け ホームページ"],
+    priceBand: "standard",
+    leadTime: "既存サイトへの追加で2〜4週間（言語数とページ数による）",
+    costFactors: [
+      "対応する言語の数と、翻訳対象のページ数",
+      "翻訳をこちらで用意するか、原稿をご支給いただくか",
+      "問い合わせフォーム・チャットボットまで各言語に揃えるか",
+    ],
     impact: "海外からの検索・予約を、翻訳の手間なく取り込める。",
     description:
       "日本語で書いた内容をAIで翻訳し、人がレビューして公開します。hreflangの設計まで含めて、各言語が正しく検索される状態をつくります。",
@@ -566,6 +684,17 @@ export const capabilities: Capability[] = [
     slug: "ai-agent",
     title: "AIエージェント対応",
     tagline: "AIが読み取れる形で情報を公開",
+    // 検索語に寄せた見出しと、費用・期間の即答（詳細は Capability 型のコメント）
+    searchTitle: "LLMO・AI検索対策（AEO）の費用と実例",
+    searchLead: "ChatGPTなどの生成AIに正しく読ませ、引用される状態を作る対策の費用",
+    searchTerms: ["LLMO 対策 費用", "AEO 対策 会社", "ChatGPT 引用 されるには", "AI検索 対策 ホームページ", "llms.txt 作成"],
+    priceBand: "standard",
+    leadTime: "現状サイトへの実装で2〜4週間",
+    costFactors: [
+      "ページ数と、既存の原稿を書き直す範囲",
+      "構造化データをどこまで設計するか（事業者・サービス・FAQ・記事）",
+      "公開後の更新・計測まで任せるかどうか",
+    ],
     impact: "ChatGPTなどのAIが代理で調べ、比較し、連絡してくる時代に備える。",
     description:
       "AIが読み取れる形でサイトの情報を公開します。llms.txt・構造化データ・エージェント向けAPIを整え、AIが情報源として選び、行動できる状態をつくります。",
@@ -611,6 +740,17 @@ export const capabilities: Capability[] = [
     slug: "personalize",
     title: "AIパーソナライズ",
     tagline: "訪問者の業種に合わせて表示を変更",
+    // 検索語に寄せた見出しと、費用・期間の即答（詳細は Capability 型のコメント）
+    searchTitle: "Webパーソナライズ導入の費用と実例（表示の出し分け）",
+    searchLead: "訪問者の業種や流入元に合わせて表示を変える仕組みの費用",
+    searchTerms: ["Web パーソナライズ 導入", "出し分け ホームページ 実装", "LP 出し分け 費用", "訪問者 別 表示 変更"],
+    priceBand: "premium",
+    leadTime: "2〜4週間（出し分けるパターン数による）",
+    costFactors: [
+      "出し分けるパターンの数と、差し替える範囲",
+      "判定に使う情報（流入元・地域・閲覧履歴・入力内容）",
+      "個人情報を扱わない設計にするための要件整理",
+    ],
     impact: "同じ1ページで、業種ごとに刺さる訴求を出し分けられる。",
     description:
       "流入元・検索キーワード・過去の閲覧から訪問者の関心を推定し、見出し・実績・CTAを出し分けます。ページを何本も作らずに、訴求の精度だけを上げられます。",
@@ -656,6 +796,17 @@ export const capabilities: Capability[] = [
     slug: "insight",
     title: "行動解析・A/Bテスト",
     tagline: "クリックの実データで改善点を特定",
+    // 検索語に寄せた見出しと、費用・期間の即答（詳細は Capability 型のコメント）
+    searchTitle: "ヒートマップ・A/Bテスト導入の費用と実例",
+    searchLead: "どこで離脱しているかを数字で特定し、改善を検証する仕組みの費用",
+    searchTerms: ["ヒートマップ 導入 費用", "A/Bテスト 実施 会社", "行動解析 ツール 導入", "CVR 改善 依頼", "サイト 改善 コンサル"],
+    priceBand: "standard",
+    leadTime: "計測の実装は1〜2週間、改善の検証は運用で継続",
+    costFactors: [
+      "計測する画面数と、記録するイベントの種類",
+      "既存ツール（GA4等）を使うか、自社で計測基盤を持つか",
+      "改善案の実装まで任せるか、レポートまでにするか",
+    ],
     impact: "どこで離脱しているかが見え、改善が「当たったか」を数字で言い切れる。",
     description:
       "クリック位置・スクロール到達率を記録して可視化し、2案を同時に出して勝ち負けを統計的に判定します。デザインの好みの議論を、数字の議論に変えます。",
@@ -706,6 +857,17 @@ export const capabilities: Capability[] = [
     slug: "pwa",
     title: "アプリ化（PWA）・通知",
     tagline: "ホーム画面に追加できて通知も送れる",
+    // 検索語に寄せた見出しと、費用・期間の即答（詳細は Capability 型のコメント）
+    searchTitle: "PWA開発の費用と実例（アプリを作らずアプリ化）",
+    searchLead: "ホーム画面に追加でき、プッシュ通知も送れるサイトを、いくらで作れるか",
+    searchTerms: ["PWA 開発 費用", "アプリ化 ホームページ", "プッシュ通知 導入 Web", "ネイティブアプリ 不要 アプリ化", "PWA 制作会社"],
+    priceBand: "standard",
+    leadTime: "既存サイトへの追加で1〜3週間",
+    costFactors: [
+      "オフラインで見せる範囲（どのページを手元に保存するか）",
+      "プッシュ通知の配信先管理を、どこまで作るか",
+      "iOSの制約（ホーム画面追加が必要）への案内の作り込み",
+    ],
     impact: "アプリを作らずに、アプリと同じ再訪導線を持てる。",
     description:
       "Webサイトをホーム画面に追加でき、通信が不安定でも開けるようにします。通知を送れば、SNSや広告に頼らず直接ユーザーを呼び戻せます。",
@@ -751,6 +913,17 @@ export const capabilities: Capability[] = [
     slug: "sns",
     title: "SNS連携",
     tagline: "SNSの投稿をサイトに自動掲載",
+    // 検索語に寄せた見出しと、費用・期間の即答（詳細は Capability 型のコメント）
+    searchTitle: "SNS連携（Instagram埋め込み）の制作費用と実例",
+    searchLead: "SNSの投稿をサイトへ自動で載せ、共有時の見え方も整える実装の費用",
+    searchTerms: ["Instagram 埋め込み ホームページ", "SNS連携 制作 費用", "OGP 設定 依頼", "SNS 自動掲載 サイト", "X 埋め込み 実装"],
+    priceBand: "standard",
+    leadTime: "1〜2週間",
+    costFactors: [
+      "連携するSNSの数と、公式APIの利用申請が必要かどうか",
+      "取り込んだ投稿を自動で出すか、選んで出すか",
+      "共有画像（OGP）を投稿ごとに自動生成するか",
+    ],
     impact: "SNSを更新すればサイトも更新され、放置感による信頼低下を防げる。",
     description:
       "Instagram・X・YouTube の投稿をサイトへ自動掲載し、あわせてシェア時に表示されるOGPカードを設計します。発信からサイト、問い合わせまでを一本につなぎます。",
@@ -802,6 +975,17 @@ export const capabilities: Capability[] = [
     slug: "integration",
     title: "他システムとの連携",
     tagline: "既存システムとデータを自動でやりとり",
+    // 検索語に寄せた見出しと、費用・期間の即答（詳細は Capability 型のコメント）
+    searchTitle: "システム連携・API開発の費用と実例",
+    searchLead: "在庫・顧客・通知を既存システムと自動でつなぐ開発の費用",
+    searchTerms: ["システム連携 開発 費用", "API 連携 開発 依頼", "基幹システム Web 連携", "kintone 連携 開発", "受注 自動化 システム"],
+    priceBand: "premium",
+    leadTime: "3〜6週間（相手側システムの仕様確認を含む）",
+    costFactors: [
+      "つなぐ相手のシステム数と、APIが公開されているかどうか",
+      "リアルタイム同期か、1日1回の同期でよいか",
+      "失敗時の再試行・通知・記録をどこまで作り込むか",
+    ],
     impact: "在庫・予約・顧客データが自動で同期し、人を増やさず処理量を増やせる。",
     description:
       "基幹システム・在庫管理・予約・CRM・決済など、すでに社内で動いているシステムとWebサイトをAPIで接続します。認証・リトライ・エラー通知まで含めた、止まらない連携設計が本領です。",
@@ -1267,6 +1451,16 @@ export const plans: Plan[] = [
     ],
   },
 ];
+
+/**
+ * 費用の目安に使うプランを引く。
+ * 金額の単一情報源は `plans` で、デモページ側は帯（standard / premium）だけを持つ。
+ * ⚠️ 機能ごとに新しい金額を作らないこと（実在しない価格は信用を損ないます）。
+ */
+export function planForBand(band: Capability["priceBand"]): Plan {
+  const name = band === "premium" ? "プレミアム" : "スタンダード";
+  return plans.find((p) => p.name === name) ?? plans[1];
+}
 
 export type Step = { title: string; description: string };
 export const steps: Step[] = [
@@ -2008,6 +2202,18 @@ export const pageLinks: PageLink[] = [
     title: "会社概要",
     description: "所在地・連絡先・所属団体、そして私たちが約束できること。",
     icon: "pin",
+  },
+  {
+    href: "/showcase",
+    title: "デモサイト（職種別）",
+    description: "18の職種ごとに「この機能をこう使えます」を、実際に動くデモつきで。",
+    icon: "target",
+  },
+  {
+    href: "/columns",
+    title: "コラム",
+    description: "AIでWeb制作はどこまでできるのか、期間と費用はどう変わるのかを実測で解説。",
+    icon: "search",
   },
   {
     href: "/faq",

@@ -18,6 +18,8 @@ import {
   type Capability,
   type ServiceCategory,
 } from "@/lib/content";
+import { author, hasNamedAuthor } from "@/lib/author";
+import type { Column } from "@/lib/columns";
 
 type JsonLd = Record<string, unknown>;
 
@@ -82,6 +84,20 @@ export function organizationJsonLd(): JsonLd {
     },
     // 実在するアカウントがある場合のみ出力（架空のプロフィールを載せない）
     ...(siteConfig.sameAs.length > 0 ? { sameAs: [...siteConfig.sameAs] } : {}),
+    // 代表者（E-E-A-T：誰が事業をしているか）。実名が未設定のときは出力しない。
+    // このノードは全ページの共通JSON-LDに出るため、記事の author から @id で参照できる。
+    ...(hasNamedAuthor
+      ? {
+          founder: {
+            "@type": "Person",
+            "@id": `${siteConfig.url}/#author`,
+            name: author.personName,
+            alternateName: author.personNameRomaji,
+            jobTitle: author.personRole,
+            worksFor: { "@id": ORGANIZATION_ID },
+          },
+        }
+      : {}),
     // 所属団体（商工団体への加入は事業者の実在性・信頼性のシグナルになる）
     memberOf: siteConfig.memberOf.map((m) => ({
       "@type": "Organization",
@@ -267,6 +283,9 @@ export function webPageJsonLd(opts?: {
   name?: string;
   description?: string;
   type?: "WebPage" | "CollectionPage" | "AboutPage";
+  /** 記事ページなど、ページ固有の日付を持つ場合に上書きする */
+  datePublished?: string;
+  dateModified?: string;
 }): JsonLd {
   const path = opts?.path ?? "/";
   const url = absoluteUrl(path);
@@ -282,12 +301,120 @@ export function webPageJsonLd(opts?: {
     about: { "@id": ORGANIZATION_ID },
     publisher: { "@id": ORGANIZATION_ID },
     primaryImageOfPage: absoluteUrl("/opengraph-image"),
-    datePublished: siteConfig.foundingDate,
-    dateModified: BUILD_DATE,
+    datePublished: opts?.datePublished ?? siteConfig.foundingDate,
+    dateModified: opts?.dateModified ?? BUILD_DATE,
     speakable: {
       "@type": "SpeakableSpecification",
       cssSelector: [".speakable"],
     },
+  };
+}
+
+/**
+ * 著者（E-E-A-T）。
+ * 代表者の実名が確定していない間は、著者を事業者（Organization）として扱います。
+ * 実在しない人物を Person として出力しないための切り替えです。
+ */
+export function authorRef(): JsonLd {
+  return hasNamedAuthor
+    ? {
+        "@type": "Person",
+        "@id": `${siteConfig.url}/#author`,
+        name: author.personName,
+        alternateName: author.personNameRomaji,
+        jobTitle: author.personRole,
+        description: author.bio,
+        worksFor: { "@id": ORGANIZATION_ID },
+        knowsAbout: [...siteConfig.knowsAbout],
+        url: absoluteUrl("/company"),
+      }
+    : { "@id": ORGANIZATION_ID };
+}
+
+/**
+ * コラム記事（Article）。
+ * 見出し・公開日・更新日・著者・発行者を明示し、「誰がいつ書いたか」を機械可読にします。
+ * about / mentions に扱っている主題を入れることで、AIが記事の対象を取り違えにくくなります。
+ */
+export function articleJsonLd(column: Column): JsonLd {
+  const url = absoluteUrl(`/columns/${column.slug}`);
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "@id": `${url}#article`,
+    headline: column.title,
+    description: column.description,
+    url,
+    mainEntityOfPage: { "@id": `${url}#webpage` },
+    inLanguage: siteConfig.lang,
+    datePublished: column.published,
+    dateModified: column.updated,
+    author: authorRef(),
+    publisher: { "@id": ORGANIZATION_ID },
+    image: absoluteUrl("/opengraph-image"),
+    articleSection: column.category,
+    keywords: column.keywords.join(", "),
+    wordCount: countCharacters(column),
+    timeRequired: `PT${column.readMinutes}M`,
+    about: { "@id": ORGANIZATION_ID },
+    isAccessibleForFree: true,
+    // 記事が答える質問と結論を明示（AEO：回答としてそのまま引用されやすくする）
+    mainEntity: {
+      "@type": "Question",
+      name: column.question,
+      acceptedAnswer: { "@type": "Answer", text: column.answer },
+    },
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector: [".speakable"],
+    },
+  };
+}
+
+/** 記事の本文文字数（wordCount 用のおおよその値） */
+function countCharacters(column: Column): number {
+  return column.body.reduce((total, block) => {
+    switch (block.type) {
+      case "h2":
+      case "h3":
+      case "p":
+        return total + block.text.length;
+      case "ul":
+        return total + block.items.join("").length;
+      case "steps":
+        return total + block.items.reduce((n, i) => n + i.title.length + i.body.length, 0);
+      case "table":
+        return total + block.rows.flat().join("").length;
+      case "note":
+      case "link":
+        return total + block.body.length;
+    }
+  }, column.answer.length);
+}
+
+/** コラム一覧（Blog）。個々の記事を BlogPosting として並べる。 */
+export function blogJsonLd(items: Column[]): JsonLd {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "@id": `${absoluteUrl("/columns")}#blog`,
+    name: `${siteConfig.name}のコラム`,
+    description:
+      "AIを使ったWeb制作の実際、費用と期間、AI検索（AEO / LLMO）対策について、実測にもとづいて書いています。",
+    url: absoluteUrl("/columns"),
+    inLanguage: siteConfig.lang,
+    publisher: { "@id": ORGANIZATION_ID },
+    blogPost: items.map((c) => ({
+      "@type": "BlogPosting",
+      "@id": `${absoluteUrl(`/columns/${c.slug}`)}#article`,
+      headline: c.title,
+      description: c.description,
+      url: absoluteUrl(`/columns/${c.slug}`),
+      datePublished: c.published,
+      dateModified: c.updated,
+      author: authorRef(),
+      publisher: { "@id": ORGANIZATION_ID },
+    })),
   };
 }
 
@@ -301,9 +428,12 @@ export function capabilityJsonLd(c: Capability): JsonLd {
     "@context": "https://schema.org",
     "@type": "Service",
     "@id": `${absoluteUrl(`/demo/${c.slug}`)}#service`,
-    name: c.title,
+    name: c.searchTitle,
+    alternateName: c.title,
     description: c.description,
     serviceType: c.title,
+    // 検索されている言葉をそのまま渡す（機能名だけだと検索意図に当たらない）
+    keywords: c.searchTerms.join(", "),
     url: absoluteUrl(`/demo/${c.slug}`),
     provider: { "@id": ORGANIZATION_ID },
     areaServed: siteConfig.areaServedList.map((a) => ({ "@type": "AdministrativeArea", name: a })),

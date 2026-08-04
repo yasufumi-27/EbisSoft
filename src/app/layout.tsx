@@ -1,4 +1,3 @@
-import { ViewTransition } from "react";
 import type { Metadata, Viewport } from "next";
 import { Geist, Orbitron } from "next/font/google";
 import "./globals.css";
@@ -6,15 +5,7 @@ import "./globals.css";
 import { siteConfig } from "@/lib/site";
 import { organizationJsonLd, websiteJsonLd } from "@/lib/jsonld";
 import { JsonLd } from "@/components/JsonLd";
-import { SiteHeader } from "@/components/site/SiteHeader";
-import { SiteFooter } from "@/components/site/SiteFooter";
-import { BackgroundFx } from "@/components/fx/BackgroundFx";
-import { RevealInit } from "@/components/fx/RevealInit";
-import { PointerFx } from "@/components/fx/PointerFx";
-import { ScrollProgress } from "@/components/fx/ScrollProgress";
-import { PwaInit } from "@/components/fx/PwaInit";
-import { CursorGlow } from "@/components/fx/CursorGlow";
-import { SiteAssistant } from "@/components/assistant/SiteAssistant";
+import { Analytics } from "@/components/analytics/Analytics";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,6 +22,9 @@ const orbitron = Orbitron({
 
 /** サブパス配信時のプレフィックス（GitHub Pages なら "/EbisSoft"、通常ホスティングでは ""）。 */
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
+/** プレビュー環境（GitHub Pages）かどうか。本番＝さくらとの重複を避けるために使う。 */
+const IS_PREVIEW = process.env.GITHUB_PAGES === "true";
 
 /**
  * サイト全体のメタデータ。各ページはここを継承し、必要に応じて上書きします。
@@ -106,6 +100,18 @@ export const metadata: Metadata = {
   verification: {
     google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
   },
+  // プレビュー（GitHub Pages）は本番と同一内容のため、インデックス対象から外す。
+  // robots.txt の disallow はクロールを止めるだけで、外部リンク経由のインデックス登録は
+  // 防げない。noindex を各ページの meta にも出して二重に効かせる。
+  ...(IS_PREVIEW
+    ? {
+        robots: {
+          index: false,
+          follow: false,
+          googleBot: { index: false, follow: false },
+        },
+      }
+    : {}),
 };
 
 export const viewport: Viewport = {
@@ -115,6 +121,15 @@ export const viewport: Viewport = {
   themeColor: "#05070f",
 };
 
+/**
+ * ここには **本サイトにもデモサイトにも共通するものだけ** を置きます。
+ *
+ * ヘッダー・フッター・3D背景・常駐アシスタントは `app/(chrome)/layout.tsx` に移しました。
+ * 職種別のデモサイト（`/demosite/<職種>`）は、お客様のホームページそのものを再現する場所で、
+ * エビスソフトのヘッダーやフッターが乗っていては「本物のサイト」に見えないためです。
+ * ルートグループを分けることで、デモサイト側ではこれらの**JSそのものを配信しません**
+ * （＝デモの描画にCPUとGPUを回せます）。
+ */
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -132,27 +147,11 @@ export default function RootLayout({
         </noscript>
         {/* サイト共通の構造化データ（事業者・サイト） */}
         <JsonLd data={[organizationJsonLd(), websiteJsonLd()]} />
-        {/* 3D背景（クライアントのみ・遅延読み込み）と各種演出の起動役 */}
-        <BackgroundFx />
-        <RevealInit />
-        <PointerFx />
-        <ScrollProgress />
-        <PwaInit />
-        {/* マウス位置に追従する薄い光（タッチ端末・reduced-motionでは出ません） */}
-        <CursorGlow />
 
-        <SiteHeader />
-        {/* ページ遷移をクロスフェードさせる（非対応ブラウザでは通常の遷移になる） */}
-        <ViewTransition>
-          <main id="main" tabIndex={-1} className="flex-1">
-            {children}
-          </main>
-        </ViewTransition>
-        <SiteFooter />
+        {children}
 
-        {/* 右下に常駐するドット絵キャラクター（サイト内AIアシスタント）。
-            チャット本体はクリックされて初めて読み込むため、初期表示には影響しません。 */}
-        <SiteAssistant />
+        {/* アクセス解析（NEXT_PUBLIC_GA_ID が設定された本番ビルドでのみ出力） */}
+        <Analytics />
       </body>
     </html>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { DemoStage } from "./DemoUi";
 import { Icon } from "@/components/ui/icons";
@@ -9,8 +9,10 @@ import {
   FOCUS_THRESHOLD,
   isConfident,
   kbDocs,
+  createKbSearch,
   searchKb,
   suggestedQuestions,
+  type KbDoc,
   type SearchHit,
 } from "@/lib/kb";
 import { ja } from "@/lib/typography";
@@ -71,9 +73,40 @@ function measure<T>(fn: () => T): { value: T; ms: number } {
  * 本番ではこの後段にLLMを接続して自然文を生成しますが、
  * 「根拠を示す」「知らないことは答えない」という設計はこのデモと同じです。
  */
-export default function DemoChatbot() {
+/**
+ * @param knowledge 職種別デモサイトから渡す知識源（そのお店・その医院のQ&A）。
+ *   渡されたときは、当社の情報ではなく**そのサイトの内容に答えるボット**になります。
+ *   仕組み（BM25検索・根拠の表示・答えられないときは答えない）は同じです。
+ * @param industryName 職種名（名乗りと問い合わせ誘導の文面に使う）
+ */
+export default function DemoChatbot({
+  knowledge,
+  industryName,
+}: {
+  knowledge?: { q: string; a: string }[];
+  industryName?: string;
+}) {
+  /** 知識源を差し替えるときの検索エンジン（渡されなければ当社の知識源を使う） */
+  const custom = useMemo(() => {
+    if (!knowledge || knowledge.length === 0) return null;
+    const docs: KbDoc[] = knowledge.map((k, i) => ({
+      id: `site-${i}`,
+      source: "サイト内のよくある質問",
+      category: "FAQ",
+      key: k.q,
+      answer: k.a,
+    }));
+    return createKbSearch(docs);
+  }, [knowledge]);
+
+  const greeting = custom
+    ? `こんにちは。${industryName ?? "当店"}のサイト内AIアシスタントです。このサイトに書かれている内容についてお答えします。この会話の中で、ご予約まで進めることもできます。`
+    : GREETING;
+
+  const suggestions = custom && knowledge ? knowledge.map((k) => k.q) : suggestedQuestions;
+
   const [messages, setMessages] = useState<Message[]>([
-    { id: nextId(), role: "bot", text: GREETING },
+    { id: nextId(), role: "bot", text: greeting },
   ]);
   const [input, setInput] = useState("");
   const [thinking, setThinking] = useState(false);
@@ -193,12 +226,12 @@ export default function DemoChatbot() {
     setThinking(true);
 
     // 検索の実行時間を計測（ブラウザ内で完結するため通常1ms未満）
-    const { value: hits, ms } = measure(() => searchKb(q, 3));
+    const { value: hits, ms } = measure(() => (custom ? custom.search(q, 3) : searchKb(q, 3)));
     setLatency(Math.max(ms, 0.01));
     setLastHits(hits);
 
     const top = hits[0];
-    const confident = isConfident(top);
+    const confident = custom ? custom.isConfident(top, q) : isConfident(top);
 
     // 検索〜生成の待ち時間を再現（実際のLLM応答は数百ms〜数秒）
     later(() => {
@@ -224,7 +257,9 @@ export default function DemoChatbot() {
         ]);
         streamAnswer(
           id,
-          "申し訳ありません。その質問に確実にお答えできる情報が知識源に見つかりませんでした。憶測でお答えするより、担当者から正確にご回答します。お問い合わせフォームからご連絡ください（初回相談は無料です）。",
+          custom
+            ? "申し訳ありません。その質問に確実にお答えできる情報が、このサイトの中に見つかりませんでした。憶測でお答えするより、スタッフから正確にご回答します。お問い合わせフォームかお電話でご連絡ください。"
+            : "申し訳ありません。その質問に確実にお答えできる情報が知識源に見つかりませんでした。憶測でお答えするより、担当者から正確にご回答します。お問い合わせフォームからご連絡ください（初回相談は無料です）。",
         );
       }
     }, 480);
@@ -233,7 +268,7 @@ export default function DemoChatbot() {
   const reset = () => {
     timers.current.forEach((t) => window.clearTimeout(t));
     timers.current = [];
-    setMessages([{ id: nextId(), role: "bot", text: GREETING }]);
+    setMessages([{ id: nextId(), role: "bot", text: greeting }]);
     setLastHits([]);
     setLastQuery("");
     setLatency(null);
@@ -246,7 +281,7 @@ export default function DemoChatbot() {
       {/* ---------------- チャット本体 ---------------- */}
       <DemoStage
         className="min-w-0 lg:col-span-3"
-        label="エビスソフト.AI_Assistant"
+        label={custom ? "AI_Assistant" : "エビスソフト.AI_Assistant"}
         status={thinking ? "THINKING…" : "ONLINE"}
       >
         <div
@@ -441,7 +476,7 @@ export default function DemoChatbot() {
           >
             {ja("相談を予約したい")}
           </button>
-          {suggestedQuestions.map((q) => (
+          {suggestions.map((q) => (
             <button
               key={q}
               type="button"
@@ -503,7 +538,7 @@ export default function DemoChatbot() {
           <div className="bg-ink-2/80 px-3 py-3">
             <dt className="text-[10px] text-slate-500">知識ドキュメント</dt>
             <dd className="font-display mt-1 text-lg font-bold text-brand-light">
-              {KB_DOC_COUNT}
+              {custom ? custom.docCount : KB_DOC_COUNT}
             </dd>
           </div>
           <div className="bg-ink-2/80 px-3 py-3">

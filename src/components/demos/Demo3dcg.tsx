@@ -6,13 +6,19 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { ChipButton, ControlGroup, DemoStage, RangeControl, SwitchButton } from "./DemoUi";
 import { createLogo3d, LOGO_BLUE, type Logo3d } from "@/components/fx/logo3d";
+import {
+  createIndustryModel,
+  INDUSTRY_MODEL_LABEL,
+  type IndustryModel,
+  type IndustryModelKey,
+} from "./industryModels";
 
 /* ------------------------------------------------------------------
  * 選択肢の定義
  * ---------------------------------------------------------------- */
 
-type ShapeKey = "knot" | "icosa" | "box" | "sphere" | "torus" | "logo";
-type PrimitiveKey = Exclude<ShapeKey, "logo">;
+type ShapeKey = "knot" | "icosa" | "box" | "sphere" | "torus" | "logo" | "product";
+type PrimitiveKey = Exclude<ShapeKey, "logo" | "product">;
 type MaterialKey = "metal" | "glass" | "matte" | "wire";
 
 const SHAPES: { key: ShapeKey; label: string }[] = [
@@ -105,11 +111,28 @@ type SceneApi = {
  * Three.js でリアルタイムにレンダリングし、形状・素材・カラー・光量・自動回転を
  * その場で切り替えられます（動画ではなく実際のWebGL描画）。
  */
-export default function Demo3dcg() {
+/**
+ * @param productLabel 職種別のページから渡す「本番では何を表示するか」。
+ * @param model 職種別の3Dモデル（医療なら診療ユニット、製造なら機械部品など）。
+ *   渡されたときは、その形状を**初期表示**にします。基本形状（球・キューブ等）は
+ *   仕組みを見せるための比較用として残します。
+ */
+export default function Demo3dcg({
+  productLabel,
+  model,
+}: {
+  productLabel?: string;
+  model?: IndustryModelKey;
+}) {
   const mountRef = useRef<HTMLDivElement>(null);
   const apiRef = useRef<SceneApi | null>(null);
 
-  const [shape, setShape] = useState<ShapeKey>("knot");
+  // 職種のモデルがあるときは、それを先頭・初期選択にする
+  const shapes = model
+    ? [{ key: "product" as ShapeKey, label: INDUSTRY_MODEL_LABEL[model] }, ...SHAPES]
+    : SHAPES;
+
+  const [shape, setShape] = useState<ShapeKey>(model ? "product" : "knot");
   const [material, setMaterial] = useState<MaterialKey>("metal");
   const [color, setColor] = useState(CYAN);
   const [light, setLight] = useState(120);
@@ -188,10 +211,18 @@ export default function Demo3dcg() {
     let matColor = CYAN;
     let logo: Logo3d | null = null;
 
+    /* --- 職種別の3Dモデル ---
+       医療なら診療ユニット、製造なら機械部品というように、その職種で見せたい物を
+       基本形状の組み合わせで組み立てます（外部ファイルを読まないので追加の通信ゼロ）。
+       ロゴと同じく、選ばれたときに初めて組み立てます。 */
+    let product: IndustryModel | null = null;
+
     const applyMaterial = () => {
       const next = createMaterial(matKind, matColor);
       mesh.material = next;
       if (logo) logo.letters.material = next;
+      // 職種モデルは「色を変える部品」だけを差し替える（影の部品は固定素材のまま）
+      if (product) product.themed.forEach((m) => (m.material = next));
       mat.dispose();
       mat = next;
     };
@@ -201,6 +232,12 @@ export default function Demo3dcg() {
       logo = createLogo3d({ lettersMaterial: mat });
       logo.group.scale.setScalar(0.92);
       scene.add(logo.group);
+    };
+
+    const ensureProduct = () => {
+      if (product || !model) return;
+      product = createIndustryModel(model, mat);
+      scene.add(product.group);
     };
 
     // 足元のリフレクション代わりの発光リング（見栄えの底上げ）
@@ -239,10 +276,20 @@ export default function Demo3dcg() {
         if (s === "logo") {
           ensureLogo();
           mesh.visible = false;
+          if (product) product.group.visible = false;
           logo!.group.visible = true;
           setTriangles(logo!.triangles);
+        } else if (s === "product") {
+          ensureProduct();
+          mesh.visible = false;
+          if (logo) logo.group.visible = false;
+          if (product) {
+            product.group.visible = true;
+            setTriangles(product.triangles);
+          }
         } else {
           if (logo) logo.group.visible = false;
+          if (product) product.group.visible = false;
           mesh.visible = true;
           const next = createGeometry(s);
           mesh.geometry = next;
@@ -340,6 +387,7 @@ export default function Demo3dcg() {
       geometry.dispose();
       mat.dispose();
       logo?.dispose();
+      product?.dispose();
       glow.geometry.dispose();
       (glow.material as THREE.Material).dispose();
       envRT.dispose();
@@ -350,7 +398,8 @@ export default function Demo3dcg() {
       }
       apiRef.current = null;
     };
-  }, []);
+    // model はマウント中に変わらない（職種ページごとに別のインスタンス）
+  }, [model]);
 
   /* --- Reactの状態をシーンへ反映 --- */
   useEffect(() => {
@@ -412,8 +461,16 @@ export default function Demo3dcg() {
 
       {/* 操作パネル */}
       <div className="panel space-y-5 p-5 min-w-0 lg:col-span-2">
+        {productLabel ? (
+          <p className="rounded-lg border border-gold/25 bg-gold/[0.06] px-3 py-2 text-xs leading-relaxed text-gold-light">
+            {model
+              ? `いま表示しているのは、この職種向けに組み立てた「${INDUSTRY_MODEL_LABEL[model]}」のモデルです。実案件では、お客様の「${productLabel}」のCADデータや3Dスキャンに差し替えます。`
+              : `実案件では、ここに「${productLabel}」の3Dモデルが入ります。下の形状は仕組みを見せるための基本形状です。`}
+          </p>
+        ) : null}
+
         <ControlGroup label="Shape / 形状">
-          {SHAPES.map((s) => (
+          {shapes.map((s) => (
             <ChipButton
               key={s.key}
               active={shape === s.key}

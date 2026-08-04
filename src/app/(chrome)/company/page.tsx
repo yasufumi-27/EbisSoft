@@ -5,6 +5,7 @@ import { ja } from "@/lib/typography";
 import { JsonLd } from "@/components/JsonLd";
 import { breadcrumbJsonLd, webPageJsonLd } from "@/lib/jsonld";
 import { siteConfig } from "@/lib/site";
+import { author } from "@/lib/author";
 import { businessLines, services, techStack } from "@/lib/content";
 import { Section, SectionHeading } from "@/components/ui/Section";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -41,6 +42,8 @@ const fullAddress = `〒${contact.address.postalCode} ${contact.address.region}$
 /** 会社概要テーブルの項目（NAPは site.ts の単一情報源から生成し、表記ゆれを作らない） */
 const profile: { label: string; value: string }[] = [
   { label: "名称", value: siteConfig.legalName },
+  // 代表者名は E-E-A-T（誰が事業をしているか）の基本情報。author.ts を単一情報源にする
+  { label: "代表", value: `${author.personName}（${author.personNameRomaji}）` },
   { label: "所在地", value: fullAddress },
   { label: "設立", value: "2001年4月" },
   {

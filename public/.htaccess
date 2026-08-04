@@ -100,6 +100,14 @@ ErrorDocument 404 /404.html
 # mod_mime は拡張子を右から解釈し、知らない .br / .gz は型判定では無視するため、
 # Content-Type は元の拡張子（.html → text/html）のまま encoding だけが足される。
 <IfModule mod_mime.c>
+  # 【重要】さくらの Apache は既定で AddType application/x-gzip .gz を持っており、
+  # .gz は「未知の拡張子」ではなく型を持つ拡張子として解釈される。その結果
+  # sitemap.xml.gz が Content-Type: application/x-gzip で配信され、
+  # Google Search Console が「サイトマップを読み込めませんでした」になった
+  # （HTMLも同様に text/html ではなく x-gzip になっていた）。
+  # RemoveType で .gz の型定義を消すと、.br と同じく元の拡張子
+  # （.xml → application/xml）で型が決まり、encoding だけが足される。
+  RemoveType .gz
   AddEncoding br .br
   AddEncoding gzip .gz
 </IfModule>

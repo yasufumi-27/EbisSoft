@@ -1,9 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { ChipButton, ControlGroup, DemoStage, RangeControl } from "./DemoUi";
 import { Icon } from "@/components/ui/icons";
+import {
+  createIndustryModel,
+  INDUSTRY_MODEL_LABEL,
+  type IndustryModelKey,
+} from "./industryModels";
 
 /* ------------------------------------------------------------------
  * 商品データ（実寸ミリメートル）
@@ -11,7 +16,8 @@ import { Icon } from "@/components/ui/icons";
  * ここでは寸法の正しさを見せるため、プリミティブで組んだモデルを使います。
  * ---------------------------------------------------------------- */
 
-type ProductKey = "chair" | "table" | "lamp" | "shelf";
+/** 標準の家具4種に加え、職種別モデル（key = "industry"）が入ることがある */
+type ProductKey = string;
 
 type Product = {
   key: ProductKey;
@@ -127,6 +133,72 @@ const PRODUCTS: Product[] = [
   },
 ];
 
+/* ------------------------------------------------------------------
+ * 職種別モデルをAR用に取り込む
+ *
+ * `industryModels.ts` のモデルは「見せるための大きさ」で作ってあるため、
+ * ARでは**実寸（メートル）に直し、床の上に載せる**必要があります。
+ * バウンディングボックスから縮尺を求めて合わせます。
+ * ---------------------------------------------------------------- */
+
+/** 職種別モデルの実寸（W × D × H、ミリメートル） */
+const INDUSTRY_AR_SIZE: Record<IndustryModelKey, [number, number, number]> = {
+  cup: [120, 100, 100],
+  dish: [300, 300, 90],
+  "dental-unit": [1900, 1000, 1500],
+  "machine-part": [220, 220, 190],
+  floorplan: [1800, 1400, 400],
+  house: [3600, 3000, 2600],
+  desk: [1200, 700, 780],
+  documents: [450, 320, 220],
+  "salon-chair": [720, 900, 1100],
+  dumbbell: [420, 260, 260],
+  guestroom: [2400, 1900, 800],
+  truck: [4700, 1900, 2400],
+  wheel: [660, 660, 260],
+  crate: [600, 400, 330],
+  arch: [2400, 700, 2400],
+  "care-bed": [2000, 1000, 700],
+  server: [600, 900, 1900],
+  garment: [520, 520, 1650],
+};
+
+/** 職種別モデルを、実寸・床置きの状態に整えて Product にする */
+function industryProduct(key: IndustryModelKey): Product {
+  const size = INDUSTRY_AR_SIZE[key];
+  return {
+    key: "industry",
+    name: INDUSTRY_MODEL_LABEL[key],
+    size,
+    price: 0,
+    build: (color) => {
+      const built = createIndustryModel(key, woodMat(color));
+      const inner = built.group;
+
+      // いったん置いてから採寸し、指定の実寸に収まる縮尺を求める
+      const box = new THREE.Box3().setFromObject(inner);
+      const dim = new THREE.Vector3();
+      box.getSize(dim);
+      const scale = Math.min(
+        size[0] / 1000 / (dim.x || 1),
+        size[1] / 1000 / (dim.z || 1),
+        size[2] / 1000 / (dim.y || 1),
+      );
+      inner.scale.multiplyScalar(scale);
+
+      // 床（y = 0）に載せ、水平方向の中心を原点に合わせる
+      const box2 = new THREE.Box3().setFromObject(inner);
+      inner.position.y -= box2.min.y;
+      inner.position.x -= (box2.min.x + box2.max.x) / 2;
+      inner.position.z -= (box2.min.z + box2.max.z) / 2;
+
+      const wrap = new THREE.Group();
+      wrap.add(inner);
+      return wrap;
+    },
+  };
+}
+
 const COLORS = [
   { hex: 0xb98a5a, label: "オーク" },
   { hex: 0x6b4a33, label: "ウォルナット" },
@@ -179,7 +251,15 @@ function applyDeviceOrientation(
  *
  * いずれも同じ Three.js シーンで、寸法は実寸（メートル単位）です。
  */
-export default function DemoAr() {
+export default function DemoAr({
+  model,
+  productLabel,
+}: {
+  /** 職種別の3Dモデル（渡されたときは、それを初期表示にする） */
+  model?: IndustryModelKey;
+  /** 本番で何に置き換わるか（注記に使う） */
+  productLabel?: string;
+}) {
   const mountRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const apiRef = useRef<SceneApi | null>(null);
@@ -191,7 +271,15 @@ export default function DemoAr() {
   const colorRef = useRef<number>(COLORS[0].hex);
   const gyroRef = useRef<"unknown" | "active" | "unavailable">("unknown");
 
-  const [product, setProduct] = useState<ProductKey>("chair");
+  // 職種別モデルがあるときは、それを先頭・初期選択にする
+  const products = useMemo(
+    () => (model ? [industryProduct(model), ...PRODUCTS] : PRODUCTS),
+    [model],
+  );
+  const productsRef = useRef(products);
+  productsRef.current = products;
+
+  const [product, setProduct] = useState<ProductKey>(products[0].key);
   const [color, setColor] = useState(COLORS[0].hex);
   const [human, setHuman] = useState(true);
   const [distance, setDistance] = useState(3);
@@ -202,7 +290,7 @@ export default function DemoAr() {
   const [ready, setReady] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
-  const current = PRODUCTS.find((p) => p.key === product) ?? PRODUCTS[0];
+  const current = products.find((p) => p.key === product) ?? products[0];
 
   /* ---------------- シーン構築 ---------------- */
   useEffect(() => {
@@ -290,7 +378,7 @@ export default function DemoAr() {
     scene.add(shadow);
 
     // ---- 商品 ----
-    let productGroup = PRODUCTS[0].build(COLORS[0].hex);
+    let productGroup = productsRef.current[0].build(COLORS[0].hex);
     scene.add(productGroup);
 
     const disposeGroup = (g: THREE.Object3D) => {
@@ -380,7 +468,7 @@ export default function DemoAr() {
 
     apiRef.current = {
       setProduct: (k) => {
-        const def = PRODUCTS.find((p) => p.key === k);
+        const def = productsRef.current.find((p) => p.key === k);
         if (!def) return;
         scene.remove(productGroup);
         disposeGroup(productGroup);
@@ -637,7 +725,11 @@ export default function DemoAr() {
             <p className="font-display mt-0.5 text-[11px] text-brand-light tabular-nums">
               W{w} × D{d} × H{h} mm
             </p>
-            <p className="mt-0.5 text-[11px] text-gold-light">¥{current.price.toLocaleString()}</p>
+            {current.price > 0 ? (
+              <p className="mt-0.5 text-[11px] text-gold-light">
+                ¥{current.price.toLocaleString()}
+              </p>
+            ) : null}
           </div>
 
           {/* モードごとの操作ヒント */}
@@ -734,8 +826,14 @@ export default function DemoAr() {
           ) : null}
         </div>
 
+        {model && productLabel ? (
+          <p className="rounded-lg border border-gold/25 bg-gold/[0.06] px-3 py-2 text-xs leading-relaxed text-gold-light">
+            {`いま置いているのは、この職種向けに組み立てた「${INDUSTRY_MODEL_LABEL[model]}」を実寸に直したものです。実案件では、お客様の「${productLabel}」の3Dデータに差し替えます。`}
+          </p>
+        ) : null}
+
         <ControlGroup label="Product / 商品">
-          {PRODUCTS.map((p) => (
+          {products.map((p) => (
             <ChipButton key={p.key} active={product === p.key} onClick={() => setProduct(p.key)}>
               {p.name}
             </ChipButton>

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ChipButton, DemoStage, RangeControl, SwitchButton } from "./DemoUi";
-import { Icon } from "@/components/ui/icons";
+import { Icon, type IconKey } from "@/components/ui/icons";
 
 /* ==================================================================
  * モックAPI（社内システムの代役）
@@ -47,19 +47,36 @@ const LOG_STYLE: Record<LogKind, { color: string; label: string }> = {
 };
 
 /** パイプライン上のノード（データが通る経路の可視化） */
-const NODES = [
-  { key: "web", label: "Webサイト", icon: "layout" as const },
-  { key: "api", label: "APIゲートウェイ", icon: "plug" as const },
-  { key: "inventory", label: "在庫システム", icon: "cart" as const },
-  { key: "crm", label: "CRM", icon: "user" as const },
-  { key: "notify", label: "Slack通知", icon: "chat" as const },
+type Node = { key: string; label: string; icon: IconKey };
+
+/**
+ * 既定の連携先。
+ * ⚠️ `key`（web / api / inventory / crm / notify）は処理ステップの識別子でもあるため固定。
+ *    デモサイト（/showcase）から職種に合わせて差し替えられるのは **label と icon だけ**。
+ */
+const NODES: Node[] = [
+  { key: "web", label: "Webサイト", icon: "layout" },
+  { key: "api", label: "APIゲートウェイ", icon: "plug" },
+  { key: "inventory", label: "在庫システム", icon: "cart" },
+  { key: "crm", label: "CRM", icon: "user" },
+  { key: "notify", label: "Slack通知", icon: "chat" },
 ];
 
 const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 
-export default function DemoIntegration() {
+/**
+ * @param nodes    連携先の表示名（職種別デモサイトから差し替える。key は固定）
+ * @param catalog  在庫データ（職種別デモサイトから差し替える）
+ */
+export default function DemoIntegration({
+  nodes = NODES,
+  catalog = CATALOG,
+}: {
+  nodes?: Node[];
+  catalog?: Item[];
+}) {
   const [query, setQuery] = useState("");
-  const [items, setItems] = useState<Item[]>(CATALOG);
+  const [items, setItems] = useState<Item[]>(catalog);
   const [searching, setSearching] = useState(false);
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [activeNode, setActiveNode] = useState<string | null>(null);
@@ -150,7 +167,7 @@ export default function DemoIntegration() {
         path: `/api/inventory?q=${encodeURIComponent(q || "*")}`,
         failRate: 0.2,
         result: () =>
-          CATALOG.filter(
+          catalog.filter(
             (i) =>
               !q ||
               i.name.includes(q) ||
@@ -243,7 +260,7 @@ export default function DemoIntegration() {
         status={busy ? "PROCESSING…" : "IDLE"}
       >
         <div className="flex items-center gap-1 overflow-x-auto p-5 sm:gap-2">
-          {NODES.map((n, i) => (
+          {nodes.map((n, i) => (
             <div key={n.key} className="flex shrink-0 items-center gap-1 sm:gap-2">
               <div
                 className={`flex min-w-[86px] flex-col items-center gap-2 rounded-xl border px-3 py-3 transition-all duration-300 sm:min-w-[110px] ${
@@ -264,7 +281,7 @@ export default function DemoIntegration() {
                   {n.label}
                 </span>
               </div>
-              {i < NODES.length - 1 ? (
+              {i < nodes.length - 1 ? (
                 <span
                   aria-hidden
                   className={`h-px w-4 shrink-0 sm:w-7 ${
@@ -360,7 +377,7 @@ export default function DemoIntegration() {
                 <ChipButton
                   active={false}
                   onClick={() => {
-                    setItems(CATALOG);
+                    setItems(catalog);
                     setQuery("");
                     setLogs([]);
                     setStats({ calls: 0, errors: 0, retries: 0 });

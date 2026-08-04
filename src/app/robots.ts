@@ -24,7 +24,21 @@ const aiCrawlers = [
   "cohere-ai",
 ];
 
+/**
+ * プレビュー環境（GitHub Pages）かどうか。
+ * 本番（さくら）とまったく同じ内容が別URLで公開されるため、そのままだと
+ * 重複コンテンツとして検索評価が割れる。プレビュー側は全面 disallow にする。
+ */
+const isPreview = process.env.GITHUB_PAGES === "true";
+
 export default function robots(): MetadataRoute.Robots {
+  // プレビューはクロールも sitemap 提示もしない（本番だけを検索対象にする）
+  if (isPreview) {
+    return {
+      rules: [{ userAgent: "*", disallow: "/" }],
+    };
+  }
+
   return {
     rules: [
       { userAgent: "*", allow: "/" },

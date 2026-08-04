@@ -4,7 +4,7 @@ import { ja } from "@/lib/typography";
 
 import { JsonLd } from "@/components/JsonLd";
 import { breadcrumbJsonLd, capabilitiesJsonLd, webPageJsonLd } from "@/lib/jsonld";
-import { capabilities } from "@/lib/content";
+import { capabilities, planForBand } from "@/lib/content";
 import { siteConfig } from "@/lib/site";
 import { Section } from "@/components/ui/Section";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -19,6 +19,8 @@ const description =
 export const metadata: Metadata = {
   title,
   description,
+  // 15本のデモページが受ける検索語を、一覧側でも束ねて持たせる
+  keywords: Array.from(new Set(capabilities.flatMap((c) => c.searchTerms))),
   alternates: { canonical: "/demo" },
   openGraph: {
     type: "website",
@@ -94,12 +96,17 @@ export default function DemoIndexPage() {
                 </span>
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                    <h2 className="text-xl font-bold text-white">{ja(c.title)}</h2>
+                    {/* 見出しは機能名ではなく、探されている言葉を主語にする */}
+                    <h2 className="text-xl leading-snug font-bold text-white">
+                      {ja(c.searchTitle)}
+                    </h2>
                     <span className="font-display rounded-md border border-gold/30 bg-gold/10 px-2 py-0.5 text-[10px] font-bold tracking-wider text-gold-light">
                       実装 {c.buildTime}
                     </span>
                   </div>
-                  <p className="mt-1 text-sm text-brand-light">{ja(c.tagline)}</p>
+                  <p className="mt-1.5 text-sm text-brand-light">
+                    {ja(`${c.title}／${c.tagline}`)}
+                  </p>
                 </div>
               </div>
 
@@ -116,6 +123,19 @@ export default function DemoIndexPage() {
                   </li>
                 ))}
               </ul>
+
+              {/* 費用と期間を一覧の時点で出す（「制作 費用」で来た人が開かずに判断できるように） */}
+              <p className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-400">
+                <span>
+                  費用の目安{" "}
+                  <span className="font-bold text-brand-light">
+                    {planForBand(c.priceBand).price}
+                  </span>
+                </span>
+                <span>
+                  期間の目安 <span className="font-bold text-slate-200">{ja(c.leadTime)}</span>
+                </span>
+              </p>
 
               <ul className="mt-5 flex flex-wrap gap-2">
                 {c.tech.slice(0, 4).map((t) => (

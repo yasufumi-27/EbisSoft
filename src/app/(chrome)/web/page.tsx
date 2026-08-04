@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { JsonLd } from "@/components/JsonLd";
 import {
@@ -173,6 +174,27 @@ export default function WebPage() {
             </article>
           ))}
         </div>
+
+        {/* 詳しい解説記事への内部リンク（キーワードをそのままアンカーテキストにする） */}
+        <p className="mt-8 text-sm text-slate-400">
+          {ja("工程ごとの分担と実測値は、コラム")}
+          <Link
+            prefetch={false}
+            href="/columns/ai-web-seisaku"
+            className="mx-1 font-bold text-brand-light underline underline-offset-4 hover:text-brand"
+          >
+            {ja("AIでWeb制作はどこまでできるのか")}
+          </Link>
+          {ja("と")}
+          <Link
+            prefetch={false}
+            href="/columns/ai-web-seisaku-kikan-hiyou"
+            className="mx-1 font-bold text-brand-light underline underline-offset-4 hover:text-brand"
+          >
+            {ja("期間と費用はどれだけ変わるか")}
+          </Link>
+          {ja("で詳しく書いています。")}
+        </p>
       </Section>
 
       {/* 対応できるサービス */}
@@ -202,7 +224,7 @@ export default function WebPage() {
         moreHref="/faq"
       />
 
-      <RelatedPages hrefs={["/request", "/ai", "/demo", "/embedded"]} />
+      <RelatedPages hrefs={["/request", "/ai", "/columns", "/demo"]} />
       <ContactCta />
     </>
   );

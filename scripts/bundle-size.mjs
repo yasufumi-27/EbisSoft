@@ -29,6 +29,10 @@ const PAGES = [
   { label: "/demo", file: "demo.html" },
   { label: "/demo/3dcg", file: "demo/3dcg.html" },
   { label: "/contact", file: "contact.html" },
+  // デモサイト（装飾を読み込まないぶん軽いことを確認するため）
+  { label: "/showcase", file: "showcase.html" },
+  { label: "/showcase/retail", file: "showcase/retail.html" },
+  { label: "/columns/...", file: "columns/ai-web-seisaku.html" },
 ];
 
 /** 目安：これを超えたら黄信号（初期JSのgzip合計 / KB）。 */

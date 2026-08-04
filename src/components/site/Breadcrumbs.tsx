@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
+import { ja } from "@/lib/typography";
 
 export type Crumb = { name: string; path: string };
 
@@ -19,7 +20,8 @@ export function Breadcrumbs({ items }: { items: Crumb[] }) {
               <li key={item.path} className="flex items-center gap-2">
                 {isLast ? (
                   <span aria-current="page" className="text-slate-300">
-                    {item.name}
+                    {/* 記事タイトルのように長い現在地でも語の途中で折り返さないようにする */}
+                    {ja(item.name)}
                   </span>
                 ) : (
                   <>

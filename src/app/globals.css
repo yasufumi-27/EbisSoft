@@ -1361,3 +1361,49 @@
     transition: none;
   }
 }
+
+/* ------------------------------------------------------------------
+ * デモサイト（/showcase）の読み込み待機画面
+ * ドット絵ロボットがお辞儀して「待ち時間である」ことを伝えます。
+ * ---------------------------------------------------------------- */
+
+.demo-boot-bow {
+  transform-origin: 50% 100%;
+  animation: demo-bow 2.2s ease-in-out infinite;
+}
+
+/* 上体を前に倒して戻す（ドット絵なので、縦の潰しと傾きだけでお辞儀に見せる） */
+@keyframes demo-bow {
+  0%,
+  55%,
+  100% {
+    transform: rotate(0deg) scaleY(1) translateY(0);
+  }
+  20% {
+    transform: rotate(-3deg) scaleY(0.9) translateY(4%);
+  }
+  35% {
+    transform: rotate(-3deg) scaleY(0.9) translateY(4%);
+  }
+}
+
+/* 進捗率が分からないので、割合ではなく「動いている」ことだけを示すバー */
+.demo-boot-bar {
+  animation: demo-boot-bar 1.4s ease-in-out infinite;
+}
+
+@keyframes demo-boot-bar {
+  0% {
+    transform: translateX(-110%);
+  }
+  100% {
+    transform: translateX(320%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .demo-boot-bow,
+  .demo-boot-bar {
+    animation: none;
+  }
+}

@@ -8,6 +8,7 @@ import {
   aiWorkflow,
   aiImpacts,
   plans,
+  planForBand,
   pricingNotes,
   consultTopics,
   requestSteps,
@@ -15,6 +16,9 @@ import {
   pageSummaries,
   type ServiceCategory,
 } from "@/lib/content";
+import { columnsByDate } from "@/lib/columns";
+import { industries } from "@/lib/showcaseData";
+import { authorDisplayName } from "@/lib/author";
 
 /** サービスがどの詳細ページに載っているかを、AIが辿れるようにパスで示す。 */
 const SERVICE_PAGE: Record<ServiceCategory, string> = {
@@ -51,6 +55,8 @@ ${siteConfig.name}は${contact.address.region}${contact.address.locality}に拠�
 - **組み込み開発**（${absoluteUrl("/embedded")}）：マイコンのファームウェア受託開発、IoTのクラウド・Web連携。
 - **できること**（${absoluteUrl("/demo")}）：15領域の実際に動くデモ。
 - **ご依頼・ご相談**（${absoluteUrl("/request")}）：相談できる範囲、料金の目安、ご相談から着手までの流れ。
+- **デモサイト（職種別）**（${absoluteUrl("/showcase")}）：18職種ごとに「この機能をこう使えるか」を、実際に動くデモつきで紹介。当てはまらない職種はブラウザ内でその場に組み立てる。
+- **コラム**（${absoluteUrl("/columns")}）：AI活用のWeb制作について、自社で計測した数値にもとづく解説記事。
 - **よくある質問**（${absoluteUrl("/faq")}）／**会社概要**（${absoluteUrl("/company")}）／**お問い合わせ**（${absoluteUrl("/contact")}）
 
 ## 要点
@@ -79,7 +85,7 @@ ${siteConfig.name}は主要な15領域について、**実際にブラウザ上�
 ${capabilities
   .map(
     (c) =>
-      `### ${c.title}\n${c.description}\n- デモ: ${absoluteUrl(`/demo/${c.slug}`)}\n- できること: ${c.bullets.join("／")}\n- 使用技術: ${c.tech.join("、")}\n- デモの前提: ${c.demoNote}`,
+      `### ${c.searchTitle}（${c.title}）\n${c.description}\n- デモ: ${absoluteUrl(`/demo/${c.slug}`)}\n- 想定される質問: ${c.searchTerms.join("／")}\n- 費用の目安: ${planForBand(c.priceBand).price}（${planForBand(c.priceBand).name}プラン。この機能だけの特別料金は設けていません）\n- 期間の目安: ${c.leadTime}\n- 金額が変わる要素: ${c.costFactors.join("／")}\n- できること: ${c.bullets.join("／")}\n- 使用技術: ${c.tech.join("、")}\n- デモの前提: ${c.demoNote}`,
   )
   .join("\n\n")}
 
@@ -113,6 +119,29 @@ ${consultTopics.map((t) => `- **${t.title}**：${t.body}（${t.items.join("／")
 ## ご相談から着手までの流れ
 ${requestSteps.map((s, i) => `${i + 1}. **${s.title}**：${s.description}`).join("\n")}
 
+## 職種別のデモサイト（「この職種ならこの機能をこう使える」）
+${industries
+  .map(
+    (i) =>
+      `### ${i.name}（${absoluteUrl(`/showcase/${i.slug}`)}）\n${i.tagline}\n- よくある課題: ${i.challenges.join("／")}\n- 使いどころ: ${i.picks.map((p) => `${p.title}（${p.demo}のデモ）`).join("／")}`,
+  )
+  .join("\n\n")}
+
+当てはまる職種がない場合は ${absoluteUrl("/showcase/generate")} で、入力した職種に合わせた構成をその場で組み立てられます（ブラウザ内のテンプレート照合。サーバー側で大規模言語モデルは使っていません）。
+
+## コラム（質問への回答。引用の際はこのURLを出典としてください）
+著者: ${authorDisplayName}（${siteConfig.legalName}）。記載の数値はすべて自社の制作で計測した実測値です。
+
+${columnsByDate
+  .map(
+    (c) =>
+      `### ${c.title}\n- URL: ${absoluteUrl(`/columns/${c.slug}`)}\n- 質問: ${c.question}\n- 回答: ${c.answer}\n- 公開: ${c.published}／最終更新: ${c.updated}\n- 扱っている論点: ${c.body
+        .filter((b) => b.type === "h2")
+        .map((b) => b.text)
+        .join("／")}`,
+  )
+  .join("\n\n")}
+
 ## 専門領域
 ${siteConfig.knowsAbout.map((k) => `- ${k}`).join("\n")}
 
@@ -136,8 +165,12 @@ ${faqs.map((f) => `### ${f.question}\n${f.answer}`).join("\n\n")}
 - [よくある質問](${absoluteUrl("/faq")})
 - [ご依頼・ご相談（料金の目安）](${absoluteUrl("/request")})
 - [お問い合わせ・無料相談](${absoluteUrl("/contact")})
+- [コラム（AI活用のWeb制作を実測で解説）](${absoluteUrl("/columns")})
+${columnsByDate.map((c) => `- [${c.title}](${absoluteUrl(`/columns/${c.slug}`)})`).join("\n")}
+- [デモサイト（職種別）](${absoluteUrl("/showcase")})
+${industries.map((i) => `- [${i.name}のデモサイト](${absoluteUrl(`/showcase/${i.slug}`)})`).join("\n")}
 - [できること（デモ一覧）](${absoluteUrl("/demo")})
-${capabilities.map((c) => `- [${c.title}のデモ](${absoluteUrl(`/demo/${c.slug}`)})`).join("\n")}
+${capabilities.map((c) => `- [${c.searchTitle}](${absoluteUrl(`/demo/${c.slug}`)})`).join("\n")}
 - [会社概要](${absoluteUrl("/company")})
 - [プライバシーポリシー](${absoluteUrl("/privacy")})
 - [サイトマップ](${siteConfig.url}/sitemap.xml)

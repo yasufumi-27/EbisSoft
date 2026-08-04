@@ -1,24 +1,35 @@
 "use client";
 
-import { useId, useMemo, useState, type FormEvent } from "react";
+import { useEffect, useId, useMemo, useRef, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/icons";
 import { siteConfig } from "@/lib/site";
 import { inquiryGroups, type InquiryGroup } from "@/lib/inquiry";
 import { ja } from "@/lib/typography";
+import { trackEvent } from "@/lib/analytics";
 
 /**
  * お問い合わせフォーム（/contact 専用）。
  *
- * 静的書き出し（GitHub Pages）でも動くよう、送信は mailto 方式。
- * 実送信（Resend等のAPI）を実装する際は、buildMailBody() の結果を
- * そのままAPIへPOSTする形に差し替えられるよう分離しています。
+ * 送信は本番（さくら）の `/api/contact.php` へ fetch で POST します。
+ * 静的書き出しのサイトなので Server Actions は使えませんが、さくらは PHP が動くため
+ * 外部のフォームサービスを経由せずに実送信できます。
+ *
+ * PHP が無い環境（GitHub Pages のプレビュー・ローカルの静的配信）や、
+ * 送信が失敗したときは、従来どおり mailto でメールソフトを起動する方式に切り替えます。
+ * ＝ どの環境でも問い合わせが成立しなくならないようにしています。
  *
  * 入力のハードルを下げるため、必須はお名前・メール・「やりたいこと」の3つだけ。
  * 選択項目は未選択のまま送信できます。
  */
 
 type Errors = Partial<Record<"name" | "email" | "goal", string>>;
+
+/** 送信完了画面の出し分け。api＝実際に送れた／mailto＝メールソフトを起動した */
+type SentState = { body: string; mode: "api" | "mailto" };
+
+/** 送信先。GitHub Pages ではサブパス配下になるが、そちらに PHP は無いので必ず失敗→mailto に落ちる */
+const ENDPOINT = `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/api/contact.php`;
 
 /** 選択式の1グループ（ラジオ／チェックボックス） */
 function ChoiceGroup({ group, uid }: { group: InquiryGroup; uid: string }) {
@@ -97,25 +108,48 @@ function buildMailBody(data: FormData): string {
 export function InquiryForm() {
   const uid = useId();
   const [errors, setErrors] = useState<Errors>({});
-  const [sent, setSent] = useState<string | null>(null);
+  const [sent, setSent] = useState<SentState | null>(null);
+  const [sending, setSending] = useState(false);
+  /** 送信に失敗したときの案内。ここが入るとメールソフトでの送信ボタンを出す */
+  const [failure, setFailure] = useState<
+    { message: string; body: string; subjectName: string } | null
+  >(null);
   const [goalLength, setGoalLength] = useState(0);
 
   const mailtoBase = useMemo(() => `mailto:${siteConfig.contact.email}`, []);
+  /**
+   * フォームが表示された時刻。速すぎる送信＝自動入力の判定にサーバー側で使う。
+   * レンダー中に Date.now() を呼ぶと結果が不安定になるため、マウント後に入れる。
+   */
+  const mountedAt = useRef<number | null>(null);
+  useEffect(() => {
+    mountedAt.current = Date.now();
+  }, []);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  /** mailto でメールソフトを起動する（PHPが無い環境・送信失敗時のフォールバック） */
+  const openMailer = (body: string, subjectName: string) => {
+    const subject = `【Web制作のご相談】${subjectName} 様`;
+    window.location.href = `${mailtoBase}?subject=${encodeURIComponent(
+      subject,
+    )}&body=${encodeURIComponent(body)}`;
+    setSent({ body, mode: "mailto" });
+  };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
     const data = new FormData(form);
 
     // ハニーポット：ボットが埋めたら黙って成功扱い
     if (String(data.get("company_url") ?? "") !== "") {
-      setSent("");
+      setSent({ body: "", mode: "api" });
       return;
     }
 
     const name = String(data.get("name") ?? "").trim();
     const email = String(data.get("email") ?? "").trim();
     const goal = String(data.get("goal") ?? "").trim();
+    const company = String(data.get("company") ?? "").trim();
 
     const next: Errors = {};
     if (!name) next.name = "お名前を入力してください。";
@@ -134,11 +168,57 @@ export function InquiryForm() {
     }
 
     const body = buildMailBody(data);
-    const subject = `【Web制作のご相談】${String(data.get("company") ?? "").trim() || name} 様`;
-    window.location.href = `${mailtoBase}?subject=${encodeURIComponent(
-      subject,
-    )}&body=${encodeURIComponent(body)}`;
-    setSent(body);
+    const subjectName = company || name;
+
+    setSending(true);
+    setFailure(null);
+    try {
+      const res = await fetch(ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          email,
+          company,
+          goal,
+          body,
+          company_url: "", // ハニーポット（ここまで来ている＝空）
+          elapsed: mountedAt.current
+            ? Math.round((Date.now() - mountedAt.current) / 1000)
+            : 0,
+        }),
+      });
+
+      if (res.ok) {
+        // このサイトの最重要コンバージョン。GA4 の推奨イベント名で送る
+        trackEvent("generate_lead", { form_id: "contact" });
+        setSent({ body, mode: "api" });
+        return;
+      }
+
+      // 連投制限だけは、メールソフトへ逃がさずそのまま伝える（二重送信を防ぐため）
+      if (res.status === 429) {
+        setFailure({
+          message:
+            "送信が続けて行われました。しばらく時間をおいてから、もう一度お試しください。",
+          body,
+          subjectName,
+        });
+        return;
+      }
+
+      throw new Error(`status ${res.status}`);
+    } catch {
+      // PHPが無い環境（プレビュー）・通信断・サーバーエラー。メールソフトでの送信に案内する
+      setFailure({
+        message:
+          "送信サーバーへ接続できませんでした。お手数ですが、下のボタンからメールでお送りください。",
+        body,
+        subjectName,
+      });
+    } finally {
+      setSending(false);
+    }
   };
 
   /* ---------------- 送信後 ---------------- */
@@ -148,16 +228,32 @@ export function InquiryForm() {
         <span className="mx-auto grid size-14 place-items-center rounded-full border border-emerald-400/40 bg-emerald-400/10 text-emerald-300 shadow-[0_0_24px_rgba(16,185,129,0.35)]">
           <Icon name="check" className="size-7" />
         </span>
-        <h2 className="mt-5 text-xl font-bold text-white">{ja("メールソフトを起動しました")}</h2>
+        <h2 className="mt-5 text-xl font-bold text-white">
+          {sent.mode === "api"
+            ? ja("お問い合わせを送信しました")
+            : ja("メールソフトを起動しました")}
+        </h2>
         <p className="mt-3 text-sm leading-relaxed text-slate-400">
-          {ja("入力内容を差し込んだメールが作成されます。そのまま送信してください。")}
-          <br />
-          {ja("2営業日以内にご返信します。")}
+          {sent.mode === "api" ? (
+            <>
+              {ja("ご入力のメールアドレス宛に、受付内容の控えをお送りしました。")}
+              <br />
+              {ja("2営業日以内に担当者よりご返信します。")}
+            </>
+          ) : (
+            <>
+              {ja("入力内容を差し込んだメールが作成されます。そのまま送信してください。")}
+              <br />
+              {ja("2営業日以内にご返信します。")}
+            </>
+          )}
         </p>
 
         <div className="mt-8 rounded-xl border border-white/10 bg-ink/60 p-4 text-left">
           <p className="mb-2 text-xs text-slate-500">
-            {ja("メールソフトが起動しない場合は、下記をコピーして")}{" "}
+            {sent.mode === "api"
+              ? ja("控えのメールが届かない場合は、下記をコピーして")
+              : ja("メールソフトが起動しない場合は、下記をコピーして")}{" "}
             <a
               href={`mailto:${siteConfig.contact.email}`}
               className="text-brand-light underline"
@@ -167,11 +263,11 @@ export function InquiryForm() {
             {ja("へお送りください。")}
           </p>
           <pre className="max-h-64 overflow-auto text-[11px] leading-relaxed whitespace-pre-wrap text-slate-400">
-            {sent}
+            {sent.body}
           </pre>
           <button
             type="button"
-            onClick={() => navigator.clipboard?.writeText(sent)}
+            onClick={() => navigator.clipboard?.writeText(sent.body)}
             className="mt-3 rounded-lg border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-semibold text-slate-300 transition-colors hover:border-brand/50 hover:text-brand-light"
           >
             内容をコピー
@@ -393,13 +489,31 @@ export function InquiryForm() {
         </div>
 
         <div className="mt-8">
-          <Button type="submit" size="lg" withArrow className="w-full">
-            この内容で相談する
+          <Button type="submit" size="lg" withArrow className="w-full" disabled={sending}>
+            {sending ? "送信中…" : "この内容で相談する"}
           </Button>
+
+          {/* 送信に失敗したとき。入力内容は消さず、メールソフトでの送信に逃がす */}
+          {failure ? (
+            <div
+              role="alert"
+              className="mt-4 rounded-xl border border-amber-400/40 bg-amber-400/10 p-4 text-left"
+            >
+              <p className="text-sm leading-relaxed text-amber-200">{ja(failure.message)}</p>
+              <button
+                type="button"
+                onClick={() => openMailer(failure.body, failure.subjectName)}
+                className="mt-3 rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition-colors hover:border-brand/50 hover:text-brand-light"
+              >
+                メールソフトで送る
+              </button>
+            </div>
+          ) : null}
+
           <p className="mt-3 text-center text-xs leading-relaxed text-slate-500">
-            {ja("送信するとメールソフトが起動し、入力内容が差し込まれた状態でメールが作成されます。")}
-            <br />
             {ja("いただいた情報は、お問い合わせ対応の目的にのみ利用します。")}
+            <br />
+            {ja("送信後、受付内容の控えを自動返信メールでお送りします。")}
           </p>
         </div>
       </div>
