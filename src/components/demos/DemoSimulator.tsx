@@ -4,6 +4,8 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { ChipButton, ControlGroup, DemoStage, RangeControl } from "./DemoUi";
 import { Icon } from "@/components/ui/icons";
+import { DemoSimulatorIndustry } from "./DemoSimulatorIndustry";
+import type { SimulatorConfig } from "@/lib/showcase";
 
 /* ------------------------------------------------------------------
  * 料金シミュレーター（自動診断）。
@@ -82,7 +84,20 @@ function formatWeeks(w: number): string {
   return `約${months}か月`;
 }
 
-export default function DemoSimulator() {
+/**
+ * 料金シミュレーターのデモ。
+ *
+ * @param config 職種別デモサイトから渡す試算の中身（リフォーム費用・車検費用など）。
+ *   渡されたときは、当社のWeb制作費用の試算ではなく**その職種の試算**を表示します。
+ *   仕組み（ブラウザ内で完結する計算・内訳の可視化・問い合わせへの引き継ぎ）は同じです。
+ */
+export default function DemoSimulator({ config }: { config?: SimulatorConfig }) {
+  if (config) return <DemoSimulatorIndustry config={config} />;
+  return <WebEstimate />;
+}
+
+/** 当社のWeb制作費用の見積もり診断（/demo/simulator で表示している本来の内容） */
+function WebEstimate() {
   const [kind, setKind] = useState(KINDS[1]);
   const [pages, setPages] = useState(KINDS[1].pages);
   const [design, setDesign] = useState(DESIGNS[1]);

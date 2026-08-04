@@ -276,9 +276,6 @@ export default function DemoAr({
     () => (model ? [industryProduct(model), ...PRODUCTS] : PRODUCTS),
     [model],
   );
-  const productsRef = useRef(products);
-  productsRef.current = products;
-
   const [product, setProduct] = useState<ProductKey>(products[0].key);
   const [color, setColor] = useState(COLORS[0].hex);
   const [human, setHuman] = useState(true);
@@ -378,7 +375,7 @@ export default function DemoAr({
     scene.add(shadow);
 
     // ---- 商品 ----
-    let productGroup = productsRef.current[0].build(COLORS[0].hex);
+    let productGroup = products[0].build(COLORS[0].hex);
     scene.add(productGroup);
 
     const disposeGroup = (g: THREE.Object3D) => {
@@ -468,7 +465,7 @@ export default function DemoAr({
 
     apiRef.current = {
       setProduct: (k) => {
-        const def = productsRef.current.find((p) => p.key === k);
+        const def = products.find((p) => p.key === k);
         if (!def) return;
         scene.remove(productGroup);
         disposeGroup(productGroup);
@@ -593,8 +590,9 @@ export default function DemoAr({
       if (renderer.domElement.parentNode === mount) mount.removeChild(renderer.domElement);
       apiRef.current = null;
     };
-    // シーンは1度だけ構築し、以降はAPI経由で更新する
-  }, []);
+    // シーンは1度だけ構築し、以降はAPI経由で更新する。
+    // products は model（職種）から決まり、この部品の生存中は変わらない。
+  }, [products]);
 
   // 最新の値をアニメーションループ／シーン構築側から読むための同期
   useEffect(() => {

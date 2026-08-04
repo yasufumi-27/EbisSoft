@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 
 import "../demosite.css";
 
-import { demoSiteNav, MAX_SITE_DEMOS } from "@/lib/demoSite";
+import { demoSiteNav, siteDemoPicks } from "@/lib/demoSite";
 import { demoSites, getDemoSite } from "@/lib/demoSiteData";
 import { getIndustry } from "@/lib/showcaseData";
 import { demoPropsFor } from "@/lib/demoProps";
@@ -71,7 +71,8 @@ export default async function DemoSitePage({ params }: { params: Promise<{ indus
   if (!site || !data) notFound();
 
   const nav = demoSiteNav(site);
-  const demos = data.picks.slice(0, MAX_SITE_DEMOS);
+  // 中身まで職種のものになっているデモだけを載せる（siteDemoPicks のコメント参照）
+  const demos = siteDemoPicks(data.picks);
 
   return (
     <div className="ds" data-theme={site.theme}>

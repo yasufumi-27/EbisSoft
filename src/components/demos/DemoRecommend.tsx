@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import type { CatalogItem } from "@/lib/showcase";
 import Link from "next/link";
 import { DemoStage } from "./DemoUi";
 import { Icon } from "@/components/ui/icons";
@@ -42,18 +43,102 @@ type Item = {
 };
 
 const ITEMS: Item[] = [
-  { id: "sofa", name: "ローソファ 2人掛け", price: 168_000, cat: "ソファ", vec: [0.8, 0.5, 0.4, 0.5, 0.2, 0.2], hue: "from-slate-500 to-slate-700" },
-  { id: "rug", name: "ウールラグ 200×140", price: 48_000, cat: "ファブリック", vec: [0.3, 0.8, 0.3, 0.2, 0.1, 0.7], hue: "from-amber-700 to-stone-600" },
-  { id: "lamp", name: "真鍮フロアランプ", price: 62_000, cat: "照明", vec: [0.5, 0.3, 0.9, 0.3, 0.4, 0.3], hue: "from-amber-400 to-yellow-700" },
-  { id: "chair", name: "オーク材ダイニングチェア", price: 39_000, cat: "チェア", vec: [0.6, 0.9, 0.4, 0.4, 0.6, 0.1], hue: "from-amber-600 to-amber-800" },
-  { id: "table", name: "ガラスセンターテーブル", price: 84_000, cat: "テーブル", vec: [0.95, 0.1, 0.6, 0.3, 0.3, 0.05], hue: "from-cyan-300 to-slate-500" },
-  { id: "stool", name: "収納スツール", price: 18_000, cat: "収納", vec: [0.4, 0.4, 0.1, 0.95, 0.9, 0.3], hue: "from-emerald-600 to-teal-800" },
-  { id: "curtain", name: "リネンカーテン", price: 24_000, cat: "ファブリック", vec: [0.5, 0.9, 0.3, 0.3, 0.2, 0.4], hue: "from-stone-300 to-stone-500" },
-  { id: "mirror", name: "アーチミラー（真鍮）", price: 56_000, cat: "インテリア", vec: [0.6, 0.2, 0.95, 0.1, 0.5, 0.2], hue: "from-yellow-500 to-amber-700" },
-  { id: "desk", name: "折りたたみデスク", price: 32_000, cat: "デスク", vec: [0.7, 0.3, 0.1, 0.9, 0.95, 0.1], hue: "from-slate-400 to-slate-600" },
-  { id: "vase", name: "セラミックベース", price: 9_800, cat: "小物", vec: [0.5, 0.7, 0.5, 0.05, 0.95, 0.8], hue: "from-rose-300 to-orange-400" },
-  { id: "blanket", name: "ウールブランケット", price: 16_000, cat: "ファブリック", vec: [0.3, 0.8, 0.4, 0.4, 0.8, 0.9], hue: "from-red-700 to-amber-600" },
-  { id: "shelf", name: "モジュール式シェルフ", price: 74_000, cat: "収納", vec: [0.85, 0.4, 0.3, 0.9, 0.2, 0.1], hue: "from-zinc-500 to-zinc-700" },
+  {
+    id: "sofa",
+    name: "ローソファ 2人掛け",
+    price: 168_000,
+    cat: "ソファ",
+    vec: [0.8, 0.5, 0.4, 0.5, 0.2, 0.2],
+    hue: "from-slate-500 to-slate-700",
+  },
+  {
+    id: "rug",
+    name: "ウールラグ 200×140",
+    price: 48_000,
+    cat: "ファブリック",
+    vec: [0.3, 0.8, 0.3, 0.2, 0.1, 0.7],
+    hue: "from-amber-700 to-stone-600",
+  },
+  {
+    id: "lamp",
+    name: "真鍮フロアランプ",
+    price: 62_000,
+    cat: "照明",
+    vec: [0.5, 0.3, 0.9, 0.3, 0.4, 0.3],
+    hue: "from-amber-400 to-yellow-700",
+  },
+  {
+    id: "chair",
+    name: "オーク材ダイニングチェア",
+    price: 39_000,
+    cat: "チェア",
+    vec: [0.6, 0.9, 0.4, 0.4, 0.6, 0.1],
+    hue: "from-amber-600 to-amber-800",
+  },
+  {
+    id: "table",
+    name: "ガラスセンターテーブル",
+    price: 84_000,
+    cat: "テーブル",
+    vec: [0.95, 0.1, 0.6, 0.3, 0.3, 0.05],
+    hue: "from-cyan-300 to-slate-500",
+  },
+  {
+    id: "stool",
+    name: "収納スツール",
+    price: 18_000,
+    cat: "収納",
+    vec: [0.4, 0.4, 0.1, 0.95, 0.9, 0.3],
+    hue: "from-emerald-600 to-teal-800",
+  },
+  {
+    id: "curtain",
+    name: "リネンカーテン",
+    price: 24_000,
+    cat: "ファブリック",
+    vec: [0.5, 0.9, 0.3, 0.3, 0.2, 0.4],
+    hue: "from-stone-300 to-stone-500",
+  },
+  {
+    id: "mirror",
+    name: "アーチミラー（真鍮）",
+    price: 56_000,
+    cat: "インテリア",
+    vec: [0.6, 0.2, 0.95, 0.1, 0.5, 0.2],
+    hue: "from-yellow-500 to-amber-700",
+  },
+  {
+    id: "desk",
+    name: "折りたたみデスク",
+    price: 32_000,
+    cat: "デスク",
+    vec: [0.7, 0.3, 0.1, 0.9, 0.95, 0.1],
+    hue: "from-slate-400 to-slate-600",
+  },
+  {
+    id: "vase",
+    name: "セラミックベース",
+    price: 9_800,
+    cat: "小物",
+    vec: [0.5, 0.7, 0.5, 0.05, 0.95, 0.8],
+    hue: "from-rose-300 to-orange-400",
+  },
+  {
+    id: "blanket",
+    name: "ウールブランケット",
+    price: 16_000,
+    cat: "ファブリック",
+    vec: [0.3, 0.8, 0.4, 0.4, 0.8, 0.9],
+    hue: "from-red-700 to-amber-600",
+  },
+  {
+    id: "shelf",
+    name: "モジュール式シェルフ",
+    price: 74_000,
+    cat: "収納",
+    vec: [0.85, 0.4, 0.3, 0.9, 0.2, 0.1],
+    hue: "from-zinc-500 to-zinc-700",
+  },
 ];
 
 /**
@@ -76,9 +161,9 @@ const SESSIONS: string[][] = [
 ];
 
 /** 共起回数：CO[a][b] = a と b が同じセッションで見られた回数 */
-const CO: Record<string, Record<string, number>> = (() => {
+function buildCo(sessions: string[][]): Record<string, Record<string, number>> {
   const m: Record<string, Record<string, number>> = {};
-  for (const s of SESSIONS) {
+  for (const s of sessions) {
     for (const a of s) {
       m[a] ??= {};
       for (const b of s) {
@@ -88,7 +173,77 @@ const CO: Record<string, Record<string, number>> = (() => {
     }
   }
   return m;
-})();
+}
+
+const CO = buildCo(SESSIONS);
+
+/* ------------------------------------------------------------------
+ * 職種別の取扱商品でそのまま動かす
+ *
+ * 家具の代わりに、その職種のメニュー・商品（`showcaseData` の catalog）を
+ * 並べ替えの対象にします。特徴ベクトルは価格・在庫・区分から機械的に作るので、
+ * どの職種でも同じ計算式のまま動きます。
+ * 実案件では、ここを商品説明文の埋め込み（ベクトル）に置き換えます。
+ * ---------------------------------------------------------------- */
+
+const HUES = [
+  "from-slate-500 to-slate-700",
+  "from-amber-600 to-amber-800",
+  "from-cyan-400 to-sky-700",
+  "from-emerald-600 to-teal-800",
+  "from-rose-400 to-orange-500",
+  "from-violet-500 to-indigo-700",
+];
+
+function buildFromCatalog(catalog: CatalogItem[]) {
+  const prices = catalog.map((c) => c.price);
+  const maxP = Math.max(...prices, 1);
+  const minP = Math.min(...prices);
+  const maxStock = Math.max(1, ...catalog.map((c) => c.stock));
+  const cats = Array.from(new Set(catalog.map((c) => c.category)));
+
+  // 軸のうち2つは「その職種で多い区分」そのものにする（推薦理由が読める文になる）
+  const axes = [
+    { key: "value", label: "手ごろさ" },
+    { key: "premium", label: "特別感" },
+    { key: "standard", label: "定番" },
+    { key: "rare", label: "希少性" },
+    { key: "cat0", label: cats[0] ?? "主な区分" },
+    { key: "cat1", label: cats[1] ?? "そのほかの区分" },
+  ] as const;
+
+  const items: Item[] = catalog.map((c, i) => {
+    const priceRank = maxP > minP ? (c.price - minP) / (maxP - minP) : 0.5;
+    const stockRank = c.stock / maxStock;
+    return {
+      id: c.sku,
+      name: c.name,
+      price: c.price,
+      cat: c.category,
+      vec: [
+        1 - priceRank,
+        priceRank,
+        stockRank,
+        1 - stockRank,
+        c.category === cats[0] ? 1 : 0.1,
+        c.category === cats[1] ? 1 : 0.1,
+      ] as Vec,
+      hue: HUES[i % HUES.length],
+    };
+  });
+
+  // 閲覧セッションの代わりに、「同じ区分」「価格帯が近い」を一緒に見たものとして扱う
+  const sessions: string[][] = items.map((it) => {
+    const same = items.filter((o) => o.id !== it.id && o.cat === it.cat).slice(0, 2);
+    const near = items
+      .filter((o) => o.id !== it.id && !same.includes(o))
+      .sort((a, b) => Math.abs(a.price - it.price) - Math.abs(b.price - it.price))
+      .slice(0, 2);
+    return [it.id, ...same.map((o) => o.id), ...near.map((o) => o.id)];
+  });
+
+  return { items, axes: axes as unknown as typeof AXES, co: buildCo(sessions) };
+}
 
 const dot = (a: readonly number[], b: readonly number[]) => a.reduce((s, v, i) => s + v * b[i], 0);
 const norm = (a: readonly number[]) => Math.sqrt(dot(a, a));
@@ -100,7 +255,31 @@ function cosine(a: readonly number[], b: readonly number[]) {
 
 const yen = (n: number) => `¥${n.toLocaleString("ja-JP")}`;
 
-export default function DemoRecommend() {
+/**
+ * @param catalog 職種別デモサイトから渡す取扱商品・メニュー。
+ *   渡されたときは、家具のサンプルではなく**その職種の商品**を並べ替えます。
+ * @param industryName 職種名（表示ラベルに使う）
+ */
+export default function DemoRecommend({
+  catalog,
+  industryName,
+}: {
+  catalog?: CatalogItem[];
+  industryName?: string;
+}) {
+  /** 並べ替えの対象。職種の商品が渡されればそちらを使う */
+  const {
+    items: ITEMS_,
+    axes: AXES_,
+    co: CO_,
+  } = useMemo(
+    () =>
+      catalog && catalog.length >= 4
+        ? buildFromCatalog(catalog)
+        : { items: ITEMS, axes: AXES, co: CO },
+    [catalog],
+  );
+
   /** クリック履歴（新しいものが先頭） */
   const [history, setHistory] = useState<string[]>([]);
 
@@ -109,26 +288,26 @@ export default function DemoRecommend() {
   /** 関心ベクトル：新しいクリックほど重みを大きくした加重平均 */
   const profile = useMemo(() => {
     if (history.length === 0) return null;
-    const acc = new Array(AXES.length).fill(0);
+    const acc = new Array(AXES_.length).fill(0);
     let total = 0;
     history.forEach((id, i) => {
-      const item = ITEMS.find((x) => x.id === id);
+      const item = ITEMS_.find((x) => x.id === id);
       if (!item) return;
       const weight = Math.pow(0.7, i); // 直近のクリックを重視（時間減衰）
       item.vec.forEach((v, k) => (acc[k] += v * weight));
       total += weight;
     });
     return acc.map((v) => v / total);
-  }, [history]);
+  }, [history, ITEMS_, AXES_]);
 
   /** 推薦：未閲覧の商品を、関心ベクトルとの類似度＋共起スコアで並べ替える */
   const ranked = useMemo(() => {
     if (!profile) return [];
     const last = history[0];
-    const coRow = CO[last] ?? {};
+    const coRow = CO_[last] ?? {};
     const coMax = Math.max(1, ...Object.values(coRow));
 
-    return ITEMS.filter((it) => !history.includes(it.id))
+    return ITEMS_.filter((it) => !history.includes(it.id))
       .map((it) => {
         const content = cosine(profile, it.vec); // 好みとの近さ
         const collab = (coRow[it.id] ?? 0) / coMax; // よく一緒に見られている度
@@ -146,20 +325,22 @@ export default function DemoRecommend() {
           }
         });
 
-        return { item: it, score, content, collab, axis: AXES[bestAxis].label };
+        return { item: it, score, content, collab, axis: AXES_[bestAxis].label };
       })
       .sort((a, b) => b.score - a.score);
-  }, [profile, history]);
+  }, [profile, history, ITEMS_, AXES_, CO_]);
 
   const top = ranked.slice(0, 3);
-  const rest = profile ? ranked.slice(3) : ITEMS.map((it) => ({ item: it, score: 0, content: 0, collab: 0, axis: "" }));
+  const rest = profile
+    ? ranked.slice(3)
+    : ITEMS_.map((it) => ({ item: it, score: 0, content: 0, collab: 0, axis: "" }));
 
   return (
     <div className="grid gap-5 [&>*]:min-w-0 lg:grid-cols-5">
       {/* ---------------- 推薦結果と商品一覧 ---------------- */}
       <div className="space-y-5 min-w-0 lg:col-span-3">
         <DemoStage
-          label="エビスソフト.Recommender"
+          label={industryName ? `${industryName}.Recommender` : "エビスソフト.Recommender"}
           status={profile ? `RANKED / ${history.length} views` : "NO DATA"}
         >
           <div className="p-5">
@@ -260,7 +441,7 @@ export default function DemoRecommend() {
           </div>
 
           <ul className="mt-4 space-y-2.5">
-            {AXES.map((a, i) => {
+            {AXES_.map((a, i) => {
               const v = profile ? profile[i] : 0;
               return (
                 <li key={a.key}>
@@ -296,7 +477,7 @@ export default function DemoRecommend() {
           ) : (
             <ol className="mt-3 space-y-1.5">
               {history.map((id, i) => {
-                const it = ITEMS.find((x) => x.id === id);
+                const it = ITEMS_.find((x) => x.id === id);
                 if (!it) return null;
                 return (
                   <li key={id} className="log-line flex items-center gap-2 text-[11px]">
@@ -330,7 +511,10 @@ export default function DemoRecommend() {
           ) : (
             <ul className="mt-3 space-y-3">
               {top.map((r, i) => (
-                <li key={r.item.id} className="rounded-xl border border-white/10 bg-white/[0.03] p-3">
+                <li
+                  key={r.item.id}
+                  className="rounded-xl border border-white/10 bg-white/[0.03] p-3"
+                >
                   <p className="flex items-center gap-1.5 text-[11px] font-bold text-white">
                     <span className="font-display text-gold-light">#{i + 1}</span>
                     <span className="truncate">{r.item.name}</span>
@@ -370,7 +554,8 @@ export default function DemoRecommend() {
             </ul>
           )}
           <p className="mt-4 border-t border-white/10 pt-3 text-[10px] leading-relaxed text-slate-500">
-            コンテンツベース（コサイン類似度）75% ＋ 協調フィルタリング（共起）25% で合成しています。
+            コンテンツベース（コサイン類似度）75% ＋ 協調フィルタリング（共起）25%
+            で合成しています。
           </p>
         </div>
 

@@ -23,7 +23,7 @@
  * ここに実在企業の名称・ロゴ・実績を書いてはいけません。
  */
 
-import type { DemoSlug } from "@/lib/showcase";
+import type { DemoSlug, ShowcasePick } from "@/lib/showcase";
 
 /** 配色と字面のプリセット。職種の「らしさ」はほぼここで決まる */
 export type DemoSiteTheme = "clean" | "warm" | "care" | "bold" | "elegant" | "trust";
@@ -73,6 +73,52 @@ export type DemoSiteData = {
 
 /** 職種ページの picks からデモサイトに埋め込む数（多いと重くなるので上限を決めておく） */
 export const MAX_SITE_DEMOS = 4;
+
+/**
+ * デモサイトに載せてよいデモ。
+ *
+ * デモサイトは「そのお店のホームページ」なので、**中身まで職種のものになっている**
+ * デモだけを載せます（3Dモデル・チャットボットの知識・試算の内容・扱うデータ）。
+ * 当社向けの内容のままのデモ（パーソナライズの出し分け文言など）は、
+ * ここに載せると「他社の宣伝が混ざったサイト」になってしまうため外しています。
+ * 職種の説明ページ `/showcase/<職種>` では、引き続きすべてのデモを見られます。
+ *
+ * ⚠️ デモを職種対応にしたら（`lib/demoProps.ts` に設定を足したら）、ここにも追加すること。
+ */
+const SITE_READY: DemoSlug[] = ["3dcg", "ar", "ai-chatbot", "simulator", "integration", "recommend"];
+
+/** 職種の picks に足りないときに補うデモと、その説明文 */
+const FALLBACK: Partial<Record<DemoSlug, { title: string; scene: string; effect: string }>> = {
+  "ai-chatbot": {
+    title: "よくある質問に、24時間その場で答える",
+    scene:
+      "このサイトに書かれている内容を知識源にして、営業時間外の質問にも自動で答えます。答えられない質問は、無理に答えずお問い合わせへ案内します。",
+    effect: "電話と返信の手間が減り、営業時間外の問い合わせも取りこぼしません。",
+  },
+  simulator: {
+    title: "費用の目安を、その場で出す",
+    scene:
+      "条件を選ぶだけで、概算の金額と期間が出ます。計算はブラウザの中で完結するので、待ち時間がありません。",
+    effect: "「いくらかかるか分からない」を理由にした離脱がなくなります。",
+  },
+  "3dcg": {
+    title: "実物を、回して見てもらう",
+    scene: "写真では伝わらない形や質感を、立体で確かめられるようにします。",
+    effect: "来店・来院前の不安が減り、問い合わせの内容が具体的になります。",
+  },
+};
+
+/** デモサイトに埋め込むデモを決める（職種の picks を優先し、足りなければ補う） */
+export function siteDemoPicks(picks: ShowcasePick[]): ShowcasePick[] {
+  const chosen = picks.filter((p) => SITE_READY.includes(p.demo));
+  for (const slug of ["ai-chatbot", "simulator", "3dcg"] as DemoSlug[]) {
+    if (chosen.length >= 3) break;
+    if (chosen.some((c) => c.demo === slug)) continue;
+    const text = FALLBACK[slug];
+    if (text) chosen.push({ demo: slug, ...text });
+  }
+  return chosen.slice(0, MAX_SITE_DEMOS);
+}
 
 /** デモサイトのナビゲーション（全職種共通の並び。名前だけ職種語に差し替える） */
 export function demoSiteNav(d: DemoSiteData): { id: string; label: string }[] {
