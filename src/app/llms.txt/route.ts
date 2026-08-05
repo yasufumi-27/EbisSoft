@@ -158,7 +158,7 @@ ${faqs.map((f) => `### ${f.question}\n${f.answer}`).join("\n\n")}
 - 対面での打ち合わせ対応エリア: ${siteConfig.localAreas.join("、")}
 
 ## リンク
-- [トップページ](${siteConfig.url})
+- [トップページ](${siteConfig.homeUrl})
 - [AI活用](${absoluteUrl("/ai")})
 - [Web制作](${absoluteUrl("/web")})
 - [組み込み開発](${absoluteUrl("/embedded")})

@@ -46,7 +46,7 @@ export function organizationJsonLd(): JsonLd {
     "@type": ["ProfessionalService", "Organization"],
     "@id": ORGANIZATION_ID,
     name: siteConfig.legalName,
-    url: siteConfig.url,
+    url: siteConfig.homeUrl,
     logo: {
       "@type": "ImageObject",
       url: absoluteUrl("/icon.svg"),
@@ -134,7 +134,7 @@ export function websiteJsonLd(): JsonLd {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "@id": WEBSITE_ID,
-    url: siteConfig.url,
+    url: siteConfig.homeUrl,
     name: siteConfig.name,
     description: siteConfig.description,
     inLanguage: siteConfig.lang,

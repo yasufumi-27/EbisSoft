@@ -16,7 +16,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [
     {
-      url: siteConfig.url,
+      // トップは末尾スラッシュあり（Search Console のプロパティ表記と揃える）
+      url: siteConfig.homeUrl,
       lastModified,
       changeFrequency: "weekly",
       priority: 1,

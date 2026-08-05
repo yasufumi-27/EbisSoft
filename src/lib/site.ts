@@ -17,6 +17,9 @@ function normalizeUrl(url: string): string {
   return url.replace(/\/+$/, "");
 }
 
+/** 末尾スラッシュを落としたベースURL。下層パスの連結に使う */
+const SITE_URL = normalizeUrl(process.env.NEXT_PUBLIC_SITE_URL ?? FALLBACK_URL);
+
 export const siteConfig = {
   /**
    * 表示用ブランド名。本文・見出し・メタ・構造化データはすべてこのカタカナ表記で統一する。
@@ -32,8 +35,16 @@ export const siteConfig = {
   /** メタディスクリプション（120〜160字目安） */
   description:
     "エビスソフトは京都市伏見区のAI活用型Web制作・組み込みソフトウェア開発事業者です。生成AIを制作フロー全体に組み込み、通常の数分の一の期間で高性能なサイトを構築。3DCG・WebGL演出、AIチャットボット、業務システム連携に加え、マイコン・IoT機器のファームウェア開発とWeb連携まで一貫対応します。SEO・AEO・LLMO（AI検索最適化）にも特化。京都商工会所属。",
-  /** 公開URL（末尾スラッシュなし） */
-  url: normalizeUrl(process.env.NEXT_PUBLIC_SITE_URL ?? FALLBACK_URL),
+  /** 公開URL（末尾スラッシュなし）。`${url}/ai` のように下層パスを連結する用途に使う */
+  url: SITE_URL,
+  /**
+   * トップページの正規URL（末尾スラッシュ**あり**）。
+   * canonical・OG・sitemap・構造化データなど「トップそのものを指す」用途はこちらを使う。
+   * ルートは `https://example.com` と `https://example.com/` が仕様上等価だが、
+   * 表記が混在すると Search Console 側の紐付けが読みにくくなるため `/` 付きに統一する。
+   * （下層ページは `trailingSlash: false` のとおりスラッシュなしが正。ルートだけ別扱い）
+   */
+  homeUrl: `${SITE_URL}/`,
   /** OGロケール */
   locale: "ja_JP",
   /** html lang */

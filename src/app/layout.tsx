@@ -39,13 +39,19 @@ export const metadata: Metadata = {
   description: siteConfig.description,
   keywords: [...siteConfig.keywords],
   applicationName: siteConfig.name,
-  authors: [{ name: siteConfig.legalName, url: siteConfig.url }],
+  authors: [{ name: siteConfig.legalName, url: siteConfig.homeUrl }],
   creator: siteConfig.legalName,
   publisher: siteConfig.legalName,
   category: "Web制作",
-  // 正規URL（重複コンテンツ対策）。metadataBase と結合され絶対URLになる。
+  // 正規URL（重複コンテンツ対策）。
+  // ※ ここは末尾スラッシュあり（homeUrl）を渡しても、Next が next.config の
+  //   trailingSlash: false に従って正規化するため、出力は末尾スラッシュなしになる。
+  //   metadata API 経由では変えられないので、sitemap・構造化データ側の
+  //   「末尾スラッシュあり」表記とは見た目が揃わない。
+  //   ルートは https://example.com と https://example.com/ が同一URLとして
+  //   扱われる（RFC 3986・Google とも）ため、実害はない。
   alternates: {
-    canonical: "/",
+    canonical: siteConfig.homeUrl,
   },
   // 電話番号以外の自動リンク化を抑止（postalコード等の誤リンク防止）
   formatDetection: {
@@ -56,7 +62,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: siteConfig.locale,
-    url: siteConfig.url,
+    url: siteConfig.homeUrl,
     siteName: siteConfig.name,
     title: siteConfig.title,
     description: siteConfig.description,
