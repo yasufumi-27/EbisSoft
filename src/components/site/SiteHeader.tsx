@@ -5,6 +5,8 @@ import { nav } from "@/lib/nav";
 import { SmartLink } from "@/components/ui/SmartLink";
 import { ButtonLink } from "@/components/ui/Button";
 import { Logo } from "@/components/site/Logo";
+import { Icon } from "@/components/ui/icons";
+import { siteConfig } from "@/lib/site";
 
 /**
  * サイト共通ヘッダー。暗い背景＋下辺の発光ライン。
@@ -113,6 +115,16 @@ export function SiteHeader() {
             >
               無料で相談する
             </ButtonLink>
+            {/* 電話は「すぐ話したい」層の離脱を止める導線。
+                クリックの計測は ContactLinkTracker がイベント委譲で拾うため onClick は不要。 */}
+            <a
+              href={`tel:${siteConfig.contact.telephone}`}
+              className="mt-2 inline-flex items-center justify-center gap-2 rounded-lg border border-brand/30 bg-brand/10 px-4 py-3 text-sm font-bold text-brand-light"
+              onClick={() => setOpen(false)}
+            >
+              <Icon name="phone" aria-hidden className="size-4" />
+              {siteConfig.contact.telephoneDisplay}
+            </a>
           </nav>
         </div>
       ) : null}

@@ -24,7 +24,7 @@ export function Strengths() {
               <Icon name={s.icon} className="size-6" />
             </span>
             <h3 className="mt-5 text-lg font-bold text-white">{ja(s.title)}</h3>
-            <p className="mt-2 text-sm leading-relaxed text-slate-400">{ja(s.description)}</p>
+            <p className="mt-2 text-[0.9375rem] leading-relaxed text-slate-400 sm:text-sm">{ja(s.description)}</p>
           </div>
         ))}
       </div>

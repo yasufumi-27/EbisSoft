@@ -5,6 +5,7 @@ import { TechMarquee } from "@/components/sections/TechMarquee";
 import { KeyFacts } from "@/components/sections/KeyFacts";
 import { Pillars } from "@/components/sections/Pillars";
 import { DemoShowcase } from "@/components/sections/DemoShowcase";
+import { WorkSamples } from "@/components/sections/WorkSamples";
 import { Strengths } from "@/components/sections/Strengths";
 import { PricingTeaser } from "@/components/sections/PricingTeaser";
 import { Faq } from "@/components/sections/Faq";
@@ -25,6 +26,7 @@ import { faqs } from "@/lib/content";
 const SECTIONS = [
   { id: "key-facts", label: "30秒でわかる" },
   { id: "pillars", label: "事業内容" },
+  { id: "samples", label: "制作サンプル" },
   { id: "demos", label: "できること" },
   { id: "strengths", label: "強み" },
   { id: "pricing-teaser", label: "料金" },
@@ -61,6 +63,9 @@ export default function Home() {
       <PageNav items={SECTIONS} />
       <KeyFacts />
       <Pillars />
+      {/* 「実績が見たい」に最短で答える位置。実在の事例は公開できないため、
+          実物のサンプルサイト（架空の事業者向け）を事業内容の直後に置いている。 */}
+      <WorkSamples />
       <DemoShowcase bg="deep" />
       <Strengths />
       <PricingTeaser />

@@ -1407,3 +1407,90 @@
     animation: none;
   }
 }
+
+/* ---------------------------------------------------------------
+ * スマートフォン向けの固定CTAバー（`site/MobileCta.tsx`）
+ *
+ * スマホでは問い合わせ導線がページ末尾にしかなく、読んでいる途中で動けませんでした。
+ * 画面下端に「電話」と「無料で相談する」を常駐させます。lg 以上では出しません。
+ * ⚠️ 高さを変えるときは `--mobile-cta-h` だけを直すこと。
+ *    本文末尾の余白と、常駐アシスタントの持ち上げ量が同じ値を参照しています。
+ * --------------------------------------------------------------- */
+:root {
+  --mobile-cta-h: 3.9rem;
+}
+
+/* ⚠️ 表示・非表示を Tailwind の `lg:hidden` に任せないこと。
+   このブロックは @layer の外にあり、非レイヤーのCSSは @layer utilities より強い（Tailwind v4）。
+   `lg:hidden` の display:none が負けて、PCでもバーが出てしまう。切替はここで書く。 */
+.mobile-cta,
+.mobile-cta-spacer {
+  display: none;
+}
+
+.mobile-cta {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 55; /* ヘッダー(50)より上、常駐アシスタント(60)より下 */
+  gap: 0.5rem;
+  padding: 0.5rem max(0.75rem, env(safe-area-inset-left)) calc(0.5rem + env(safe-area-inset-bottom))
+    max(0.75rem, env(safe-area-inset-right));
+  background-color: rgba(5, 7, 15, 0.92);
+  border-top: 1px solid rgba(148, 163, 184, 0.16);
+  /* backdrop-filter は使わない：背後で3D背景が動き続けるため再合成が走って重い（ヘッダーと同じ理由） */
+}
+
+.mobile-cta-btn {
+  display: flex;
+  flex: 1 1 0;
+  min-width: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.625rem;
+  padding: 0.45rem 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: 1.25;
+  text-align: left;
+}
+
+.mobile-cta-sub {
+  display: block;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  opacity: 0.75;
+  font-variant-numeric: tabular-nums;
+}
+
+.mobile-cta-tel {
+  border: 1px solid rgba(34, 211, 238, 0.35);
+  background-color: rgba(34, 211, 238, 0.1);
+  color: var(--color-brand-light);
+}
+
+.mobile-cta-main {
+  background-image: linear-gradient(120deg, var(--color-brand), var(--color-accent));
+  color: #05070f;
+}
+
+/* 本文の末尾がバーに隠れないよう、同じ高さの余白を通常フローに置く。
+   ⚠️ body の padding では効かせない：globals.css は職種別デモサイト
+   （バーを出さない `/demosite/*`）にも読まれるため、そちらに余白だけが残る。 */
+.mobile-cta-spacer {
+  height: calc(var(--mobile-cta-h) + env(safe-area-inset-bottom));
+}
+
+@media (max-width: 1023px) {
+  .mobile-cta {
+    display: flex;
+  }
+  .mobile-cta-spacer {
+    display: block;
+  }
+  /* 常駐アシスタントをバーの上へ逃がす（重なると起動ボタンが押せない） */
+  .assistant-root {
+    bottom: calc(var(--mobile-cta-h) + max(0.75rem, env(safe-area-inset-bottom)));
+  }
+}

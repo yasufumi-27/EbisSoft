@@ -53,7 +53,7 @@ export function Pillars() {
               </Link>
             </h3>
             <p className="speakable mt-3 font-medium text-slate-200">{ja(p.lead)}</p>
-            <p className="mt-3 text-sm leading-relaxed text-slate-400">{ja(p.description)}</p>
+            <p className="mt-3 text-[0.9375rem] leading-relaxed text-slate-400 sm:text-sm">{ja(p.description)}</p>
 
             <ul className="mt-5 flex-1 space-y-2 border-t border-white/10 pt-5">
               {p.bullets.map((b) => (

@@ -39,7 +39,7 @@ export function PricingTeaser() {
               >
                 {plan.price}
               </span>
-              <span className="mt-3 block text-sm leading-relaxed text-slate-400">
+              <span className="mt-3 block text-[0.9375rem] leading-relaxed text-slate-400 sm:text-sm">
                 {ja(plan.description)}
               </span>
             </dd>

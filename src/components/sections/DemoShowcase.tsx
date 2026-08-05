@@ -57,7 +57,7 @@ export function DemoShowcase({
               </Link>
             </h3>
             <p className="mt-1 text-sm text-brand-light">{ja(c.tagline)}</p>
-            <p className="mt-3 flex-1 text-sm leading-relaxed text-slate-400">{ja(c.impact)}</p>
+            <p className="mt-3 flex-1 text-[0.9375rem] leading-relaxed text-slate-400 sm:text-sm">{ja(c.impact)}</p>
 
             <span className="mt-4 inline-flex items-center gap-1.5 border-t border-white/10 pt-4 text-xs font-bold text-slate-500 transition-colors group-hover:text-brand-light">
               <Icon name="play" className="size-3.5" />

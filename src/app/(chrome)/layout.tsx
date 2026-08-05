@@ -3,6 +3,7 @@ import { ViewTransition } from "react";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { SiteChrome } from "@/components/fx/SiteChrome";
+import { MobileCta } from "@/components/site/MobileCta";
 
 /**
  * エビスソフト本サイトの外枠（ヘッダー・フッター・演出）。
@@ -31,6 +32,8 @@ export default function ChromeLayout({
         </main>
       </ViewTransition>
       <SiteFooter />
+      {/* スマホだけ、画面下端に電話と相談の導線を常駐させる（lg 以上では非表示） */}
+      <MobileCta />
     </>
   );
 }
