@@ -39,8 +39,23 @@ if ! grep -q "machine ${HOST}" ~/.netrc 2>/dev/null; then
   exit 1
 fi
 
-echo "▶ ビルド（静的書き出し＋事前圧縮）"
-npm run build:sakura
+# 事前圧縮（.br / .gz）を作るかどうか。
+# 前段のWAF（SiteGuard）が Accept-Encoding を削るため、WAFを有効にしている間は
+# 圧縮版が配信されることは一度もない。それでもアップロードすると転送ファイル数が
+# 3倍（533 → 1599）に膨らみ、FTPS転送の失敗が増える（実際 mirror が
+# 「No such file or directory」を大量に出して落ちた）。
+# そのため既定では圧縮を作らない。WAFを無効化して圧縮を使う運用に戻すときは
+#   PRECOMPRESS=1 npm run deploy:sakura
+# とするか、この既定値を 1 に変えること。
+PRECOMPRESS="${PRECOMPRESS:-0}"
+
+if [ "$PRECOMPRESS" = "1" ]; then
+  echo "▶ ビルド（静的書き出し＋事前圧縮）"
+  npm run build:sakura:br
+else
+  echo "▶ ビルド（静的書き出し／事前圧縮なし＝WAF有効のため）"
+  npm run build:sakura
+fi
 
 echo "▶ アップロード → ${HOST}:${REMOTE_DIR}"
 # --delete: out/ から消えたファイルはリモートからも消す
