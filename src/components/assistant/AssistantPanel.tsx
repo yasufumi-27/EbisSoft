@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Icon } from "@/components/ui/icons";
 import { ja } from "@/lib/typography";
 import { PixelMascot } from "./PixelMascot";
-import { isConfident, searchKb, suggestedQuestions, type SearchHit } from "@/lib/kb";
+import { askKb, suggestedQuestions, type SearchHit } from "@/lib/kb";
 
 /**
  * サイト内AIアシスタントの本体（チャット画面）。
@@ -34,10 +34,7 @@ type Message = {
 };
 
 const GREETING =
-  "こんにちは。エビスソフトの案内役です。このサイトに書かれていることなら何でもお答えします。料金・制作期間・できること・組み込み開発・会社情報など、お気軽にどうぞ。";
-
-const NO_ANSWER =
-  "申し訳ありません。そのご質問にお答えできる情報が、このサイトの中に見つかりませんでした。憶測でお答えするより、担当者から正確にご回答します。お問い合わせからご連絡ください（初回のご相談・お見積もりは無料です）。";
+  "こんにちは。エビスソフトの案内役です。料金・制作期間・できること・組み込み開発・会社情報など、このサイトに書かれていることにお答えします。「AIって何？」「Web制作って何をするの？」のような用語の質問も大丈夫です。お気軽にどうぞ。";
 
 let messageId = 0;
 const nextId = () => (messageId += 1);
@@ -107,9 +104,8 @@ export default function AssistantPanel({ onClose }: { onClose: () => void }) {
       setMessages((prev) => [...prev, { id: nextId(), role: "user", text: q }]);
       setThinking(true);
 
-      const hits = searchKb(q, 3);
-      const top = hits[0];
-      const confident = isConfident(top);
+      // 検索・確信度の判定・文面の決定は kb 側にまとめてある（デモと判定をそろえるため）
+      const result = askKb(q, 3);
 
       // 検索〜生成の待ち時間を再現（検索自体はブラウザ内で1ms未満）
       later(() => {
@@ -123,11 +119,11 @@ export default function AssistantPanel({ onClose }: { onClose: () => void }) {
             text: "",
             streaming: true,
             // 答えられなかったときは、無関係なページを根拠として見せない
-            sources: confident ? hits : undefined,
-            unanswered: !confident,
+            sources: result.sources.length > 0 ? result.sources : undefined,
+            unanswered: result.kind === "none",
           },
         ]);
-        streamAnswer(id, confident ? top.doc.answer : NO_ANSWER);
+        streamAnswer(id, result.text);
       }, 420);
     },
     // streamAnswer / later は ref とセッターしか使わないため依存は thinking のみで足りる
@@ -296,7 +292,7 @@ export default function AssistantPanel({ onClose }: { onClose: () => void }) {
       </form>
 
       <p className="border-t border-white/10 px-4 py-2 text-[10px] leading-relaxed text-slate-500">
-        このサイトの掲載内容だけを根拠に回答します。書かれていないことは答えません。
+        このサイトの掲載内容と、Web・AIの用語解説だけを根拠に回答します。それ以外は答えません。
       </p>
     </div>
   );

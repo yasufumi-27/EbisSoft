@@ -33,7 +33,7 @@ export const industries: Industry[] = [
     ],
     product: { name: "主力商品", note: "陶器・雑貨・家電など、質感が売りの商品を想定しています" },
     // 3DCG・ARデモで実際に表示する立体（industryModels.ts）
-    model: "cup",
+    models: ["cup", "teapot", "gift-box"],
     // 料金シミュレーターデモで試算する内容（この職種のサイトに本当に置かれるもの）
     simulator: {
       title: "ギフト注文の概算",
@@ -233,7 +233,7 @@ export const industries: Industry[] = [
     ],
     product: { name: "看板メニュー", note: "コース料理や名物料理を立体で見せる想定です" },
     // 3DCG・ARデモで実際に表示する立体（industryModels.ts）
-    model: "dish",
+    models: ["dish", "bento", "coffee-set"],
     // 料金シミュレーターデモで試算する内容（この職種のサイトに本当に置かれるもの）
     simulator: {
       title: "ご宴会の概算",
@@ -436,7 +436,7 @@ export const industries: Industry[] = [
       note: "診療室や機器を立体で見せて、来院前の不安を減らす想定です",
     },
     // 3DCG・ARデモで実際に表示する立体（industryModels.ts）
-    model: "dental-unit",
+    models: ["dental-unit", "medical-cart", "waiting-sofa"],
     // 料金シミュレーターデモで試算する内容（この職種のサイトに本当に置かれるもの）
     simulator: {
       title: "自由診療の費用の概算",
@@ -638,7 +638,7 @@ export const industries: Industry[] = [
       note: "装置・部品・筐体など、形状そのものが仕様の商品を想定しています",
     },
     // 3DCG・ARデモで実際に表示する立体（industryModels.ts）
-    model: "machine-part",
+    models: ["machine-part", "gearbox", "conveyor"],
     // 料金シミュレーターデモで試算する内容（この職種のサイトに本当に置かれるもの）
     simulator: {
       title: "加工費の概算",
@@ -841,7 +841,7 @@ export const industries: Industry[] = [
       note: "建物や部屋を立体で見せて、内見前に判断してもらう想定です",
     },
     // 3DCG・ARデモで実際に表示する立体（industryModels.ts）
-    model: "floorplan",
+    models: ["floorplan", "kitchen", "apartment"],
     // 料金シミュレーターデモで試算する内容（この職種のサイトに本当に置かれるもの）
     simulator: {
       title: "初期費用の概算",
@@ -1041,7 +1041,7 @@ export const industries: Industry[] = [
     ],
     product: { name: "施工イメージ", note: "住宅・内装・外構の完成形を立体で見せる想定です" },
     // 3DCG・ARデモで実際に表示する立体（industryModels.ts）
-    model: "house",
+    models: ["house", "timber-frame", "deck"],
     // 料金シミュレーターデモで試算する内容（この職種のサイトに本当に置かれるもの）
     simulator: {
       title: "リフォーム費用の概算",
@@ -1240,7 +1240,7 @@ export const industries: Industry[] = [
     ],
     product: { name: "教室・教材", note: "教室の雰囲気や教材を立体で見せる想定です" },
     // 3DCG・ARデモで実際に表示する立体（industryModels.ts）
-    model: "desk",
+    models: ["desk", "whiteboard", "bookshelf"],
     // 料金シミュレーターデモで試算する内容（この職種のサイトに本当に置かれるもの）
     simulator: {
       title: "月謝の概算",
@@ -1437,7 +1437,7 @@ export const industries: Industry[] = [
     ],
     product: { name: "事務所・書類", note: "事務所の雰囲気や取り扱い書類を見せる想定です" },
     // 3DCG・ARデモで実際に表示する立体（industryModels.ts）
-    model: "documents",
+    models: ["documents", "consult-table", "cabinet"],
     // 料金シミュレーターデモで試算する内容（この職種のサイトに本当に置かれるもの）
     simulator: {
       title: "顧問料の概算",
@@ -1636,7 +1636,7 @@ export const industries: Industry[] = [
     ],
     product: { name: "スタイル・仕上がり", note: "仕上がりイメージや店内を見せる想定です" },
     // 3DCG・ARデモで実際に表示する立体（industryModels.ts）
-    model: "salon-chair",
+    models: ["salon-chair", "shampoo-basin", "salon-cart"],
     // 料金シミュレーターデモで試算する内容（この職種のサイトに本当に置かれるもの）
     simulator: {
       title: "施術料金の概算",
@@ -1833,7 +1833,7 @@ export const industries: Industry[] = [
     ],
     product: { name: "設備・マシン", note: "マシンやスタジオを立体で見せる想定です" },
     // 3DCG・ARデモで実際に表示する立体（industryModels.ts）
-    model: "dumbbell",
+    models: ["dumbbell", "bench-press", "treadmill"],
     // 料金シミュレーターデモで試算する内容（この職種のサイトに本当に置かれるもの）
     simulator: {
       title: "月額の概算",
@@ -2025,7 +2025,7 @@ export const industries: Industry[] = [
     ],
     product: { name: "客室・施設", note: "客室や露天風呂などを立体で見せる想定です" },
     // 3DCG・ARデモで実際に表示する立体（industryModels.ts）
-    model: "guestroom",
+    models: ["guestroom", "open-air-bath", "front-desk"],
     // 料金シミュレーターデモで試算する内容（この職種のサイトに本当に置かれるもの）
     simulator: {
       title: "宿泊料金の概算",
@@ -2224,7 +2224,7 @@ export const industries: Industry[] = [
     ],
     product: { name: "車両・設備", note: "車両や倉庫設備を立体で見せる想定です" },
     // 3DCG・ARデモで実際に表示する立体（industryModels.ts）
-    model: "truck",
+    models: ["truck", "pallet", "forklift"],
     // 料金シミュレーターデモで試算する内容（この職種のサイトに本当に置かれるもの）
     simulator: {
       title: "運賃の概算",
@@ -2423,7 +2423,7 @@ export const industries: Industry[] = [
     ],
     product: { name: "車両・パーツ", note: "車両やホイールなどを立体で見せる想定です" },
     // 3DCG・ARデモで実際に表示する立体（industryModels.ts）
-    model: "wheel",
+    models: ["wheel", "car-body", "car-lift"],
     // 料金シミュレーターデモで試算する内容（この職種のサイトに本当に置かれるもの）
     simulator: {
       title: "車検費用の概算",
@@ -2622,7 +2622,7 @@ export const industries: Industry[] = [
     ],
     product: { name: "農産物・加工品", note: "商品パッケージや詰め合わせを見せる想定です" },
     // 3DCG・ARデモで実際に表示する立体（industryModels.ts）
-    model: "crate",
+    models: ["crate", "greenhouse", "tractor"],
     // 料金シミュレーターデモで試算する内容（この職種のサイトに本当に置かれるもの）
     simulator: {
       title: "定期便の概算",
@@ -2821,7 +2821,7 @@ export const industries: Industry[] = [
     ],
     product: { name: "会場・装飾", note: "会場のレイアウトや装花を立体で見せる想定です" },
     // 3DCG・ARデモで実際に表示する立体（industryModels.ts）
-    model: "arch",
+    models: ["arch", "banquet-table", "cake"],
     // 料金シミュレーターデモで試算する内容（この職種のサイトに本当に置かれるもの）
     simulator: {
       title: "挙式・披露宴の概算",
@@ -3019,7 +3019,7 @@ export const industries: Industry[] = [
     ],
     product: { name: "施設・設備", note: "居室や共用スペースを立体で見せる想定です" },
     // 3DCG・ARデモで実際に表示する立体（industryModels.ts）
-    model: "care-bed",
+    models: ["care-bed", "wheelchair", "care-bath"],
     // 料金シミュレーターデモで試算する内容（この職種のサイトに本当に置かれるもの）
     simulator: {
       title: "ご利用料金の概算",
@@ -3220,7 +3220,7 @@ export const industries: Industry[] = [
       note: "プロダクトのイメージやデータの流れを見せる想定です",
     },
     // 3DCG・ARデモで実際に表示する立体（industryModels.ts）
-    model: "server",
+    models: ["server", "workstation", "monitor-wall"],
     // 料金シミュレーターデモで試算する内容（この職種のサイトに本当に置かれるもの）
     simulator: {
       title: "月額の概算",
@@ -3418,7 +3418,7 @@ export const industries: Industry[] = [
     ],
     product: { name: "商品・素材", note: "生地や小物を立体で見せて、質感を伝える想定です" },
     // 3DCG・ARデモで実際に表示する立体（industryModels.ts）
-    model: "garment",
+    models: ["garment", "sneaker", "handbag"],
     // 料金シミュレーターデモで試算する内容（この職種のサイトに本当に置かれるもの）
     simulator: {
       title: "オーダーの概算",

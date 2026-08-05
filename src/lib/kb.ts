@@ -16,6 +16,7 @@ import { faqs, keyFacts, services, capabilities, plans, aiImpacts, businessLines
 import { siteConfig } from "@/lib/site";
 import { columns } from "@/lib/columns";
 import { industries } from "@/lib/showcaseData";
+import { glossary } from "@/lib/glossary";
 
 export type KbDoc = {
   id: string;
@@ -31,7 +32,8 @@ export type KbDoc = {
     | "会社情報"
     | "スピード"
     | "コラム"
-    | "職種別";
+    | "職種別"
+    | "用語";
   /** 検索対象テキスト（質問文・見出しなど） */
   key: string;
   /** 回答本文 */
@@ -98,6 +100,20 @@ function buildDocs(): KbDoc[] {
       key: `${c.title} ${c.tagline} ${c.bullets.join(" ")} ${c.tech.join(" ")}`,
       answer: `${c.description}\n\n主にできること：${c.bullets.join("／")}\n実際に動くデモをご用意しています。`,
       href: `/demo/${c.slug}`,
+    });
+  });
+
+  // 用語のやさしい解説。「そもそもAIって何？」「Web制作って何をするの？」のように、
+  // サイト本文の手前にある一般的な質問に答えるための知識源（`glossary.ts`）。
+  glossary.forEach((g, i) => {
+    docs.push({
+      id: `glossary-${i}`,
+      source: `用語解説：${g.term}`,
+      category: "用語",
+      // 用語名そのものと言い換えを重ねて、短い質問（「AIとは？」）でも確実に当てる
+      key: `${g.term} ${g.term} ${g.keywords.join(" ")}`,
+      answer: g.answer,
+      href: g.href,
     });
   });
 
@@ -230,32 +246,97 @@ export const kbDocs: KbDoc[] = buildDocs();
  * キーは NFKC 正規化・小文字化した後の形で書きます。
  */
 const SYNONYMS: [string, string][] = [
+  /* 料金・期間 */
   ["値段", "料金 費用"],
   ["価格", "料金 費用"],
   ["費用", "料金"],
   ["いくら", "料金 費用"],
   ["コスト", "料金 費用"],
   ["予算", "料金 費用"],
+  ["相場", "料金 費用 プラン"],
+  ["見積", "料金 費用 見積もり"],
+  ["安い", "料金 費用 プラン"],
   ["納期", "期間 スピード"],
   ["どれくらい", "期間"],
   ["どのくらい", "期間"],
   ["何日", "期間 日数"],
   ["速い", "期間 スピード"],
   ["早い", "期間 スピード"],
+  ["急ぎ", "期間 スピード 最短"],
+
+  /* できること・デモ */
   ["3d", "3dcg 立体 webgl"],
   ["スリーディー", "3d 3dcg webgl"],
   ["ボット", "チャットボット ai"],
   ["bot", "チャットボット ai"],
   ["チャット", "チャットボット ai"],
+  ["問い合わせ対応", "チャットボット ai 自動"],
   ["インスタ", "sns instagram"],
   ["ツイッター", "sns x twitter"],
-  ["場所", "所在地 住所 京都"],
-  ["どこ", "所在地 住所 京都"],
-  ["住所", "所在地 京都 伏見"],
+  ["ライン", "sns line 通知"],
   ["連携", "連携 api システム"],
   ["アニメ", "アニメーション 動き"],
   ["動き", "アニメーション"],
-  ["生成ai", "ai 生成AI"],
+  ["拡張現実", "ar"],
+  ["多言語", "多言語 翻訳 英語"],
+  ["英語", "多言語 翻訳"],
+  ["予約", "予約 チャットボット フォーム"],
+
+  /* AI まわり（一般語 → 用語解説へつなぐ） */
+  ["生成ai", "ai 生成AI llm"],
+  ["人工知能", "ai"],
+  ["エーアイ", "ai"],
+  ["chatgpt", "生成ai ai llm"],
+  ["claude", "生成ai ai llm"],
+  ["gemini", "生成ai ai llm"],
+  ["機械学習", "ai 学習"],
+  ["ディープラーニング", "ai 深層学習 機械学習"],
+  ["自動化", "ai エージェント 効率化"],
+  ["ハルシネーション", "誤答 ai 根拠"],
+
+  /* Web の一般語 */
+  ["ホームページ", "web制作 サイト ホームページ"],
+  ["hp", "ホームページ web制作 サイト"],
+  ["webサイト", "web制作 サイト"],
+  ["ウェブ", "web"],
+  ["リニューアル", "web制作 作り直し 既存"],
+  ["作り直し", "リニューアル web制作"],
+  ["スマホ対応", "レスポンシブ モバイル"],
+  ["モバイル", "レスポンシブ スマホ対応"],
+  ["検索", "seo 検索エンジン"],
+  ["上位", "seo 検索順位"],
+  ["集客", "seo 集客 コンバージョン"],
+  ["アクセス", "seo アクセス 集客"],
+  ["ワードプレス", "wordpress cms 更新"],
+  ["更新", "cms 更新 保守"],
+  ["メンテナンス", "保守 運用"],
+  ["サポート", "保守 運用 サポート"],
+  ["表示速度", "速度 core web vitals 表示"],
+  ["重い", "表示速度 速度"],
+  ["独自ドメイン", "ドメイン url"],
+  ["レンタルサーバー", "サーバー ホスティング"],
+  ["セキュリティ", "ssl https 安全"],
+  ["アプリ", "pwa アプリ"],
+  ["ノーコード", "ノーコード wix studio 自作"],
+  ["地図", "meo google マップ 店舗"],
+  ["マップ", "meo google 地図 店舗"],
+
+  /* 組み込み・IoT */
+  ["組込み", "組み込み embedded"],
+  ["組込", "組み込み embedded"],
+  ["ファーム", "ファームウェア 組み込み"],
+  ["マイコン", "組み込み ファームウェア esp32 stm32"],
+  ["センサー", "iot 組み込み 計測"],
+  ["デバイス", "組み込み iot 機器"],
+
+  /* 会社・問い合わせ */
+  ["場所", "所在地 住所 京都"],
+  ["どこ", "所在地 住所 京都"],
+  ["住所", "所在地 京都 伏見"],
+  ["遠方", "対応エリア 地域 オンライン"],
+  ["エリア", "対応エリア 地域"],
+  ["相談したい", "問い合わせ 相談 無料"],
+  ["依頼", "問い合わせ 相談 発注"],
 ];
 
 function normalize(text: string): string {
@@ -272,22 +353,30 @@ export function tokenize(text: string): string[] {
   const norm = normalize(text).replace(STOP_CHARS, " ");
   const tokens: string[] = [];
 
-  // 英数字は単語単位（3文字以上は前方一致の部分文字列も足して表記ゆれに強くする）
   for (const w of norm.split(/\s+/)) {
     if (!w) continue;
-    if (/^[a-z0-9./+#-]+$/.test(w)) {
-      tokens.push(w);
-      continue;
-    }
-    // 日本語混じりは文字 bi-gram（1文字語も拾えるよう uni-gram も少量加える）
+
+    // 文字 bi-gram（1文字語はそのまま）。日本語はこれが主役。
     const chars = Array.from(w);
     if (chars.length === 1) {
       tokens.push(chars[0]);
-      continue;
+    } else {
+      for (let i = 0; i < chars.length - 1; i += 1) {
+        tokens.push(chars[i] + chars[i + 1]);
+      }
     }
-    for (let i = 0; i < chars.length - 1; i += 1) {
-      tokens.push(chars[i] + chars[i + 1]);
+
+    /* 英数字は「語まるごと」も足す。
+       ⚠️ ここを分けているのは実際に外していた不具合への対処です。
+       以前は「英数字だけの語」と「日本語混じりの語」を排他にしていたため、
+       文書側の `SEO`（→ seo）と、質問側の `SEOって何？`（→ se, eo, oっ …）が
+       まったく別のトークンになり、当たりませんでした。
+       いまは両方から bi-gram と語まるごとの両方を出すので、必ず交わります。 */
+    for (const run of w.match(/[a-z0-9]{2,}/g) ?? []) {
+      tokens.push(run);
     }
+    // c++ / next.js のように記号を含む語は、そのままでも1トークンとして扱う
+    if (/[./+#-]/.test(w) && /^[a-z0-9./+#-]+$/.test(w)) tokens.push(w);
   }
   return tokens;
 }
@@ -332,6 +421,12 @@ export type SearchHit = {
   relevance: number;
   /** スコアのうち「内容語」が占める割合（0〜1）。低いほど、てにをはだけで当たっている。 */
   focus: number;
+  /**
+   * 質問に含まれる内容語のうち、この文書に入っていた割合（0〜1）。
+   * BM25のスコアは知識源の大きさで桁が変わるのに対し、こちらは常に 0〜1 なので、
+   * 「答えてよいか」の判定はこちらを主に使います。
+   */
+  coverage: number;
 };
 
 /**
@@ -357,6 +452,20 @@ function searchIn(index: ReturnType<typeof buildIndex>, query: string, topK: num
 
   const contentDfLimit = INDEX.total * CONTENT_TERM_DF_RATIO;
 
+  // 一致率（coverage）の分母。珍しい語＝内容語だけを対象にする
+  // （「ですか」「ますか」のような文末表現で分母を薄めない）。
+  const unique = Array.from(new Set(terms));
+  /* ひらがなだけの語は数えない。
+     日本語で意味を担うのは漢字・カタカナ・英数字で、`って` `ですか` `どう` のような
+     ひらがなだけの bi-gram は文法の部品です。これを一致率の分母に入れると、
+     `ARって何` のように内容語が1つしかない短い質問で一致率が不当に下がり、
+     答えられるはずの質問を取りこぼします。 */
+  // 「何」を含む語（〜は何・何ですか）も疑問の言い回しなので数えない
+  const meaningful = unique.filter((t) => /[^ぁ-ゖー]/.test(t) && !t.includes("何"));
+  const base = meaningful.length > 0 ? meaningful : unique;
+  const contentTerms = base.filter((t) => (INDEX.df.get(t) ?? 0) <= contentDfLimit);
+  const coverageTerms = contentTerms.length > 0 ? contentTerms : base;
+
   const scored = INDEX.indexed.map(({ doc, tf, length }) => {
     let score = 0;
     // 内容語だけで積んだスコア。全体に占める割合が focus。
@@ -371,43 +480,116 @@ function searchIn(index: ReturnType<typeof buildIndex>, query: string, topK: num
       score += part;
       if (n <= contentDfLimit) contentScore += part;
     }
-    return { doc, score, focus: score > 0 ? contentScore / score : 0 };
+    const matched = coverageTerms.filter((t) => tf.has(t)).length;
+    return {
+      doc,
+      score,
+      focus: score > 0 ? contentScore / score : 0,
+      coverage: matched / coverageTerms.length,
+    };
   });
 
-  scored.sort((a, b) => b.score - a.score);
-  const best = scored[0]?.score ?? 0;
+  /* 並べ替えは BM25 のスコアだけでなく、質問の内容語をどれだけ拾えているか（coverage）
+     で重み付けする。BM25 は「その語が珍しいか」で決まるため、質問の一部にしか触れて
+     いない文書が、質問全体に答えている文書を僅差で押しのけることがあった
+     （例：「ホームページのリニューアルもできますか？」で、リニューアルの説明ではなく
+     事業内容の一覧が先頭に来ていた）。 */
+  const ranked = scored.map((s) => ({ ...s, rank: s.score * (0.5 + s.coverage) }));
+  ranked.sort((a, b) => b.rank - a.rank);
+  const best = ranked[0]?.rank ?? 0;
 
-  return scored
+  return ranked
     .filter((s) => s.score > 0)
     .slice(0, topK)
-    .map((s) => ({
+    .map(({ rank, ...s }) => ({
       ...s,
-      relevance: best > 0 ? s.score / best : 0,
+      relevance: best > 0 ? rank / best : 0,
     }));
 }
 
 /**
- * 回答に足る関連度があるかの閾値。
- * これを下回る場合は「わからない」と答え、問い合わせへ誘導します（誤答の抑制）。
- *
- * 実測にもとづく値：想定質問（サジェスト18問）の最低スコアは 7.3 だったのに対し、
- * 無関係な質問（「明日の天気は？」）がたまたま1語だけ引っかかると 3.7 前後になる。
- * その間に置いた 6.0 を境界にしている。
+ * 回答に足るスコアがあるかの下限（BM25の生スコア）。
+ * 1語だけ偶然かすった一致を落とすための足切りで、主役は下の `coverage` です。
  */
 export const CONFIDENCE_THRESHOLD = 6.0;
 
 /**
- * 回答してよいかの判定。
- *
- * BM25 のスコアだけで判定すると、「明日の天気は？」のような無関係な質問でも
- * 「〜ますか」「でき」といった文末・助動詞の bi-gram が積み上がって閾値を超え、
- * 見当違いのドキュメントを自信満々に返してしまいます（実測 3.72）。
- * そこで、スコアのうち内容語が占める割合（focus）が一定以上あることも条件にします。
+ * スコアのうち内容語が占める割合の下限。
+ * 「〜ますか」のような言い回しだけで点が積み上がった一致を弾きます。
  */
-export const FOCUS_THRESHOLD = 0.4;
+export const FOCUS_THRESHOLD = 0.25;
+
+/**
+ * 「そのまま答えてよい」一致率（`coverage`）の下限。
+ *
+ * 実測（想定質問31問）にもとづく値：
+ *   ちゃんと答えたい質問 … 0.43〜1.00（大半は 0.6 以上）
+ *   無関係な質問         … 「あなたの好きな色は？」0.00、「明日の天気は？」0.20、
+ *                          「おすすめのラーメン屋を教えて」0.33
+ * 生スコアは知識源が増えるたびに桁が変わる（実測 7〜135）ため境界を引けませんが、
+ * 一致率は常に 0〜1 なので、知識を足しても基準を引き直さずに済みます。
+ */
+export const COVERAGE_CONFIDENT = 0.5;
+
+/**
+ * 「ぴったりではないが、近い内容として案内してよい」一致率の下限。
+ * ここと `COVERAGE_CONFIDENT` の間は、断定せずに前置きを付けて答えます
+ * （「AR」だけのような短い質問を、答えられるのに突き放さないため）。
+ */
+export const COVERAGE_NEAR = 0.35;
 
 export function isConfident(hit: SearchHit | undefined): hit is SearchHit {
-  return !!hit && hit.score >= CONFIDENCE_THRESHOLD && hit.focus >= FOCUS_THRESHOLD;
+  return (
+    !!hit &&
+    hit.score >= CONFIDENCE_THRESHOLD &&
+    hit.focus >= FOCUS_THRESHOLD &&
+    hit.coverage >= COVERAGE_CONFIDENT
+  );
+}
+
+/** 断定はしないが「近い内容」として案内してよいか */
+export function isNear(hit: SearchHit | undefined): hit is SearchHit {
+  if (!hit) return false;
+  if (hit.score < CONFIDENCE_THRESHOLD || hit.coverage < COVERAGE_NEAR) return false;
+  return !isConfident(hit);
+}
+
+/* ------------------------------------------------------------------
+ * 4. 回答の組み立て
+ * ---------------------------------------------------------------- */
+
+/** 近い内容を案内するときの前置き */
+const NEAR_PREFACE = "ぴったりの記載は見つかりませんでしたが、近い内容としてご案内します。\n\n";
+
+/** 知識源から答えられなかったときの文面 */
+export const NO_ANSWER_TEXT =
+  "申し訳ありません。そのご質問にお答えできる情報が見つかりませんでした。憶測でお答えするより、担当者から正確にご回答します。お問い合わせからご連絡ください（初回のご相談・お見積もりは無料です）。";
+
+export type KbAnswer = {
+  /** answer＝そのまま回答／near＝近い内容として案内／none＝答えない */
+  kind: "answer" | "near" | "none";
+  /** 画面に出す本文 */
+  text: string;
+  /** 根拠として見せる文書（none のときは空。無関係なページを根拠に見せない） */
+  sources: SearchHit[];
+};
+
+/**
+ * 質問文から回答を組み立てる。
+ *
+ * 検索（BM25）→ 確信度の判定 → 文面の決定までをここに集約しています。
+ * サイト内アシスタントとデモで判定がずれないようにするためです。
+ */
+export function askKb(query: string, topK = 3): KbAnswer {
+  const hits = searchKb(query, topK);
+  const top = hits[0];
+  if (isConfident(top)) return { kind: "answer", text: top.doc.answer, sources: hits };
+  // 別名で受け直す（isConfident が型ガードなので、そのままだと undefined に絞られてしまう）
+  const candidate = hits[0];
+  if (isNear(candidate)) {
+    return { kind: "near", text: NEAR_PREFACE + candidate.doc.answer, sources: hits };
+  }
+  return { kind: "none", text: NO_ANSWER_TEXT, sources: [] };
 }
 
 /* ------------------------------------------------------------------
@@ -433,30 +615,27 @@ export function createKbSearch(docs: KbDoc[]) {
   return {
     docCount: docs.length,
     search: (query: string, topK = 3) => searchIn(index, query, topK),
-    /** 小さな知識源向けの「答えてよいか」判定 */
-    isConfident: (hit: SearchHit | undefined, query: string): hit is SearchHit => {
-      if (!hit || hit.score <= 0) return false;
-      const terms = Array.from(new Set(tokenize(query)));
-      if (terms.length === 0) return false;
-      const contentDfLimit = index.total * CONTENT_TERM_DF_RATIO;
-      // 珍しい語（内容語）だけを対象に、どれだけ一致したかを見る
-      const content = terms.filter((t) => (index.df.get(t) ?? 0) <= contentDfLimit);
-      const target = content.length > 0 ? content : terms;
-      const indexed = index.indexed.find((d) => d.doc.id === hit.doc.id);
-      if (!indexed) return false;
-      const matched = target.filter((t) => indexed.tf.has(t)).length;
-      return matched / target.length >= 0.35;
-    },
+    /**
+     * 小さな知識源向けの「答えてよいか」判定。
+     * 一致率（`coverage`）は検索側で計算済みなので、ここでは基準だけを緩めます
+     * （文書が十数件しかないと言い回しの重なりが起きにくく、一致率が出にくいため）。
+     */
+    isConfident: (hit: SearchHit | undefined): hit is SearchHit =>
+      !!hit && hit.score > 0 && hit.coverage >= 0.35,
   };
 }
 
 /** チャット欄に出すサジェスト質問 */
 export const suggestedQuestions = [
-  "AIを使うとどれくらい速いですか？",
+  "AIって何ですか？",
+  "Web制作では何をするのですか？",
   "料金の目安を教えてください",
+  "AIを使うとどれくらい速いですか？",
+  "SEOとAEO・LLMOの違いは？",
   "3DCGでどんなことができますか？",
   "AIチャットボットは作れますか？",
-  "会社はどこにありますか？",
+  "ホームページのリニューアルもできますか？",
   "既存システムと連携できますか？",
   "組み込み・IoTの開発もできますか？",
+  "会社はどこにありますか？",
 ];

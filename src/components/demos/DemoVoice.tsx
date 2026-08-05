@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ChipButton, ControlGroup, DemoStage, RangeControl } from "./DemoUi";
 import { Icon } from "@/components/ui/icons";
-import { CONFIDENCE_THRESHOLD, searchKb, type SearchHit } from "@/lib/kb";
+import { isConfident, searchKb, type SearchHit } from "@/lib/kb";
 
 /* ------------------------------------------------------------------
  * Web Speech API の型（TypeScriptの標準libに含まれないため最小限を定義）
@@ -164,7 +164,8 @@ export default function DemoVoice() {
 
       const hits = searchKb(q, 1);
       const top = hits[0];
-      const confident = !!top && top.score >= CONFIDENCE_THRESHOLD;
+      // 判定はチャットと同じ基準にそろえる（音声だけ甘い／辛いをなくす）
+      const confident = isConfident(top);
       const text = confident
         ? top.doc.answer
         : "申し訳ありません。その質問にお答えできる情報が見つかりませんでした。お電話またはお問い合わせフォームからご連絡ください。";

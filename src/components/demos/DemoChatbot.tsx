@@ -6,6 +6,7 @@ import { DemoStage } from "./DemoUi";
 import { Icon } from "@/components/ui/icons";
 import {
   CONFIDENCE_THRESHOLD,
+  COVERAGE_CONFIDENT,
   FOCUS_THRESHOLD,
   isConfident,
   kbDocs,
@@ -231,7 +232,7 @@ export default function DemoChatbot({
     setLastHits(hits);
 
     const top = hits[0];
-    const confident = custom ? custom.isConfident(top, q) : isConfident(top);
+    const confident = custom ? custom.isConfident(top) : isConfident(top);
 
     // 検索〜生成の待ち時間を再現（実際のLLM応答は数百ms〜数秒）
     later(() => {
@@ -595,9 +596,10 @@ export default function DemoChatbot({
             </ul>
             <p className="mt-4 border-t border-white/10 pt-3 text-[11px] text-slate-500">
               スコアが <span className="text-slate-300">{CONFIDENCE_THRESHOLD}</span> 未満のとき、
-              またはスコアの{" "}
-              <span className="text-slate-300">{Math.round(FOCUS_THRESHOLD * 100)}%</span>{" "}
-              以上が内容語で説明できないときは回答せず、問い合わせへ誘導します。
+              スコアの <span className="text-slate-300">{Math.round(FOCUS_THRESHOLD * 100)}%</span>{" "}
+              以上が内容語で説明できないとき、質問の内容語の{" "}
+              <span className="text-slate-300">{Math.round(COVERAGE_CONFIDENT * 100)}%</span>{" "}
+              以上が根拠の文書に含まれないときは、回答せず問い合わせへ誘導します。
               「〜ますか」のような言い回しだけで点が積み上がった一致を弾くための判定です（誤答の抑制）。
             </p>
           </div>

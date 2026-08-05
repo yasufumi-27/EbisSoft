@@ -18,13 +18,13 @@ export function demoPropsFor(
   faq?: { q: string; a: string }[],
 ): Record<string, unknown> | undefined {
   switch (slug) {
-    // 3DCG：その職種で見せたい物の3Dモデルを出す（医療なら診療ユニット、製造なら機械部品）
+    // 3DCG：その職種で見せたい物の3Dモデルを3種類以上出す（医療なら診療ユニット・ワゴン・待合ソファ）
     case "3dcg":
-      return { productLabel: industry.product.name, model: industry.model };
+      return { productLabel: industry.product.name, models: industry.models };
 
     // AR：3DCGと同じ物を、実寸に直してその場に置く
     case "ar":
-      return { productLabel: industry.product.name, model: industry.model };
+      return { productLabel: industry.product.name, models: industry.models };
 
     // システム連携：連携先の名前と、流すデータを職種のものに差し替える
     case "integration":

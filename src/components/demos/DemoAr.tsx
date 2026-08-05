@@ -144,30 +144,66 @@ const PRODUCTS: Product[] = [
 /** 職種別モデルの実寸（W × D × H、ミリメートル） */
 const INDUSTRY_AR_SIZE: Record<IndustryModelKey, [number, number, number]> = {
   cup: [120, 100, 100],
+  teapot: [220, 180, 130],
+  "gift-box": [320, 240, 200],
   dish: [300, 300, 90],
+  "coffee-set": [420, 240, 260],
+  bento: [260, 200, 120],
   "dental-unit": [1900, 1000, 1500],
+  "medical-cart": [600, 450, 950],
+  "waiting-sofa": [1800, 900, 800],
   "machine-part": [220, 220, 190],
+  gearbox: [420, 260, 300],
+  conveyor: [3000, 900, 1100],
   floorplan: [1800, 1400, 400],
+  apartment: [12000, 9000, 15000],
+  kitchen: [2550, 900, 2300],
   house: [3600, 3000, 2600],
+  "timber-frame": [5400, 4000, 4200],
+  deck: [3600, 3200, 1000],
   desk: [1200, 700, 780],
+  whiteboard: [1800, 600, 1900],
+  bookshelf: [900, 300, 1800],
   documents: [450, 320, 220],
+  "consult-table": [1400, 1600, 750],
+  cabinet: [900, 500, 1350],
   "salon-chair": [720, 900, 1100],
+  "shampoo-basin": [900, 1700, 1300],
+  "salon-cart": [500, 400, 900],
   dumbbell: [420, 260, 260],
+  "bench-press": [1900, 1300, 1300],
+  treadmill: [1900, 850, 1400],
   guestroom: [2400, 1900, 800],
+  "open-air-bath": [2600, 2600, 1100],
+  "front-desk": [2800, 1600, 2200],
   truck: [4700, 1900, 2400],
+  pallet: [1100, 1100, 1500],
+  forklift: [2600, 1200, 2100],
   wheel: [660, 660, 260],
+  "car-body": [4600, 1800, 1450],
+  "car-lift": [4600, 3000, 2800],
   crate: [600, 400, 330],
+  greenhouse: [5000, 3600, 2100],
+  tractor: [3600, 1900, 2400],
   arch: [2400, 700, 2400],
+  "banquet-table": [1600, 1600, 800],
+  cake: [700, 700, 900],
   "care-bed": [2000, 1000, 700],
+  wheelchair: [1100, 700, 950],
+  "care-bath": [1700, 1500, 900],
   server: [600, 900, 1900],
+  workstation: [1600, 1400, 1100],
+  "monitor-wall": [3000, 1200, 2200],
   garment: [520, 520, 1650],
+  sneaker: [290, 110, 130],
+  handbag: [340, 140, 300],
 };
 
 /** 職種別モデルを、実寸・床置きの状態に整えて Product にする */
 function industryProduct(key: IndustryModelKey): Product {
   const size = INDUSTRY_AR_SIZE[key];
   return {
-    key: "industry",
+    key: `industry-${key}`,
     name: INDUSTRY_MODEL_LABEL[key],
     size,
     price: 0,
@@ -252,11 +288,14 @@ function applyDeviceOrientation(
  * いずれも同じ Three.js シーンで、寸法は実寸（メートル単位）です。
  */
 export default function DemoAr({
-  model,
+  models,
   productLabel,
 }: {
-  /** 職種別の3Dモデル（渡されたときは、それを初期表示にする） */
-  model?: IndustryModelKey;
+  /**
+   * 職種別の3Dモデル（3種類以上）。渡されたときは**それだけ**を並べます。
+   * 汎用の家具サンプルは、職種が決まっているページでは出しません。
+   */
+  models?: IndustryModelKey[];
   /** 本番で何に置き換わるか（注記に使う） */
   productLabel?: string;
 }) {
@@ -271,10 +310,10 @@ export default function DemoAr({
   const colorRef = useRef<number>(COLORS[0].hex);
   const gyroRef = useRef<"unknown" | "active" | "unavailable">("unknown");
 
-  // 職種別モデルがあるときは、それを先頭・初期選択にする
+  // 職種別モデルがあるときは、そのモデルだけを並べる（汎用サンプルは出さない）
   const products = useMemo(
-    () => (model ? [industryProduct(model), ...PRODUCTS] : PRODUCTS),
-    [model],
+    () => (models && models.length > 0 ? models.map(industryProduct) : PRODUCTS),
+    [models],
   );
   const [product, setProduct] = useState<ProductKey>(products[0].key);
   const [color, setColor] = useState(COLORS[0].hex);
@@ -824,9 +863,11 @@ export default function DemoAr({
           ) : null}
         </div>
 
-        {model && productLabel ? (
+        {models && models.length > 0 && productLabel ? (
           <p className="rounded-lg border border-gold/25 bg-gold/[0.06] px-3 py-2 text-xs leading-relaxed text-gold-light">
-            {`いま置いているのは、この職種向けに組み立てた「${INDUSTRY_MODEL_LABEL[model]}」を実寸に直したものです。実案件では、お客様の「${productLabel}」の3Dデータに差し替えます。`}
+            {`この職種向けに組み立てた${models.length}種類（${models
+              .map((m) => INDUSTRY_MODEL_LABEL[m])
+              .join("・")}）を、実寸に直して置いています。実案件では、お客様の「${productLabel}」の3Dデータに差し替えます。`}
           </p>
         ) : null}
 

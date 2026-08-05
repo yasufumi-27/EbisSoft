@@ -17,10 +17,21 @@ import {
  * 選択肢の定義
  * ---------------------------------------------------------------- */
 
-type ShapeKey = "knot" | "icosa" | "box" | "sphere" | "torus" | "logo" | "product";
-type PrimitiveKey = Exclude<ShapeKey, "logo" | "product">;
+/**
+ * 形状の識別子。
+ * 職種別の3Dモデルは `m:<モデルキー>`（例：`m:cup`）で表します。
+ * 基本形状（球・キューブ等）と会社ロゴは、職種が決まっていない
+ * 汎用のデモページ（`/demo/3dcg`）でだけ使います。
+ */
+type ShapeKey = string;
+type PrimitiveKey = "knot" | "icosa" | "box" | "sphere" | "torus";
 type MaterialKey = "metal" | "glass" | "matte" | "wire";
 
+/** 形状キーが職種別モデルを指しているかどうか */
+const modelKeyOf = (s: ShapeKey): IndustryModelKey | null =>
+  s.startsWith("m:") ? (s.slice(2) as IndustryModelKey) : null;
+
+/** 職種が決まっていないとき（`/demo/3dcg`）に見せる、仕組み確認用の形状 */
 const SHAPES: { key: ShapeKey; label: string }[] = [
   { key: "logo", label: "会社ロゴ" },
   { key: "knot", label: "トーラスノット" },
@@ -113,26 +124,27 @@ type SceneApi = {
  */
 /**
  * @param productLabel 職種別のページから渡す「本番では何を表示するか」。
- * @param model 職種別の3Dモデル（医療なら診療ユニット、製造なら機械部品など）。
- *   渡されたときは、その形状を**初期表示**にします。基本形状（球・キューブ等）は
- *   仕組みを見せるための比較用として残します。
+ * @param models 職種別の3Dモデル（3種類以上）。医療なら診療ユニット・診療ワゴン・待合ソファ、
+ *   というように**その職種の物だけ**を並べます。渡されたときは基本形状（球・キューブ等）や
+ *   会社ロゴは出しません（職種のページに当社のロゴを回しても意味がないため）。
  */
 export default function Demo3dcg({
   productLabel,
-  model,
+  models,
 }: {
   productLabel?: string;
-  model?: IndustryModelKey;
+  models?: IndustryModelKey[];
 }) {
   const mountRef = useRef<HTMLDivElement>(null);
   const apiRef = useRef<SceneApi | null>(null);
 
-  // 職種のモデルがあるときは、それを先頭・初期選択にする
-  const shapes = model
-    ? [{ key: "product" as ShapeKey, label: INDUSTRY_MODEL_LABEL[model] }, ...SHAPES]
+  // 職種のモデルがあるときは、そのモデルだけを並べる
+  const hasModels = !!models && models.length > 0;
+  const shapes = hasModels
+    ? models.map((m) => ({ key: `m:${m}`, label: INDUSTRY_MODEL_LABEL[m] }))
     : SHAPES;
 
-  const [shape, setShape] = useState<ShapeKey>(model ? "product" : "knot");
+  const [shape, setShape] = useState<ShapeKey>(shapes[0].key);
   const [material, setMaterial] = useState<MaterialKey>("metal");
   const [color, setColor] = useState(CYAN);
   const [light, setLight] = useState(120);
@@ -212,17 +224,17 @@ export default function Demo3dcg({
     let logo: Logo3d | null = null;
 
     /* --- 職種別の3Dモデル ---
-       医療なら診療ユニット、製造なら機械部品というように、その職種で見せたい物を
+       医療なら診療ユニット・診療ワゴン・待合ソファ、というように、その職種で見せたい物を
        基本形状の組み合わせで組み立てます（外部ファイルを読まないので追加の通信ゼロ）。
-       ロゴと同じく、選ばれたときに初めて組み立てます。 */
-    let product: IndustryModel | null = null;
+       職種ごとに3種類以上あるので、**選ばれたものだけ**を組み立てて使い回します。 */
+    const products = new Map<IndustryModelKey, IndustryModel>();
 
     const applyMaterial = () => {
       const next = createMaterial(matKind, matColor);
       mesh.material = next;
       if (logo) logo.letters.material = next;
       // 職種モデルは「色を変える部品」だけを差し替える（影の部品は固定素材のまま）
-      if (product) product.themed.forEach((m) => (m.material = next));
+      products.forEach((p) => p.themed.forEach((m) => (m.material = next)));
       mat.dispose();
       mat = next;
     };
@@ -234,10 +246,14 @@ export default function Demo3dcg({
       scene.add(logo.group);
     };
 
-    const ensureProduct = () => {
-      if (product || !model) return;
-      product = createIndustryModel(model, mat);
-      scene.add(product.group);
+    const ensureProduct = (key: IndustryModelKey) => {
+      const found = products.get(key);
+      if (found) return found;
+      const built = createIndustryModel(key, mat);
+      built.group.visible = false;
+      products.set(key, built);
+      scene.add(built.group);
+      return built;
     };
 
     // 足元のリフレクション代わりの発光リング（見栄えの底上げ）
@@ -273,25 +289,24 @@ export default function Demo3dcg({
     /* --- 外部から操作するためのAPI --- */
     apiRef.current = {
       setShape: (s) => {
+        const modelKey = modelKeyOf(s);
         if (s === "logo") {
           ensureLogo();
           mesh.visible = false;
-          if (product) product.group.visible = false;
+          products.forEach((p) => (p.group.visible = false));
           logo!.group.visible = true;
           setTriangles(logo!.triangles);
-        } else if (s === "product") {
-          ensureProduct();
+        } else if (modelKey) {
+          const current = ensureProduct(modelKey);
           mesh.visible = false;
           if (logo) logo.group.visible = false;
-          if (product) {
-            product.group.visible = true;
-            setTriangles(product.triangles);
-          }
+          products.forEach((p) => (p.group.visible = p === current));
+          setTriangles(current.triangles);
         } else {
           if (logo) logo.group.visible = false;
-          if (product) product.group.visible = false;
+          products.forEach((p) => (p.group.visible = false));
           mesh.visible = true;
-          const next = createGeometry(s);
+          const next = createGeometry(s as PrimitiveKey);
           mesh.geometry = next;
           geometry.dispose();
           geometry = next;
@@ -387,7 +402,7 @@ export default function Demo3dcg({
       geometry.dispose();
       mat.dispose();
       logo?.dispose();
-      product?.dispose();
+      products.forEach((p) => p.dispose());
       glow.geometry.dispose();
       (glow.material as THREE.Material).dispose();
       envRT.dispose();
@@ -398,8 +413,8 @@ export default function Demo3dcg({
       }
       apiRef.current = null;
     };
-    // model はマウント中に変わらない（職種ページごとに別のインスタンス）
-  }, [model]);
+    // models はマウント中に変わらない（職種ページごとに別のインスタンス）
+  }, []);
 
   /* --- Reactの状態をシーンへ反映 --- */
   useEffect(() => {
@@ -463,8 +478,10 @@ export default function Demo3dcg({
       <div className="panel space-y-5 p-5 min-w-0 lg:col-span-2">
         {productLabel ? (
           <p className="rounded-lg border border-gold/25 bg-gold/[0.06] px-3 py-2 text-xs leading-relaxed text-gold-light">
-            {model
-              ? `いま表示しているのは、この職種向けに組み立てた「${INDUSTRY_MODEL_LABEL[model]}」のモデルです。実案件では、お客様の「${productLabel}」のCADデータや3Dスキャンに差し替えます。`
+            {hasModels
+              ? `この職種向けに組み立てた${models!.length}種類（${models!
+                  .map((m) => INDUSTRY_MODEL_LABEL[m])
+                  .join("・")}）を切り替えられます。実案件では、お客様の「${productLabel}」のCADデータや3Dスキャンに差し替えます。`
               : `実案件では、ここに「${productLabel}」の3Dモデルが入ります。下の形状は仕組みを見せるための基本形状です。`}
           </p>
         ) : null}
