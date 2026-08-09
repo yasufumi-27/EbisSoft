@@ -14,7 +14,9 @@ AI活用型のWeb制作に加え、組み込みソフトウェア・IoT開発も
 べた塗りの平面文字＋文字を乗せないリング。3Dモデルと同じ Geist Black の輪郭をパス化してある）。
 `Logo.tsx` はこの2Dロゴ＋ワードマーク `YEBISU SOFT` の組み合わせ。ファビコンだけは潰れないよう `YE` マークにしている。
 サイト背景の3D演出（`fx/ThreeBackground.tsx`）と3DCGデモ（`demos/Demo3dcg.tsx` の「会社ロゴ」形状）は**3Dのまま**（触らない）。
-`public/logo/ebisu-soft-logo-3d-*.webp` は3Dモデルの書き出し静止画。現在サイト内では未使用（名刺・資料用に残してある）。
+印刷・資料用のロゴと名刺は `assets/brand/`（`public/` の外なのでサイトには配信されない）。
+`scripts/brand-assets.py` が `site.ts`／`author.ts`／`logoFont.json` から生成するので、連絡先を変えたら再実行すること。
+`assets/brand/archive/` は `EBISU` 表記時代の3Dロゴ書き出し画像。表記が古いので**使わない**。
 
 **作業前に必ず `docs/引き継ぎ.md` を読むこと**
 （現在の進捗・公開までのTODO・環境の注意点・将来構想がまとまっています）。

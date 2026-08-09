@@ -216,9 +216,9 @@ function buildDocs(): KbDoc[] {
     id: "embedded",
     source: "組み込み・IoT開発",
     category: "サービス",
-    key: "組み込み 組込み 組込 ファームウェア firmware マイコン 基板 デバイス 機器 iot センサー 制御 c言語 c++ stm32 esp32 arm cortex rtos ble bluetooth wi-fi mqtt uart i2c spi ハードウェア 電子機器",
+    key: "組み込み 組込み 組込 ファームウェア firmware マイコン 基板 デバイス 機器 iot センサー 制御 c言語 c++ ルネサス renesas rh850 rx rl78 ra csplus e2studio cc-rh cc-rl 車載 can canfd stm32 esp32 arm cortex rtos ble bluetooth wi-fi mqtt uart i2c spi ハードウェア 電子機器",
     answer:
-      "Web制作だけでなく、組み込みソフトウェア開発にも対応しています。マイコン（ARM Cortex-M・STM32・ESP32など）のファームウェアをC / C++で開発し、BLE・Wi-Fi・MQTT・UART・I2C・SPIの通信実装、センサー制御、省電力設計まで行います。取得データを表示する管理画面やクラウド連携も同じ体制で担当できるため、装置側とWeb側を別々の会社に発注する必要がありません。",
+      "Web制作だけでなく、組み込みソフトウェア開発にも対応しています。マイコン（ルネサス RH850・RX・RL78・RA、ARM Cortex-M・STM32・ESP32など）のファームウェアをC / C++で開発し、BLE・Wi-Fi・MQTT・UART・I2C・SPIの通信実装、センサー制御、省電力設計まで行います。取得データを表示する管理画面やクラウド連携も同じ体制で担当できるため、装置側とWeb側を別々の会社に発注する必要がありません。",
     href: "/embedded",
   });
 

@@ -1608,7 +1608,7 @@ export const faqs: Faq[] = [
   {
     question: "Web制作以外に、組み込み系の開発も依頼できますか？",
     answer:
-      "できます。マイコン（ARM Cortex-M・STM32・ESP32など）のファームウェアをC / C++で開発し、BLE・Wi-Fi・MQTT・UART・I2C・SPIといった通信部分の実装、センサー制御、省電力設計まで対応します。取得したデータを表示する管理画面やクラウド連携もあわせて実装できるため、「装置側」と「Web側」で別々の会社に発注する必要がありません。",
+      "できます。マイコン（ルネサス RH850・RX・RL78、ARM Cortex-M・STM32・ESP32など）のファームウェアをC / C++で開発し、BLE・Wi-Fi・MQTT・UART・I2C・SPIといった通信部分の実装、センサー制御、省電力設計まで対応します。取得したデータを表示する管理画面やクラウド連携もあわせて実装できるため、「装置側」と「Web側」で別々の会社に発注する必要がありません。",
     category: "embedded",
   },
   {
@@ -1626,7 +1626,7 @@ export const faqs: Faq[] = [
   {
     question: "対応できるマイコンや開発環境を教えてください。",
     answer:
-      "ARM Cortex-M系（STM32など）、ESP32、Raspberry Pi Pico を中心に、C / C++で開発します。ベアメタル構成とFreeRTOSなどのRTOS構成のどちらにも対応し、通信はBLE・Wi-Fi・UART・I2C・SPI・CANなどを実装します。記載のないマイコンでも、データシートを確認したうえで可否をお答えします。",
+      "ルネサス（RH850・RX・RL78・RAファミリ）、ARM Cortex-M系（STM32など）、ESP32、Raspberry Pi Pico を中心に、C / C++で開発します。ルネサス系は CS+ / e² studio と CC-RH / CC-RL などの純正ツールチェーンでの開発・デバッグに対応し、車載向けのRH850やCAN・CAN FDを使う機器のご相談も承ります。ベアメタル構成とFreeRTOSなどのRTOS構成のどちらにも対応し、通信はBLE・Wi-Fi・UART・I2C・SPI・CANなどを実装します。記載のないマイコンでも、データシートを確認したうえで可否をお答えします。",
     category: "embedded",
   },
   {
@@ -1712,6 +1712,7 @@ export const techStack = [
   "Webhook",
   "Embedded C / C++",
   "Firmware",
+  "Renesas RH850 / RX / RL78",
   "STM32 / ESP32",
   "RTOS",
   "IoT / MQTT",
@@ -1873,7 +1874,7 @@ export const pageSummaries: Record<"ai" | "web" | "embedded" | "request", PageSu
     },
     {
       q: "対応マイコン・環境は？",
-      a: "ARM Cortex-M（STM32）、ESP32、Raspberry Pi Pico など。ベアメタルからFreeRTOSなどのRTOS構成まで選定します。",
+      a: "ルネサス（RH850・RX・RL78・RA）、ARM Cortex-M（STM32）、ESP32、Raspberry Pi Pico など。ベアメタルからFreeRTOSなどのRTOS構成まで選定します。",
     },
     {
       q: "小さな相談でもいい？",
@@ -1925,6 +1926,7 @@ export const embeddedDomains: EmbeddedDomain[] = [
     description:
       "マイコン上で動くソフトウェアをC / C++で設計・実装します。ベアメタルからRTOS構成まで、要件に合わせて選定します。",
     items: [
+      "ルネサス RH850 / RX / RL78 / RAファミリ（CS+・e² studio）",
       "ARM Cortex-M / STM32 / ESP32 / Raspberry Pi Pico",
       "ベアメタル・FreeRTOS などのRTOS構成",
       "センサー・アクチュエータ制御、省電力設計",

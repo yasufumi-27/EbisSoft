@@ -28,7 +28,7 @@ import { ja } from "@/lib/typography";
 
 const title = "組み込み開発｜ファームウェア・IoTの受託";
 const description =
-  "京都市伏見区のエビスソフトの組み込みソフトウェア開発。ARM Cortex-M・STM32・ESP32などのマイコン向けファームウェアをC / C++で受託開発します。新規開発から既存コードの改修・移植、通信の実装、実機検証まで対応。ご希望に応じてAIを活用した開発プロセスやクラウド連携にも広げられます。技術調査のみのご相談も歓迎です。組み込み開発の費用は別途ご相談で、Web制作の料金プランは適用されません。";
+  "京都市伏見区のエビスソフトの組み込みソフトウェア開発。ルネサス RH850・RX・RL78、ARM Cortex-M・STM32・ESP32などのマイコン向けファームウェアをC / C++で受託開発します。新規開発から既存コードの改修・移植、通信の実装、実機検証まで対応。ご希望に応じてAIを活用した開発プロセスやクラウド連携にも広げられます。技術調査のみのご相談も歓迎です。組み込み開発の費用は別途ご相談で、Web制作の料金プランは適用されません。";
 
 export const metadata: Metadata = {
   title,
@@ -40,6 +40,10 @@ export const metadata: Metadata = {
     "マイコン 開発 外注",
     "組み込み 業務委託",
     "ファームウェア 改修",
+    "ルネサス マイコン 開発",
+    "RH850 開発",
+    "RX マイコン 開発",
+    "RL78 開発",
     "STM32 開発",
     "ESP32 開発",
     "BLE 開発",
@@ -278,7 +282,7 @@ export default function EmbeddedPage() {
             <h3 className="text-base font-bold text-white">お見積もりで見る主な要素</h3>
             <ul className="mt-4 space-y-2">
               {[
-                "マイコン・開発環境（ARM Cortex-M / STM32 / ESP32 など）",
+                "マイコン・開発環境（ルネサス RH850 / RX / RL78、ARM Cortex-M / STM32 / ESP32 など）",
                 "新規開発か、既存ファームウェアの改修・移植か",
                 "通信の有無と種類（BLE / Wi-Fi / MQTT / UART / I2C / SPI）",
                 "実機検証の範囲（評価ボードのみ／実機／長時間試験）",

@@ -348,10 +348,10 @@ export const glossary: GlossaryEntry[] = [
     href: "/embedded",
   },
   {
-    term: "マイコン（ESP32・STM32）とは",
-    keywords: ["マイコン", "esp32", "stm32", "arduino", "raspberry pi", "arm", "基板", "cpu 小型"],
+    term: "マイコン（ルネサス RH850・STM32・ESP32）とは",
+    keywords: ["マイコン", "ルネサス", "renesas", "rh850", "rx", "rl78", "esp32", "stm32", "arduino", "raspberry pi", "arm", "基板", "cpu 小型"],
     answer:
-      "マイコンは、機器の中で制御を担う小型のコンピューターです。ESP32はWi-Fi・Bluetoothを内蔵していて試作や小型IoT機器に向き、STM32やArm Cortex-M系は産業機器で広く使われます。用途・消費電力・入手性・開発のしやすさから選定します。",
+      "マイコンは、機器の中で制御を担う小型のコンピューターです。ルネサスのRH850は車載機器、RX・RL78は産業機器や省電力の機器で広く使われます。ESP32はWi-Fi・Bluetoothを内蔵していて試作や小型IoT機器に向き、STM32やArm Cortex-M系も産業機器で広く使われます。用途・消費電力・入手性・開発のしやすさから選定します。",
     href: "/embedded",
   },
 ];

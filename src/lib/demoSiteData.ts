@@ -8,6 +8,15 @@
  *    実在の事業者と誤認されないよう、画面上部の帯とフッターで必ずその旨を出します。
  *    電話番号は意図的に `075-000-0000`（存在しない番号）にしています。実在番号を書かないこと。
  *
+ * ⚠️ **屋号（`brand` / `brandEn`）の付け方（2026-08-09に全18職種を改名）**
+ *    「みやこ不動産」「大和建装」「hair salon LUCE」のように、ありふれた語を組み合わせた
+ *    屋号は実在の事業者と一致してしまいます（実際に一致していたため差し替えました）。
+ *    屋号を足す・変えるときは次を守ること：
+ *    1. 一般名詞そのまま（ひだまり・まなび・みやこ 等）と実在の地名・学校名は**使わない**
+ *    2. 造語（みずゆら／灯り舟／ひなぎ／ソラナギ／トコナ 等）を核にする
+ *    3. 決める前に必ず屋号を**そのままWeb検索**し、同名の事業者が出ないことを確認する
+ *    それでも同名が生まれる可能性は消せないため、画面の帯とフッターの「架空」表示は必須。
+ *
  * メニューの品目と価格は `showcaseData.ts` の `catalog` を使い回します
  * （同じ職種で内容が食い違わないようにするため）。
  */
@@ -26,8 +35,8 @@ export const demoSites: DemoSiteData[] = [
   /* ------------------------------------------------------------------ 小売・EC */
   {
     industry: "retail",
-    brand: "京の器 とわ",
-    brandEn: "Towa Kyoto Craft",
+    brand: "京うつわ みずゆら窯",
+    brandEn: "Mizuyura Kyoto Craft",
     brandNote: "京焼・和雑貨のオンラインストア",
     theme: "trust",
     hero: ["手に取る前に、", "手ざわりまで分かるお店。"],
@@ -84,8 +93,8 @@ export const demoSites: DemoSiteData[] = [
   /* ------------------------------------------------------------------ 飲食店 */
   {
     industry: "restaurant",
-    brand: "割烹 みやこ庵",
-    brandEn: "Miyakoan",
+    brand: "割烹 灯り舟",
+    brandEn: "Akaribune",
     brandNote: "京料理・会席",
     theme: "warm",
     hero: ["季節を、", "一皿ずつ。"],
@@ -142,8 +151,8 @@ export const demoSites: DemoSiteData[] = [
   /* ------------------------------------------------------------------ クリニック・歯科 */
   {
     industry: "clinic",
-    brand: "ふしみ中央デンタルクリニック",
-    brandEn: "Fushimi Central Dental",
+    brand: "ひより坂歯科クリニック",
+    brandEn: "Hiyorizaka Dental",
     brandNote: "一般歯科・小児歯科・予防歯科",
     theme: "care",
     hero: ["痛くなる前に、", "通える歯科医院へ。"],
@@ -200,8 +209,8 @@ export const demoSites: DemoSiteData[] = [
   /* ------------------------------------------------------------------ 製造業 */
   {
     industry: "manufacturing",
-    brand: "幸和精機工業",
-    brandEn: "Kowa Seiki",
+    brand: "碧洲精機工業",
+    brandEn: "Hekishu Seiki",
     brandNote: "精密切削加工・治具設計",
     theme: "clean",
     hero: ["図面のない相談から、", "量産まで。"],
@@ -258,8 +267,8 @@ export const demoSites: DemoSiteData[] = [
   /* ------------------------------------------------------------------ 不動産 */
   {
     industry: "realestate",
-    brand: "みやこ不動産",
-    brandEn: "Miyako Estate",
+    brand: "灯町不動産",
+    brandEn: "Akarimachi Estate",
     brandNote: "京都市南部の賃貸・売買",
     theme: "trust",
     hero: ["内見の前に、", "だいたい決まっている。"],
@@ -316,8 +325,8 @@ export const demoSites: DemoSiteData[] = [
   /* ------------------------------------------------------------------ 建設・工務店 */
   {
     industry: "construction",
-    brand: "大和建装",
-    brandEn: "Yamato Kenso",
+    brand: "あさぎ建装",
+    brandEn: "Asagi Kenso",
     brandNote: "注文住宅・リフォーム・外構",
     theme: "bold",
     hero: ["建てる前に、", "住んでみる。"],
@@ -374,8 +383,8 @@ export const demoSites: DemoSiteData[] = [
   /* ------------------------------------------------------------------ 学習塾・スクール */
   {
     industry: "school",
-    brand: "まなび塾 伏見校",
-    brandEn: "Manabi Juku",
+    brand: "ひらく進学塾 伏見校",
+    brandEn: "Hiraku Shingakujuku",
     brandNote: "小中学生対象・個別指導",
     theme: "care",
     hero: ["点数より先に、", "つまずきを見つける。"],
@@ -432,8 +441,8 @@ export const demoSites: DemoSiteData[] = [
   /* ------------------------------------------------------------------ 士業事務所 */
   {
     industry: "legal",
-    brand: "洛南総合会計事務所",
-    brandEn: "Rakunan Accounting",
+    brand: "みなも坂会計事務所",
+    brandEn: "Minamozaka Accounting",
     brandNote: "税理士法人・記帳代行・相続",
     theme: "clean",
     hero: ["顧問料が、", "何に使われているか分かる。"],
@@ -490,8 +499,8 @@ export const demoSites: DemoSiteData[] = [
   /* ------------------------------------------------------------------ 美容室・サロン */
   {
     industry: "beauty",
-    brand: "hair salon LUCE",
-    brandEn: "Luce Kyoto",
+    brand: "ヘアサロン ひなぎ",
+    brandEn: "Hair Salon Hinagi",
     brandNote: "ヘアサロン・ヘッドスパ",
     theme: "elegant",
     hero: ["似合うかどうかは、", "座る前に分かる。"],
@@ -548,8 +557,8 @@ export const demoSites: DemoSiteData[] = [
   /* ------------------------------------------------------------------ フィットネス・ジム */
   {
     industry: "fitness",
-    brand: "BASE FIT 京都",
-    brandEn: "Base Fit Kyoto",
+    brand: "ソラナギ フィットネス京都",
+    brandEn: "Soranagi Fitness Kyoto",
     brandNote: "24時間ジム・パーソナル",
     theme: "bold",
     hero: ["続く人は、", "最初の3週間が違う。"],
@@ -606,8 +615,8 @@ export const demoSites: DemoSiteData[] = [
   /* ------------------------------------------------------------------ 宿泊・観光 */
   {
     industry: "hotel",
-    brand: "宿 かもがわ",
-    brandEn: "Yado Kamogawa",
+    brand: "町家の宿 灯路",
+    brandEn: "Yado Akariji",
     brandNote: "全8室の町家旅館",
     theme: "warm",
     hero: ["部屋を見てから、", "泊まる部屋を決める。"],
@@ -664,8 +673,8 @@ export const demoSites: DemoSiteData[] = [
   /* ------------------------------------------------------------------ 運送・物流 */
   {
     industry: "logistics",
-    brand: "みやこ運輸",
-    brandEn: "Miyako Logistics",
+    brand: "ミナカ運輸",
+    brandEn: "Minaka Logistics",
     brandNote: "一般貨物・チャーター便・倉庫",
     theme: "clean",
     hero: ["いま荷物が", "どこにあるか、見える。"],
@@ -722,8 +731,8 @@ export const demoSites: DemoSiteData[] = [
   /* ------------------------------------------------------------------ 自動車販売・整備 */
   {
     industry: "auto",
-    brand: "オートガレージ フシミ",
-    brandEn: "Auto Garage Fushimi",
+    brand: "オートガレージ トコナ",
+    brandEn: "Auto Garage Tokona",
     brandNote: "中古車販売・車検・板金",
     theme: "bold",
     hero: ["見えないところまで、", "先に見せる。"],
@@ -780,8 +789,8 @@ export const demoSites: DemoSiteData[] = [
   /* ------------------------------------------------------------------ 農業・食品生産 */
   {
     industry: "agriculture",
-    brand: "山城やさい農園",
-    brandEn: "Yamashiro Farm",
+    brand: "みのり坂農園",
+    brandEn: "Minorizaka Farm",
     brandNote: "有機野菜・加工品の産地直送",
     theme: "warm",
     hero: ["畑から、", "そのまま台所へ。"],
@@ -838,8 +847,8 @@ export const demoSites: DemoSiteData[] = [
   /* ------------------------------------------------------------------ ブライダル・イベント */
   {
     industry: "bridal",
-    brand: "THE KAMOGAWA TERRACE",
-    brandEn: "The Kamogawa Terrace",
+    brand: "ヨリソラテラス京都",
+    brandEn: "Yorisora Terrace Kyoto",
     brandNote: "貸切ウエディング・パーティ会場",
     theme: "elegant",
     hero: ["当日の景色を、", "決める前に見る。"],
@@ -896,8 +905,8 @@ export const demoSites: DemoSiteData[] = [
   /* ------------------------------------------------------------------ 介護・福祉 */
   {
     industry: "care",
-    brand: "デイサービス ひだまり伏見",
-    brandEn: "Hidamari Fushimi",
+    brand: "デイサービス はるなぎ",
+    brandEn: "Day Service Harunagi",
     brandNote: "通所介護・機能訓練",
     theme: "care",
     hero: ["見学の前に、", "中の様子が分かる。"],
@@ -954,8 +963,8 @@ export const demoSites: DemoSiteData[] = [
   /* ------------------------------------------------------------------ IT・SaaS */
   {
     industry: "saas",
-    brand: "Kanade Cloud",
-    brandEn: "Kanade Cloud",
+    brand: "Norika Cloud",
+    brandEn: "Norika Cloud",
     brandNote: "現場向け作業記録クラウド",
     theme: "clean",
     hero: ["紙の作業日報を、", "そのまま置き換える。"],
@@ -1012,8 +1021,8 @@ export const demoSites: DemoSiteData[] = [
   /* ------------------------------------------------------------------ アパレル・ファッション */
   {
     industry: "apparel",
-    brand: "ATELIER NUNO",
-    brandEn: "Atelier Nuno",
+    brand: "ATELIER YURAGI",
+    brandEn: "Atelier Yuragi",
     brandNote: "国産生地の少量生産ブランド",
     theme: "elegant",
     hero: ["生地の表情まで、", "画面で確かめる。"],

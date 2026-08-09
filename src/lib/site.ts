@@ -136,7 +136,7 @@ export const siteConfig = {
     "業務システム連携",
     "組み込みソフトウェア開発",
     "ファームウェア開発（C / C++）",
-    "マイコン制御（ARM Cortex-M / ESP32 / STM32）",
+    "マイコン制御（ルネサス RH850 / RX / RL78・ARM Cortex-M / ESP32 / STM32）",
     "IoTデバイスとクラウド・Webの連携",
     "RTOS・ベアメタル開発",
     "通信プロトコル実装（BLE / Wi-Fi / MQTT / UART / I2C / SPI）",
