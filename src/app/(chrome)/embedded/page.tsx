@@ -19,6 +19,7 @@ import { ButtonLink } from "@/components/ui/Button";
 import { Section, SectionHeading } from "@/components/ui/Section";
 import { Icon } from "@/components/ui/icons";
 import { PageSummary } from "@/components/sections/PageSummary";
+import { EmbeddedPricingNote } from "@/components/sections/EmbeddedPricingNote";
 import { BusinessLines } from "@/components/sections/BusinessLines";
 import { Faq } from "@/components/sections/Faq";
 import { RelatedPages } from "@/components/sections/RelatedPages";
@@ -27,7 +28,7 @@ import { ja } from "@/lib/typography";
 
 const title = "組み込み開発｜ファームウェア・IoTの受託";
 const description =
-  "京都市伏見区のエビスソフトの組み込みソフトウェア開発。ARM Cortex-M・STM32・ESP32などのマイコン向けファームウェアをC / C++で受託開発します。新規開発から既存コードの改修・移植、通信の実装、実機検証まで対応。ご希望に応じてAIを活用した開発プロセスやクラウド連携にも広げられます。技術調査のみのご相談も歓迎です。";
+  "京都市伏見区のエビスソフトの組み込みソフトウェア開発。ARM Cortex-M・STM32・ESP32などのマイコン向けファームウェアをC / C++で受託開発します。新規開発から既存コードの改修・移植、通信の実装、実機検証まで対応。ご希望に応じてAIを活用した開発プロセスやクラウド連携にも広げられます。技術調査のみのご相談も歓迎です。組み込み開発の費用は別途ご相談で、Web制作の料金プランは適用されません。";
 
 export const metadata: Metadata = {
   title,
@@ -44,6 +45,8 @@ export const metadata: Metadata = {
     "BLE 開発",
     "RTOS 開発",
     "IoT 開発 京都",
+    "組み込み開発 費用",
+    "ファームウェア開発 見積もり",
   ],
   alternates: { canonical: "/embedded" },
   openGraph: {
@@ -73,6 +76,7 @@ const SECTIONS = [
   { id: "options", label: "任意で追加" },
   { id: "entry-points", label: "相談の例" },
   { id: "strengths", label: "強み" },
+  { id: "pricing", label: "費用" },
   { id: "process", label: "進め方" },
   { id: "faq", label: "よくある質問" },
   { id: "contact", label: "お問い合わせ" },
@@ -115,7 +119,7 @@ export default function EmbeddedPage() {
             <span className="text-gradient">組み込みソフトウェア</span>開発
           </>
         }
-        lead="マイコンのファームウェア開発を受託します。C / C++での新規開発、既存コードの改修・移植、センサー制御、省電力設計、BLE・Wi-Fi などの通信実装、実機での検証まで。組み込み単体のご依頼が中心で、技術調査だけのご相談も歓迎です。"
+        lead="マイコンのファームウェア開発を受託します。C / C++での新規開発、既存コードの改修・移植、センサー制御、省電力設計、BLE・Wi-Fi などの通信実装、実機での検証まで。組み込み単体のご依頼が中心で、技術調査だけのご相談も歓迎です。費用は内容によって大きく変わるため、別途ご相談とさせていただいています。"
       >
         <div className="mt-8 flex flex-wrap gap-3">
           <ButtonLink href="/contact" withArrow>
@@ -261,8 +265,43 @@ export default function EmbeddedPage() {
         </div>
       </Section>
 
+      {/* 費用（定額プランは設けず、別途相談であることを強く明示する） */}
+      <Section id="pricing" bg="deep">
+        <SectionHeading
+          eyebrow="Pricing"
+          title="費用について"
+          description="組み込み開発の費用は別途ご相談です。金額の決まり方は先に開示します。"
+        />
+        <div className="mx-auto mt-12 max-w-3xl">
+          <EmbeddedPricingNote variant="embedded" />
+          <div className="panel mt-6 p-6" data-reveal>
+            <h3 className="text-base font-bold text-white">お見積もりで見る主な要素</h3>
+            <ul className="mt-4 space-y-2">
+              {[
+                "マイコン・開発環境（ARM Cortex-M / STM32 / ESP32 など）",
+                "新規開発か、既存ファームウェアの改修・移植か",
+                "通信の有無と種類（BLE / Wi-Fi / MQTT / UART / I2C / SPI）",
+                "実機検証の範囲（評価ボードのみ／実機／長時間試験）",
+                "納品物（ソースコード、設計資料、試験結果報告）",
+                "AI活用・クラウド／Web連携を追加するかどうか（任意）",
+              ].map((f) => (
+                <li key={f} className="flex items-start gap-2 text-sm text-slate-300">
+                  <Icon name="check" className="mt-0.5 size-4 shrink-0 text-gold" />
+                  <span className="min-w-0">{ja(f)}</span>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-5 text-sm leading-relaxed text-slate-500">
+              {ja(
+                "作業単位（機能ごと・工程ごと）での切り出しにも対応します。まず調査だけ、まずPoCだけ、という小さな範囲からのお見積もりも可能です。",
+              )}
+            </p>
+          </div>
+        </div>
+      </Section>
+
       {/* 進め方 */}
-      <Section id="process" bg="deep">
+      <Section id="process">
         <SectionHeading
           eyebrow="Process"
           title="ご相談から納品までの流れ"
@@ -303,6 +342,7 @@ export default function EmbeddedPage() {
         title="組み込み開発についてのよくある質問"
         description="受託範囲や進め方について、いただくことの多い質問です。"
         moreHref="/faq"
+        bg="deep"
       />
 
       <RelatedPages hrefs={["/request", "/ai", "/web"]} />

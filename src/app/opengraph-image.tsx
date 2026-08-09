@@ -34,7 +34,7 @@ export default function OgImage() {
         {/* ヘッダー：ロゴ（フラットなワードマーク。satoriは日本語グリフを持たないため英字で出す） */}
         <div style={{ display: "flex", alignItems: "center" }}>
           <div style={{ display: "flex", fontSize: 44, fontWeight: 800, letterSpacing: 4 }}>
-            EBISU
+            YEBISU
           </div>
           <div
             style={{

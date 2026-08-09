@@ -7,13 +7,13 @@ import logoFontData from "./logoFont.json";
  * 会社ロゴの3Dモデル。
  *
  * 構成（依頼主のご要望どおり、パーツを分けています）：
- * - `letters` … 押し出した立体文字「EBISU」。素材・カラーを差し替えられる
+ * - `letters` … 押し出した立体文字「YEBISU」。素材・カラーを差し替えられる
  * - `soft`    … 「Soft」。**回転させず固定**
- * - `ring`    … EBISU の周りを回るリング（別オブジェクト。2本＋軌道上の粒）
+ * - `ring`    … YEBISU の周りを回るリング（別オブジェクト。2本＋軌道上の粒）
  * - `sparks`  … 模型の周りを飛ぶ小さな光
  *
  * 文字は Geist（SIL Open Font License 1.1）の Black を three.js の typeface 形式へ
- * 変換したもの（`logoFont.json`。EBISUoft の8字だけなので約2.8KB）。
+ * 変換したもの（`logoFont.json`。ロゴとリングの文字に使う字だけのサブセットで約5.8KB）。
  * ビットマップ画像ではなく実際のジオメトリなので、どこから見ても立体で、拡大しても滲みません。
  */
 
@@ -27,7 +27,7 @@ const RING_CYAN = 0x22d3ee;
 export type Logo3d = {
   /** シーンに追加するルート */
   group: THREE.Group;
-  /** 立体文字「EBISU」。素材を差し替えるときはこの material を入れ替える */
+  /** 立体文字「YEBISU」。素材を差し替えるときはこの material を入れ替える */
   letters: THREE.Mesh;
   /** 三角形の数（デモのステータス表示用） */
   triangles: number;
@@ -64,8 +64,8 @@ export function createLogo3d(
   const group = new THREE.Group();
   const disposables: { dispose: () => void }[] = [];
 
-  /* --- EBISU（立体文字） --- */
-  const { geo: textGeo, width: textWidth } = makeText("EBISU", 1, 0.32);
+  /* --- YEBISU（立体文字） --- */
+  const { geo: textGeo, width: textWidth } = makeText("YEBISU", 1, 0.32);
   const lettersMat =
     options.lettersMaterial ??
     new THREE.MeshStandardMaterial({
@@ -90,7 +90,7 @@ export function createLogo3d(
   group.add(soft);
   disposables.push(softGeo, softMat);
 
-  /* --- リング（EBISU の周りを回る。文字とは別オブジェクト） --- */
+  /* --- リング（YEBISU の周りを回る。文字とは別オブジェクト） --- */
   const ring = new THREE.Group();
   const ringRadius = textWidth * 0.72;
   const ringMat = new THREE.MeshStandardMaterial({
@@ -226,7 +226,7 @@ export function createLogo3d(
   });
 
   const update = (t: number) => {
-    // リングだけが回る（EBISU と Soft は回さない）
+    // リングだけが回る（YEBISU と Soft は回さない）
     // ご指定の角度を崩さないよう、回すのは面内（リング自身の軸まわり）だけ
     ringA.rotation.z = t * 0.55;
     ringB.rotation.z = -t * 0.38;

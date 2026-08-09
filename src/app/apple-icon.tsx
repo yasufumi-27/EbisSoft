@@ -9,7 +9,7 @@ export const contentType = "image/png";
 
 /**
  * ホーム画面に置かれるサイズ（180px）では文字が読めるため、
- * ファビコンの "EB" ではなくロゴ本体（EBISU / SOFT）を2段で入れる。
+ * ファビコンの "YE" ではなくロゴ本体（YEBISU / SOFT）を2段で入れる。
  * 地色はブランドネイビー、アクセントはシアンのみ。グラデーション・影は使わない。
  */
 export default function AppleIcon() {
@@ -30,13 +30,14 @@ export default function AppleIcon() {
         <div
           style={{
             display: "flex",
-            fontSize: 44,
+            // YEBISU は6文字あるため、180px幅に収まるよう SOFT より一段小さくする
+            fontSize: 36,
             fontWeight: 800,
             letterSpacing: 2,
             color: "#ffffff",
           }}
         >
-          EBISU
+          YEBISU
         </div>
         <div
           style={{

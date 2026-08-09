@@ -29,7 +29,7 @@ import { ja } from "@/lib/typography";
 
 const title = "Web制作｜AI開発プロセスでつくるホームページ";
 const description =
-  "京都市伏見区のエビスソフトのWeb制作。コーポレートサイト・LP・EC・Webアプリまで、生成AIを組み込んだ開発プロセスで従来の約1/3の期間で構築します。SEO・AEO・LLMO、表示速度、公開後の運用まで標準対応。料金は298,000円〜。";
+  "京都市伏見区のエビスソフトのWeb制作。コーポレートサイト・LP・EC・Webアプリまで、生成AIを組み込んだ開発プロセスで従来の約1/3の期間で構築します。SEO・AEO・LLMO、表示速度、公開後の運用まで標準対応。料金は298,000円〜（Web制作の料金。組み込み開発の費用は別途ご相談）。";
 
 export const metadata: Metadata = {
   title,

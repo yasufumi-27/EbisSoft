@@ -216,7 +216,7 @@ export default function Demo3dcg({
     scene.add(mesh);
 
     /* --- 会社ロゴの3Dモデル ---
-       立体文字「EBISU」＋固定の「Soft」＋その周りを回るリング＋飛び交う小さな光。
+       立体文字「YEBISU」＋固定の「Soft」＋その周りを回るリング＋飛び交う小さな光。
        画像ではなく実際のジオメトリなので、素材・カラーの切り替えもそのまま効く。
        生成コストがあるので「会社ロゴ」を選んだときに初めて組み立てる。 */
     let matKind: MaterialKey = "metal";
@@ -540,7 +540,7 @@ export default function Demo3dcg({
 
         {isLogo ? (
           <p className="rounded-lg border border-brand/25 bg-brand/[0.07] px-3 py-2 text-xs leading-relaxed text-brand-light">
-            画像ではなく実物の3Dモデルです。「EBISU」は押し出した立体文字、リングは別オブジェクトで文字の周りを回り、「Soft」は固定。素材とカラーは文字に反映されます。
+            画像ではなく実物の3Dモデルです。「YEBISU」は押し出した立体文字、リングは別オブジェクトで文字の周りを回り、「Soft」は固定。素材とカラーは文字に反映されます。
           </p>
         ) : null}
 

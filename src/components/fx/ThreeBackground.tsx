@@ -107,7 +107,7 @@ export default function ThreeBackground() {
     scene.add(core);
 
     // ---- 会社ロゴ（3Dモデル） ---------------------------------------------
-    // 立体文字「EBISU」＋固定の「Soft」＋周りを回るリング＋飛ぶ光。
+    // 立体文字「YEBISU」＋固定の「Soft」＋周りを回るリング＋飛ぶ光。
     // 背景なので、本文の可読性を落とさないよう画面左手（コンテンツ幅の外）に置き、
     // 不透明度も落としている。素材の陰影用に控えめなライトを2つだけ足す。
     scene.add(new THREE.AmbientLight(0xffffff, 0.6));

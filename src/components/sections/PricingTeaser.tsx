@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Section, SectionHeading } from "@/components/ui/Section";
 import { Icon } from "@/components/ui/icons";
 import { plans } from "@/lib/content";
+import { EmbeddedPricingNote } from "@/components/sections/EmbeddedPricingNote";
 import { ja } from "@/lib/typography";
 
 /**
@@ -14,7 +15,7 @@ export function PricingTeaser() {
       <SectionHeading
         eyebrow="Pricing"
         title="料金の目安"
-        description="ページ数と機能で変わります。初回のご相談・お見積もりは無料です。"
+        description="Webサイト制作の目安です。ページ数と機能で変わります。組み込み開発の費用は別途ご相談です。初回のご相談・お見積もりは無料です。"
       />
 
       <dl className="mt-14 grid gap-5 lg:grid-cols-3">
@@ -46,6 +47,9 @@ export function PricingTeaser() {
           </div>
         ))}
       </dl>
+
+      {/* 上の金額はWeb制作のもの。組み込み開発が対象外であることを必ず明示する */}
+      <EmbeddedPricingNote className="mt-8" />
 
       <p className="mt-10 text-center" data-reveal>
         <Link

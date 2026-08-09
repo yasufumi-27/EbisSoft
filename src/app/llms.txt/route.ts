@@ -51,7 +51,7 @@ ${siteConfig.name}は${contact.address.region}${contact.address.locality}に拠�
 
 ## サイトの構成（詳細はページごとに分かれています）
 - **AI活用**（${absoluteUrl("/ai")}）：生成AIを使った開発と、AI機能そのものの受託開発、AI検索（AEO / LLMO）最適化。
-- **Web制作**（${absoluteUrl("/web")}）：AI開発プロセスで進めるサイト制作。対応範囲・進め方・料金。
+- **Web制作**（${absoluteUrl("/web")}）：AI開発プロセスで進めるサイト制作。対応範囲・進め方・料金（組み込みの費用は別途相談）。
 - **組み込み開発**（${absoluteUrl("/embedded")}）：マイコンのファームウェア受託開発、IoTのクラウド・Web連携。
 - **できること**（${absoluteUrl("/demo")}）：15領域の実際に動くデモ。
 - **ご依頼・ご相談**（${absoluteUrl("/request")}）：相談できる範囲、料金の目安、ご相談から着手までの流れ。
@@ -109,9 +109,10 @@ ${services
 ${embeddedDomains.map((d) => `### ${d.title}\n${d.description}\n${d.items.map((i) => `- ${i}`).join("\n")}`).join("\n\n")}
 
 ## 料金の目安（詳細は ${absoluteUrl("/request")}）
+以下はすべて**Webサイト制作**の料金です。**組み込みソフトウェア開発の費用は別途ご相談**で、このプラン料金は適用されません。
 ${plans.map((p) => `- **${p.name}**：${p.price}（${p.priceNote}）${p.description}`).join("\n")}
 ${pricingNotes.map((n) => `- **${n.title}**：${n.body}`).join("\n")}
-組み込みソフトウェア開発は内容によって工数が変わるため、個別にお見積もりします。初回のご相談・お見積もりは無料です。
+**組み込みソフトウェア開発の費用は別途ご相談です。**上記のWeb制作プランは適用されません。対象のマイコン、新規開発か既存コードの改修・移植か、通信の有無と種類、実機検証の範囲、納品物の内容で工数が大きく変わるため、内容を伺ったうえで個別にお見積もりします（詳細は ${absoluteUrl("/embedded")}#pricing）。技術調査のみ・PoCのみといった小さな範囲にも対応します。初回のご相談・お見積もりは無料です。
 
 ## 相談できること（${absoluteUrl("/request")}）
 ${consultTopics.map((t) => `- **${t.title}**：${t.body}（${t.items.join("／")}）`).join("\n")}

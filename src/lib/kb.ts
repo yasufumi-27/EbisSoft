@@ -166,9 +166,20 @@ function buildDocs(): KbDoc[] {
       source: `料金：${p.name}プラン`,
       category: "料金",
       key: `${p.name}プラン 料金 価格 費用 いくら 見積もり ${p.priceNote}`,
-      answer: `${p.name}プランは ${p.price}（${p.priceNote}）です。${p.description} 含まれるもの：${p.features.join("／")}。初回のご相談・お見積もりは無料です。`,
+      answer: `${p.name}プランは ${p.price}（${p.priceNote}）です。${p.description} 含まれるもの：${p.features.join("／")}。これはWebサイト制作の料金で、組み込み開発の費用は別途ご相談となります。初回のご相談・お見積もりは無料です。`,
       href: "/request#pricing",
     });
+  });
+
+  // 「組み込みはいくら？」に、プラン料金を答えてしまわないための専用ドキュメント
+  docs.push({
+    id: "embedded-pricing",
+    source: "組み込み開発の費用",
+    category: "料金",
+    key: "組み込み 組込み 組込 ファームウェア マイコン iot 費用 料金 価格 いくら 見積もり 相場 予算 単価 工数 別途",
+    answer:
+      "組み込み開発の費用は別途ご相談です。Webサイト制作の料金プラン（298,000円〜など）は組み込み開発には適用されません。対象のマイコン、新規開発か既存コードの改修・移植か、通信の有無と種類、実機検証の範囲、納品物の内容によって工数が大きく変わるため、内容を伺ったうえで個別にお見積もりします。機能単位・工程単位での切り出しや、技術調査のみ・PoCのみといった小さな範囲のご依頼にも対応します。初回のご相談・お見積もりは無料です。",
+    href: "/embedded#pricing",
   });
 
   docs.push({

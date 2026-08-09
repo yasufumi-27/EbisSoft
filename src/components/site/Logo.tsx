@@ -9,13 +9,13 @@ import { CompanyLogo } from "@/components/site/CompanyLogo";
  * - シンボルは**2Dのフラットなロゴ**（インラインSVG／`CompanyLogo.tsx`）。
  *   立体文字はやめ、リング上の文字（CLOUD/SECURITY/… ）も無し。
  *   サイト背景と3DCGデモの3Dモデルはそのまま（ここだけ2D）。
- * - ワードマークは `EBISU`（白）＋ `SOFT`（シアン）。画像は小さいと文字が読めないため、
+ * - ワードマークは `YEBISU`（白）＋ `SOFT`（シアン）。画像は小さいと文字が読めないため、
  *   社名が確実に伝わるよう文字は残す（画像だけにすると潰れて読めない）。
  * - 読み上げ・SEO上の社名は日本語の「エビスソフト」なので、リンクの aria-label で補い、
  *   画像側の alt は空にして重複読み上げを避ける。
  *
- * ※ ファビコン（`app/icon.svg` / `favicon.ico`）は16〜32pxで潰れないよう、
- *   引き続き `EB` の2文字マークのままです。
+ * ※ ファビコン（`app/icon.svg`）は16〜32pxで潰れないよう、
+ *   `YE` の2文字マークに縮めています。
  */
 export function Logo() {
   return (
@@ -33,7 +33,7 @@ export function Logo() {
         aria-hidden
         className="text-lg font-extrabold tracking-[0.1em] text-white transition-colors group-hover:text-brand-light sm:text-xl"
       >
-        EBISU
+        YEBISU
       </span>
       <span
         aria-hidden

@@ -2,6 +2,7 @@ import { Section, SectionHeading } from "@/components/ui/Section";
 import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/icons";
 import { plans } from "@/lib/content";
+import { EmbeddedPricingNote } from "@/components/sections/EmbeddedPricingNote";
 import { ja } from "@/lib/typography";
 
 /** 料金プラン。人気プランはゴールドの縁とグローで格上げ。 */
@@ -11,7 +12,7 @@ export function Pricing() {
       <SectionHeading
         eyebrow="Pricing"
         title="料金プラン"
-        description="目的と規模に合わせて選べる3プラン。すべて税別・初期費用の目安です。詳細はお見積もりにてご提案します。"
+        description="目的と規模に合わせて選べる3プラン。すべて税別・初期費用の目安です。詳細はお見積もりにてご提案します。組み込み開発の費用は別途ご相談です。"
       />
       <div className="mt-14 grid items-start gap-6 lg:grid-cols-3">
         {plans.map((plan, i) => {
@@ -69,6 +70,9 @@ export function Pricing() {
           );
         })}
       </div>
+
+      {/* 上の3プランはWeb制作の金額。組み込み開発が対象外であることを必ず明示する */}
+      <EmbeddedPricingNote className="mt-10" />
     </Section>
   );
 }

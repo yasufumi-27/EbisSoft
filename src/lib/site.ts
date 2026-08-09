@@ -23,7 +23,7 @@ const SITE_URL = normalizeUrl(process.env.NEXT_PUBLIC_SITE_URL ?? FALLBACK_URL);
 export const siteConfig = {
   /**
    * 表示用ブランド名。本文・見出し・メタ・構造化データはすべてこのカタカナ表記で統一する。
-   * 英字を使ってよいのは**ロゴだけ**（ワードマーク／ファビコン／OG画像＝`EBISU SOFT`）。
+   * 英字を使ってよいのは**ロゴだけ**（ワードマーク／ファビコン／OG画像＝`YEBISU SOFT`）。
    */
   name: "エビスソフト",
   /** 正式名称。法人格（株式会社等）はつきません。表記は必ずこの形に統一すること */
