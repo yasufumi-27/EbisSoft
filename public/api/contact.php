@@ -27,15 +27,17 @@ declare(strict_types=1);
 /** 通知の宛先（担当者） */
 const ADMIN_TO = 'yasufumi2707@icloud.com';
 /** 差出人。**さくらで実在するアドレスにすること**（SPF・迷惑メール対策） */
-const MAIL_FROM = 'no-reply@ebisusoft.sakura.ne.jp';
+const MAIL_FROM = 'no-reply@yebisusoft.jp';
 const SITE_NAME = 'エビスソフト';
-const SITE_URL = 'https://ebisusoft.sakura.ne.jp';
+const SITE_URL = 'https://www.yebisusoft.jp';
 /** 自動返信の署名に載せる電話番号。PHP からは src/lib/site.ts を読めないので二重管理になる。
  *  site.ts の telephoneDisplay を変えたら、ここも直すこと。 */
 const SITE_TEL = '090-8208-7295';
 
 /** このホスト以外からの送信は受け付けない（他サイトに埋め込まれた偽フォーム対策） */
-const ALLOWED_HOSTS = ['ebisusoft.sakura.ne.jp'];
+// www なしでアクセスされた場合と、移行確認中の旧ドメインも当面は許可する。
+// 旧ドメインを閉鎖したら 'ebisusoft.sakura.ne.jp' の行を消すこと。
+const ALLOWED_HOSTS = ['www.yebisusoft.jp', 'yebisusoft.jp', 'ebisusoft.sakura.ne.jp'];
 
 /** フォーム表示から送信までの最短秒数。これより速い＝自動入力とみなす */
 const MIN_ELAPSED_SECONDS = 3;

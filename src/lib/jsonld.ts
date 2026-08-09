@@ -103,6 +103,7 @@ export function organizationJsonLd(): JsonLd {
       "@type": "Organization",
       name: m.name,
       description: m.description,
+      url: m.url,
     })),
     contactPoint: {
       "@type": "ContactPoint",

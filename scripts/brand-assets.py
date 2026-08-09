@@ -62,11 +62,11 @@ REGION = _pick("src/lib/site.ts", r'region: "(.+?)"')
 LOCALITY = _pick("src/lib/site.ts", r'locality: "(.+?)"')
 STREET = _pick("src/lib/site.ts", r'street: "(.+?)"')
 HOURS = _pick("src/lib/site.ts", r'openingHoursDisplay: "(.+?)"')
-MEMBER = _pick("src/lib/site.ts", r'name: "(京都商工会)"')
+MEMBER = _pick("src/lib/site.ts", r'name: "(京都商工会議所)"')
 PERSON = _pick("src/lib/author.ts", r'const PERSON_NAME = "(.+?)"')
 PERSON_EN = _pick("src/lib/author.ts", r'personNameRomaji: "(.+?)"')
 ROLE = _pick("src/lib/author.ts", r'personRole: "(.+?)"')
-URL_DISPLAY = "ebisusoft.sakura.ne.jp"
+URL_DISPLAY = "www.yebisusoft.jp"
 
 ADDRESS = f"〒{POSTAL} {REGION}{LOCALITY}{STREET}"
 
@@ -276,140 +276,248 @@ def build_logos() -> None:
 
 
 # ------------------------------------------------------------------ 名刺
-# 仕上がり 91×55mm、裁ち落とし各3mm。座標はすべてmm。
+# 仕上がり 91×55mm、裁ち落とし各3mm ＝ 97×61mm。
 CARD_W, CARD_H = 91.0, 55.0
 BLEED = 3.0
 FULL_W, FULL_H = CARD_W + BLEED * 2, CARD_H + BLEED * 2
-DPI = 350
-PX_W = round(FULL_W / 25.4 * DPI)
-PX_H = round(FULL_H / 25.4 * DPI)
+
+MEISHI_HTML = OUT / "meishi" / "meishi.html"
 
 
-def guides() -> str:
-    """仕上がり線と安全枠（確認用。入稿データからは外す）。"""
-    return f"""  <g fill="none" stroke="#ff2d55" stroke-width="0.2" opacity="0.9">
-    <rect x="{BLEED}" y="{BLEED}" width="{CARD_W}" height="{CARD_H}"/>
-  </g>
-  <g fill="none" stroke="#00a3ff" stroke-width="0.15" stroke-dasharray="1 1" opacity="0.8">
-    <rect x="{BLEED + 4}" y="{BLEED + 4}" width="{CARD_W - 8}" height="{CARD_H - 8}"/>
-  </g>"""
+def mark_svg(cls: str) -> str:
+    """名刺HTMLに埋め込むロゴマーク（インラインSVG）。"""
+    return (f'<svg class="{cls}" viewBox="0 0 128 128" aria-hidden="true">'
+            f'{logo_mark(0, 0, 128)}</svg>')
 
 
-def card_front(with_guides: bool = False) -> str:
-    x0, y0 = BLEED, BLEED
-    body = f"""  <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="{NAVY_DEEP}"/>
-      <stop offset="0.55" stop-color="{NAVY}"/>
-      <stop offset="1" stop-color="#123a72"/>
-    </linearGradient>
-    <clipPath id="card"><rect width="{FULL_W:g}" height="{FULL_H:g}"/></clipPath>
-  </defs>
-  <g clip-path="url(#card)">
-    <rect width="{FULL_W:g}" height="{FULL_H:g}" fill="url(#bg)"/>
-    <!-- 背景の軌道リング（ロゴのモチーフ。読みを邪魔しない濃さに落とす） -->
-    <g transform="rotate(-24 {FULL_W - 14:.2f} {FULL_H / 2:.2f})" fill="none" stroke="{CYAN}" opacity="0.28">
-      <ellipse cx="{FULL_W - 14:.2f}" cy="{FULL_H / 2:.2f}" rx="30" ry="13" stroke-width="0.5"/>
-      <ellipse cx="{FULL_W - 14:.2f}" cy="{FULL_H / 2:.2f}" rx="24" ry="10" stroke-width="0.3" opacity="0.6"/>
-    </g>
-
-    <!-- ロゴ（マーク＋ワードマーク）。ワードマークは幅で指定して右の余白を確保する -->
-{logo_mark(x0 + 4, y0 + 4.5, 15)}
-{wordmark(x0 + 21.5, y0 + 13.6, 44, "#ffffff")[0]}
-    <text x="{x0 + 21.7:.2f}" y="{y0 + 18.2:.2f}" font-family="{JP}" font-size="2.5"
-          letter-spacing="0.5" fill="#c7d7ee">{COMPANY}</text>
-
-    <!-- 氏名 -->
-    <text x="{x0 + 4.4:.2f}" y="{y0 + 28.6:.2f}" font-family="{JP}" font-size="2.6"
-          letter-spacing="0.8" fill="{CYAN}">{ROLE}</text>
-    <text x="{x0 + 4:.2f}" y="{y0 + 36.6:.2f}" font-family="{JP}" font-size="6.4"
-          font-weight="600" letter-spacing="1.2" fill="#ffffff">{PERSON}</text>
-    <text x="{x0 + 4.4:.2f}" y="{y0 + 40.4:.2f}" font-family="{EN}" font-size="2.2"
-          letter-spacing="0.6" fill="#8fa8c8">{PERSON_EN}</text>
-
-    <!-- 連絡先（安全枠 y0+51 の内側に収める） -->
-    <g fill="none" stroke="{CYAN}" stroke-width="0.25" opacity="0.55">
-      <path d="M{x0 + 4:.2f} {y0 + 43.2:.2f} H{x0 + CARD_W - 4:.2f}"/>
-    </g>
-    <text x="{x0 + 4:.2f}" y="{y0 + 46.6:.2f}" font-family="{JP}" font-size="2.25"
-          fill="#dbe6f5">{ADDRESS}</text>
-    <text x="{x0 + CARD_W - 4:.2f}" y="{y0 + 46.6:.2f}" text-anchor="end" font-family="{EN}"
-          font-size="2.4" font-weight="700" letter-spacing="0.1" fill="{CYAN}">{URL_DISPLAY}</text>
-    <text x="{x0 + 4:.2f}" y="{y0 + 50.2:.2f}" font-family="{EN}" font-size="2.25"
-          fill="#dbe6f5">TEL {TEL}　{EMAIL}</text>
-  </g>
-{guides() if with_guides else ""}"""
-    return body
+def wordmark_svg(cls: str, fill: str) -> str:
+    """名刺HTMLに埋め込むワードマーク `YEBISU SOFT`（インラインSVG）。"""
+    svg, _ = wordmark(0, 0, _WM_UNITS, fill)   # 等倍で描き、大きさはCSSの width で決める
+    return (f'<svg class="{cls}" viewBox="0 -75 {_WM_UNITS:.1f} 78" aria-label="YEBISU SOFT">'
+            f"{svg}</svg>")
 
 
-def card_back(with_guides: bool = False) -> str:
-    x0, y0 = BLEED, BLEED
-    cols = [
+def build_meishi_html() -> None:
+    """名刺の編集用HTMLを**作り直す**（`--reset-meishi` のときだけ）。
+
+    名刺は手で直しながら使う前提（社員が増える／メールを載せない、など）なので、
+    HTMLを正データにしています。ここで上書きすると手作業が消えるため、
+    既定では書き出しません。
+    """
+    css = f"""
+    /* ===== 用紙・印刷設定（触らなくてよい） ===== */
+    @page {{ size: {FULL_W:g}mm {FULL_H:g}mm; margin: 0; }}
+    * {{ box-sizing: border-box; }}
+    html, body {{ margin: 0; padding: 0; }}
+    body {{
+      font-family: {JP};
+      background: #e9edf3;
+      -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    }}
+
+    /* ===== 名刺1枚 ===== */
+    .card {{
+      position: relative; overflow: hidden;
+      width: {FULL_W:g}mm; height: {FULL_H:g}mm;   /* 裁ち落とし込みのサイズ */
+      padding: {BLEED + 4:g}mm;                     /* 塗り足し3mm＋安全余白4mm */
+      margin: 0 auto 6mm; page-break-after: always;
+    }}
+    .card:last-of-type {{ page-break-after: auto; }}
+    .front {{ background: linear-gradient(135deg, {NAVY_DEEP} 0%, {NAVY} 55%, #123a72 100%); color: #fff; }}
+    .back  {{ background: {PAPER}; color: {INK}; }}
+
+    /* 表：背景の軌道リング（ロゴのモチーフ） */
+    .orbit {{
+      position: absolute; right: -14mm; top: 50%; width: 60mm; height: 26mm;
+      transform: translateY(-50%) rotate(-24deg);
+      border: 0.18mm solid {CYAN}; border-radius: 50%; opacity: .28; pointer-events: none;
+    }}
+    .orbit::after {{
+      content: ""; position: absolute; inset: 3mm 6mm;
+      border: 0.12mm solid {CYAN}; border-radius: 50%; opacity: .6;
+    }}
+
+    /* ロゴ */
+    .logo {{ display: flex; align-items: flex-start; gap: 2.6mm; position: relative; }}
+    .mark {{ width: 15mm; height: 15mm; flex: none; }}
+    .back .mark {{ width: 11mm; height: 11mm; }}
+    .wordmark {{ display: block; width: 44mm; }}
+    .back .wordmark {{ width: 26mm; }}
+    .company {{ margin: .8mm 0 0; font-size: 2.5mm; letter-spacing: .5mm; color: #c7d7ee; }}
+    .back .company {{ font-size: 2mm; letter-spacing: .3mm; color: {GRAY}; }}
+
+    /* 表：氏名 */
+    .name {{ position: absolute; left: {BLEED + 4:g}mm; top: 25.5mm; }}
+    .role {{ margin: 0; font-size: 2.6mm; letter-spacing: .8mm; color: {CYAN}; }}
+    .person {{ margin: 1.6mm 0 0; font-size: 6.4mm; font-weight: 600; letter-spacing: 1.2mm; }}
+    .roman {{ margin: 1mm 0 0; font-family: {EN}; font-size: 2.2mm; letter-spacing: .6mm; color: #8fa8c8; }}
+
+    /* 表：連絡先 */
+    .contact {{
+      position: absolute; left: {BLEED + 4:g}mm; right: {BLEED + 4:g}mm; bottom: {BLEED + 4:g}mm;
+      border-top: .09mm solid rgba(34,211,238,.55); padding-top: 2.2mm;
+      display: flex; justify-content: space-between; align-items: flex-end; gap: 3mm;
+    }}
+    .contact > div {{ flex: 1 1 auto; }}
+    /* 折り返すと氏名に重なるので、連絡先は必ず1行ずつに収める */
+    .contact p {{ margin: 0; font-size: 2.25mm; line-height: 1.55; color: #dbe6f5; white-space: nowrap; }}
+    .contact .url {{ font-family: {EN}; font-size: 2.4mm; font-weight: 700; color: {CYAN}; white-space: nowrap; }}
+
+    /* 裏：見出しと3本柱 */
+    .band {{ position: absolute; left: 0; right: 0; top: 0; height: {BLEED + 1.6:g}mm;
+             background: {NAVY_DEEP}; border-bottom: .12mm solid {CYAN}; }}
+    .headline {{ position: absolute; right: {BLEED + 4:g}mm; top: {BLEED + 4:g}mm; text-align: right; }}
+    .headline h1 {{ margin: 0; font-size: 2.3mm; font-weight: 700; }}
+    .headline p {{ margin: 1.4mm 0 0; font-size: 1.9mm; color: {GRAY}; }}
+    .pillars {{
+      position: absolute; left: {BLEED + 4:g}mm; right: {BLEED + 4:g}mm; top: 22.5mm;
+      border-top: .08mm solid #dbe3ef; padding-top: 4mm;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 2mm;
+    }}
+    .pillars h2 {{ margin: 0; font-size: 2.5mm; color: {NAVY}; }}
+    .pillars h2::after {{ content: ""; display: block; width: 5.5mm; height: .5mm;
+                          background: {CYAN}; margin: 1mm 0 2.4mm; }}
+    /* 折り返すと下の帯に重なるので、1項目1行に収まる長さで書くこと */
+    .pillars li {{ font-size: 1.75mm; line-height: 1.6; color: {GRAY}; white-space: nowrap; }}
+    .pillars ul {{ margin: 0; padding: 0; list-style: none; }}
+    .foot {{
+      position: absolute; left: {BLEED + 4:g}mm; right: {BLEED + 4:g}mm; bottom: {BLEED + 4:g}mm;
+      border-top: .08mm solid #dbe3ef; padding-top: 2.4mm;
+      display: flex; justify-content: space-between; align-items: baseline;
+    }}
+    .foot p {{ margin: 0; font-size: 2.1mm; color: {GRAY}; }}
+    .foot .url {{ font-family: {EN}; font-size: 2.5mm; font-weight: 700; color: {NAVY}; }}
+
+    /* 載せたくない項目に付けると消える（例：メールアドレス） */
+    .hidden {{ display: none !important; }}
+
+    /* ===== 画面でだけ出るもの（印刷には出ない） ===== */
+    .help {{ max-width: 150mm; margin: 8mm auto; padding: 6mm; background: #fff;
+             border-radius: 3mm; font-size: 3.4mm; line-height: 1.9; color: #24324a; }}
+    .help code {{ background: #eef2f8; padding: 0 .6mm; border-radius: 1mm; }}
+    .label {{ max-width: {FULL_W:g}mm; margin: 0 auto; font-size: 3mm; color: #63748f; }}
+    .card::before, .card::after {{ content: ""; position: absolute; pointer-events: none; }}
+    .card::before {{ inset: {BLEED:g}mm; outline: .1mm solid #ff2d55; }}          /* 仕上がり線 */
+    .card::after  {{ inset: {BLEED + 4:g}mm; outline: .1mm dashed #00a3ff; }}     /* 安全枠 */
+    @media print {{
+      body {{ background: #fff; }}
+      .help, .label {{ display: none; }}
+      .card {{ margin: 0; }}
+      .card::before, .card::after {{ display: none; }}   /* 印刷にはガイドを出さない */
+    }}
+"""
+
+    pillars = [
         ("AI活用", ["生成AIを開発工程に組み込み", "期間を従来の約1/3に短縮", "AIチャットボット（RAG）"]),
-        ("Web制作", ["コーポレート・LP・EC", "SEO / AEO / LLMO を標準実装", "3DCG・WebGL演出"]),
-        ("組み込み・IoT", ["ルネサス RH850 / RX / RL78", "ARM Cortex-M・STM32", "BLE・Wi-Fi・MQTT・クラウド"]),
+        ("Web制作", ["コーポレート・LP・EC", "SEO / AEO / LLMO 実装", "3DCG・WebGL演出"]),
+        ("組み込み・IoT", ["ルネサス RH850・RX・RL78", "ARM Cortex-M・STM32", "BLE・Wi-Fi・MQTT・クラウド"]),
     ]
-    col_w = (CARD_W - 8) / 3
-    col_svg = []
-    for i, (title, lines) in enumerate(cols):
-        cx = x0 + 4 + col_w * i
-        col_svg.append(
-            f'    <text x="{cx:.2f}" y="{y0 + 29.5:.2f}" font-family="{JP}" font-size="2.5" '
-            f'font-weight="700" fill="{NAVY}">{title}</text>'
-        )
-        col_svg.append(
-            f'    <path d="M{cx:.2f} {y0 + 31.2:.2f} h5.5" stroke="{CYAN}" stroke-width="0.5" fill="none"/>'
-        )
-        for j, line in enumerate(lines):
-            # 列幅（col_w）を超えたら字間を詰めて収める（隣の列に食い込ませない）
-            col_svg.append(
-                f'    <text x="{cx:.2f}" y="{y0 + 34.8 + j * 2.9:.2f}" font-family="{JP}" '
-                f'font-size="1.9" fill="{GRAY}" textLength="{col_w - 1.5:.2f}" '
-                f'lengthAdjust="spacingAndGlyphs">{line}</text>'
-            )
-    body = f"""  <defs><clipPath id="card"><rect width="{FULL_W:g}" height="{FULL_H:g}"/></clipPath></defs>
-  <g clip-path="url(#card)">
-    <rect width="{FULL_W:g}" height="{FULL_H:g}" fill="{PAPER}"/>
-    <rect width="{FULL_W:g}" height="{BLEED + 1.6:g}" fill="{NAVY_DEEP}"/>
-    <path d="M0 {BLEED + 1.6:g} H{FULL_W:g}" stroke="{CYAN}" stroke-width="0.4"/>
+    pillars_html = "\n".join(
+        f"""      <div>
+        <h2>{t}</h2>
+        <ul>{"".join(f"<li>{x}</li>" for x in items)}</ul>
+      </div>"""
+        for t, items in pillars
+    )
 
-{logo_mark(x0 + 4, y0 + 4.6, 11)}
-{wordmark(x0 + 16.8, y0 + 11.2, 26, NAVY)[0]}
-    <text x="{x0 + 17:.2f}" y="{y0 + 14.6:.2f}" font-family="{JP}" font-size="2.0"
-          letter-spacing="0.3" fill="{GRAY}">{COMPANY}／{MEMBER}所属</text>
+    front = f"""  <p class="label">1枚目：表（{ROLE}）</p>
+  <section class="card front">
+    <div class="orbit"></div>
+    <div class="logo">
+      {mark_svg("mark")}
+      <div>
+        {wordmark_svg("wordmark", "#ffffff")}
+        <p class="company">{COMPANY}</p>
+      </div>
+    </div>
 
-    <text x="{x0 + CARD_W - 4:.2f}" y="{y0 + 9.6:.2f}" text-anchor="end" font-family="{JP}"
-          font-size="2.3" font-weight="700" fill="{INK}">AI活用のWeb制作と組み込み開発</text>
-    <text x="{x0 + CARD_W - 4:.2f}" y="{y0 + 13.6:.2f}" text-anchor="end" font-family="{JP}"
-          font-size="1.9" fill="{GRAY}">実際に動くデモをサイトで公開中</text>
+    <!-- ▼ここから下が人ごとに変わるところ -->
+    <div class="name">
+      <p class="role">{ROLE}</p>
+      <p class="person">{PERSON}</p>
+      <p class="roman">{PERSON_EN}</p>
+    </div>
+    <div class="contact">
+      <div>
+        <p>{ADDRESS}</p>
+        <p>TEL {TEL}　<span class="mail">{EMAIL}</span></p>
+      </div>
+      <p class="url">{URL_DISPLAY}</p>
+    </div>
+    <!-- ▲ここまで -->
+  </section>"""
 
-    <path d="M{x0 + 4:.2f} {y0 + 22.5:.2f} H{x0 + CARD_W - 4:.2f}" stroke="#dbe3ef" stroke-width="0.25"/>
-{chr(10).join(col_svg)}
+    back = f"""  <p class="label">1枚目：裏（全員共通）</p>
+  <section class="card back">
+    <div class="band"></div>
+    <div class="logo">
+      {mark_svg("mark")}
+      <div>
+        {wordmark_svg("wordmark", NAVY)}
+        <p class="company">{COMPANY}／{MEMBER} 会員</p>
+      </div>
+    </div>
+    <div class="headline">
+      <h1>AI活用のWeb制作と組み込み開発</h1>
+      <p>実際に動くデモをサイトで公開中</p>
+    </div>
+    <div class="pillars">
+{pillars_html}
+    </div>
+    <div class="foot">
+      <p>{HOURS}　TEL {TEL}</p>
+      <p class="url">{URL_DISPLAY}</p>
+    </div>
+  </section>"""
 
-    <path d="M{x0 + 4:.2f} {y0 + 45.2:.2f} H{x0 + CARD_W - 4:.2f}" stroke="#dbe3ef" stroke-width="0.25"/>
-    <text x="{x0 + 4:.2f}" y="{y0 + 49.4:.2f}" font-family="{JP}" font-size="2.1" fill="{GRAY}">{HOURS}　TEL {TEL}</text>
-    <text x="{x0 + CARD_W - 4:.2f}" y="{y0 + 49.4:.2f}" text-anchor="end" font-family="{EN}"
-          font-size="2.5" font-weight="700" fill="{NAVY}">{URL_DISPLAY}</text>
-  </g>
-{guides() if with_guides else ""}"""
-    return body
+    help_html = f"""  <div class="help">
+    <b>この1枚が名刺の元データです。</b>ブラウザで開いたまま、テキストエディタでこのファイルを直して更新してください。<br>
+    ・<b>文字を変える</b>…&lt;p&gt; などの中身を書き換えるだけです。大きさや位置は上の &lt;style&gt; で決まります。<br>
+    ・<b>メールを載せない</b>…&lt;span class="mail"&gt; を &lt;span class="mail hidden"&gt; にします（行ごと消してもかまいません）。<br>
+    ・<b>社員を増やす</b>…&lt;section class="card front"&gt;〜&lt;/section&gt; を丸ごとコピーして、
+      「ここから下が人ごとに変わるところ」の氏名・肩書・連絡先だけ書き換えます。裏面は共通なので1枚あれば足ります。<br>
+    ・<b>印刷／PDF</b>…このページで ⌘P（印刷）→ 用紙サイズ「カスタム {FULL_W:g}×{FULL_H:g}mm」、
+      余白なし、「背景を印刷する」をON、拡大縮小100%。PDFで保存すればそのまま入稿できます。<br>
+    ・赤い線が<b>仕上がり</b>（{CARD_W:g}×{CARD_H:g}mm）、青い破線が<b>安全枠</b>です。画面だけに出て印刷されません。
+      文字は必ず青い破線の内側に置いてください。<br>
+    ・ロゴはインラインSVG（実データ）なので、拡大しても滲みません。作り直すときは
+      <code>python3 scripts/brand-assets.py</code>（ロゴのみ）です。
+  </div>"""
 
+    html = f"""<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>{COMPANY} 名刺（編集・印刷用）</title>
+<!--
+  名刺の元データ。**このファイルを手で直して使います。**
+  仕上がり {CARD_W:g}×{CARD_H:g}mm ＋ 裁ち落とし各{BLEED:g}mm ＝ {FULL_W:g}×{FULL_H:g}mm。
+  掲載内容を変えたら、サイト側（src/lib/site.ts・src/lib/author.ts）と食い違わないか確認してください。
+-->
+<style>{css}</style>
+</head>
+<body>
+{help_html}
 
-def build_cards() -> None:
-    print("名刺:")
-    d = OUT / "meishi"
-    for name, body in (
-        ("yebisu-soft-meishi-front", card_front()),
-        ("yebisu-soft-meishi-back", card_back()),
-        ("yebisu-soft-meishi-front-guides", card_front(True)),
-        ("yebisu-soft-meishi-back-guides", card_back(True)),
-    ):
-        p = d / f"{name}.svg"
-        write(p, svg_doc(PX_W, PX_H, FULL_W, FULL_H, body, f"エビスソフトの名刺（{name}）"))
-        rasterize(p, PX_W, PX_H)
+{front}
+
+{back}
+</body>
+</html>
+"""
+    write(MEISHI_HTML, html)
 
 
 if __name__ == "__main__":
-    print(f"出力先: {OUT.relative_to(ROOT)}  （名刺 {FULL_W:g}×{FULL_H:g}mm / {DPI}dpi = {PX_W}×{PX_H}px）")
+    import sys
+
+    print(f"出力先: {OUT.relative_to(ROOT)}")
     build_logos()
-    build_cards()
+    # 名刺（assets/brand/meishi/meishi.html）は手で編集する前提の正データなので、
+    # 明示的に --reset-meishi を付けたときだけ作り直す（手作業を消さないため）。
+    if "--reset-meishi" in sys.argv:
+        print("名刺HTMLを作り直します（手を入れた内容は失われます）:")
+        build_meishi_html()
+    else:
+        print(f"名刺: {MEISHI_HTML.relative_to(ROOT)} は手編集の正データなので触りません"
+              f"（作り直すなら --reset-meishi）")

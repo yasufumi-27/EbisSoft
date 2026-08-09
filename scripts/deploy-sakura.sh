@@ -18,12 +18,15 @@
 
 set -euo pipefail
 
+# FTPの接続先はさくらの初期ドメイン。独自ドメイン（yebisusoft.jp）に変えても
+# FTPサーバー名・アカウント名は初期ドメインのまま変わらない。
 HOST="ebisusoft.sakura.ne.jp"
 # FTPはchrootされていて、ログイン直後の / が既に /home/ebisusoft。
 # /home/ebisusoft/www と書くと /home/ebisusoft/home/ebisusoft/www が新規作成され、
 # 転送は成功するのに公開されない、という分かりにくい失敗になる。
 REMOTE_DIR="/www"
-SITE="https://${HOST}"
+# 疎通確認をかける公開URL（＝独自ドメイン）。FTPの接続先とは別物。
+SITE="https://www.yebisusoft.jp"
 
 cd "$(dirname "$0")/.."
 

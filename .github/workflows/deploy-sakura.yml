@@ -1,8 +1,8 @@
-# さくらのレンタルサーバ（本番: https://ebisusoft.sakura.ne.jp）への公開。
+# さくらのレンタルサーバ（本番: https://www.yebisusoft.jp）への公開。
 #
 # 静的書き出し（out/）を FTPS でアップロードする。
 # 認証情報は GitHub の Settings > Secrets and variables > Actions に登録すること：
-#   SAKURA_FTP_HOST     … ebisusoft.sakura.ne.jp
+#   SAKURA_FTP_HOST     … ebisusoft.sakura.ne.jp（独自ドメインにしてもFTP接続先は初期ドメインのまま）
 #   SAKURA_FTP_USER     … ebisusoft
 #   SAKURA_FTP_PASSWORD … サーバーパスワード（さくらの会員パスワードとは別物）
 #   SAKURA_FTP_DIR      … /www
@@ -88,9 +88,9 @@ jobs:
           set -eu
           for p in "" ai web embedded company contact faq request privacy demo demo/3dcg \
                    sitemap.xml robots.txt llms.txt; do
-            curl -sSf -o /dev/null -w "%{http_code}  /$p\n" "https://ebisusoft.sakura.ne.jp/$p"
+            curl -sSf -o /dev/null -w "%{http_code}  /$p\n" "https://www.yebisusoft.jp/$p"
           done
           # 事前圧縮（.br）が配信されているか。無ければ Content-Encoding が付かない。
           echo -n "brotli: "
-          curl -sS -o /dev/null -D- -H 'Accept-Encoding: br' https://ebisusoft.sakura.ne.jp/ \
+          curl -sS -o /dev/null -D- -H 'Accept-Encoding: br' https://www.yebisusoft.jp/ \
             | grep -i '^content-encoding' || echo "（未適用）"

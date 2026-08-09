@@ -17,7 +17,7 @@ import { RelatedPages } from "@/components/sections/RelatedPages";
 import { ContactCta } from "@/components/sections/ContactCta";
 
 const title = "会社概要";
-const description = `${siteConfig.legalName}の会社概要です。所在地は${siteConfig.contact.address.region}${siteConfig.contact.address.locality}、京都商工会所属。AIを開発プロセスにも成果物にも使うソフトウェア開発事業者として、Web制作と組み込みソフトウェア開発の両方を手がけています。`;
+const description = `${siteConfig.legalName}の会社概要です。所在地は${siteConfig.contact.address.region}${siteConfig.contact.address.locality}、京都商工会議所所属。AIを開発プロセスにも成果物にも使うソフトウェア開発事業者として、Web制作と組み込みソフトウェア開発の両方を手がけています。`;
 
 export const metadata: Metadata = {
   title,
@@ -131,7 +131,7 @@ export default function CompanyPage() {
             <span className="text-gradient">AI</span>ソフトウェア開発事業者
           </>
         }
-        lead={`${contact.address.locality}を拠点とするソフトウェア開発事業者です（京都商工会所属）。AIを開発プロセスと成果物の両方に使うことを、事業の軸にしています。適用先はWebサイト制作と組み込みソフトウェア開発の2つです。分野で分けるのではなく、AIで何をどこまで速く・確かにできるかで考えます。`}
+        lead={`${contact.address.locality}を拠点とするソフトウェア開発事業者です（京都商工会議所所属）。AIを開発プロセスと成果物の両方に使うことを、事業の軸にしています。適用先はWebサイト制作と組み込みソフトウェア開発の2つです。分野で分けるのではなく、AIで何をどこまで速く・確かにできるかで考えます。`}
       >
         <div className="mt-8 flex flex-wrap gap-3">
           <ButtonLink href="/contact" withArrow>
