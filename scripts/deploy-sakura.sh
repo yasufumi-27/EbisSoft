@@ -24,9 +24,18 @@ HOST="ebisusoft.sakura.ne.jp"
 # FTPはchrootされていて、ログイン直後の / が既に /home/ebisusoft。
 # /home/ebisusoft/www と書くと /home/ebisusoft/home/ebisusoft/www が新規作成され、
 # 転送は成功するのに公開されない、という分かりにくい失敗になる。
-REMOTE_DIR="/www"
+#
+# 転送先が /www ではなく /www/yebisusoft.jp なのは、さくらの仕様のため。
+# 追加ドメインの「Web公開フォルダー」には、初期ドメインが使っている ~/www を指定できない
+# （フォルダの重複が禁止されている）。そのため独自ドメインは ~/www/yebisusoft.jp を公開し、
+# 旧 /www は初期ドメイン（ebisusoft.sakura.ne.jp）用として残っている。
+REMOTE_DIR="/www/yebisusoft.jp"
 # 疎通確認をかける公開URL（＝独自ドメイン）。FTPの接続先とは別物。
 SITE="https://www.yebisusoft.jp"
+# 疎通確認の curl オプション。無料SSLの発行前・更新前は証明書エラーで確認できないため、
+# その期間だけ CURL_INSECURE=1 を付けて実行する（恒常的に使わないこと）。
+# ※ 配列にすると macOS の bash 3.2 で「空配列の展開 + set -u」が unbound variable になる。
+CURL_OPT="${CURL_INSECURE:+-k}"
 
 cd "$(dirname "$0")/.."
 
@@ -80,19 +89,19 @@ echo "▶ 疎通確認"
 fail=0
 for p in "" ai web embedded company contact faq request privacy demo demo/3dcg \
          sitemap.xml robots.txt llms.txt; do
-  code=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 25 "${SITE}/${p}")
+  code=$(curl -sS ${CURL_OPT} -o /dev/null -w '%{http_code}' --max-time 25 "${SITE}/${p}")
   printf '  %s  /%s\n' "$code" "$p"
   [ "$code" = "200" ] || fail=1
 done
 
 # お問い合わせの受け口。GET は 405（method_not_allowed）を返すのが正常。
 # 404 なら PHP が置かれていない、200 ならソースがそのまま配信されている（＝異常）。
-code=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 25 "${SITE}/api/contact.php")
+code=$(curl -sS ${CURL_OPT} -o /dev/null -w '%{http_code}' --max-time 25 "${SITE}/api/contact.php")
 printf '  %s  /api/contact.php（405が正常）\n' "$code"
 [ "$code" = "405" ] || fail=1
 
 # 存在しないURLはカスタム404（サイズが大きい）が返るのが正しい
-code=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 25 "${SITE}/_deploy-check-404")
+code=$(curl -sS ${CURL_OPT} -o /dev/null -w '%{http_code}' --max-time 25 "${SITE}/_deploy-check-404")
 printf '  %s  /_deploy-check-404（404が正常）\n' "$code"
 [ "$code" = "404" ] || fail=1
 
@@ -106,7 +115,7 @@ fi
 # 2026-08-04 に「WAF を有効のまま運用する」と決めたため、圧縮なしが想定どおり。
 # クローラへの到達性を優先した判断（詳細は docs/引き継ぎ.md）。状態を表示するだけにする。
 echo "▶ 圧縮の確認"
-enc=$(curl -sS -o /dev/null -D - -H 'Accept-Encoding: br, gzip' --max-time 25 "${SITE}/" \
+enc=$(curl -sS ${CURL_OPT} -o /dev/null -D - -H 'Accept-Encoding: br, gzip' --max-time 25 "${SITE}/" \
       | tr -d '\r' | awk 'tolower($1) == "content-encoding:" { print $2 }')
 if [ -n "$enc" ]; then
   echo "  ✓ Content-Encoding: ${enc}（WAFが無効化されている状態）"

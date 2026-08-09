@@ -1,6 +1,6 @@
 # エビスソフト — AI活用型Web制作・組み込み開発の集客サイト
 
-- 本番: https://ebisusoft.sakura.ne.jp （`npm run build:sakura` → Actions の「Deploy to Sakura」を手動実行）
+- 本番: https://www.yebisusoft.jp （`npm run deploy:sakura`。さくらのレンタルサーバへ FTPS で転送）
 - プレビュー: https://yasufumi-27.github.io/EbisSoft （main への push で自動デプロイ）
 
 京都市伏見区の**エビスソフト**の、受注（集客）を目的としたサービスサイトです。

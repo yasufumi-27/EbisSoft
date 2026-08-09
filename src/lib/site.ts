@@ -11,7 +11,7 @@
  * 本番ドメイン。NEXT_PUBLIC_SITE_URL が未設定のときに使われます。
  * GitHub Pages（プレビュー）へのデプロイ時だけ、ワークフローが Pages の URL を渡します。
  */
-const FALLBACK_URL = "https://ebisusoft.sakura.ne.jp";
+const FALLBACK_URL = "https://www.yebisusoft.jp";
 
 function normalizeUrl(url: string): string {
   return url.replace(/\/+$/, "");

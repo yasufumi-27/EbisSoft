@@ -16,6 +16,15 @@ DirectoryIndex index.html
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
+  # --- ホスト名の正規化（www あり を正とする）---
+  # 正規URLは https://www.yebisusoft.jp。www なしで来たら www ありへ301。
+  # ホスト名を完全一致で見ているので、旧ドメイン（ebisusoft.sakura.ne.jp）は対象外。
+  # 旧ドメインは「新ドメインへの移行を確認するまで」そのまま見えてよい（閉鎖はさくら側で行う）。
+  # ※ https への強制はさくらのコントロールパネル側の「HTTPSに転送」に任せる。
+  #   nginx がフロントに立つ構成で %{HTTPS} が当てにならず、ここで書くとループの危険がある。
+  RewriteCond %{HTTP_HOST} ^yebisusoft\.jp$ [NC]
+  RewriteRule ^(.*)$ https://www.yebisusoft.jp/$1 [R=301,L]
+
   # 【重要】事前圧縮（.br / .gz）の出し分けは、さくらでは動かないことが確認済み。
   #
   #   犯人は前段のWAF（レスポンスヘッダー Via: ss20xx.guard.sakura.ne.jp /
