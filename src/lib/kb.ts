@@ -232,6 +232,16 @@ function buildDocs(): KbDoc[] {
     href: "/contact",
   });
 
+  // 「京都で制作会社を探している」段階の質問。地名で探している人が最初に投げる言葉を広く拾う
+  docs.push({
+    id: "kyoto-irai",
+    source: "京都でWeb制作を依頼するには",
+    category: "会社情報",
+    key: "京都 京都市 京都府 伏見 伏見区 地元 地域 近く 近所 関西 制作会社 web制作会社 ホームページ制作会社 探して 探す おすすめ 候補 選び方 どこに頼む 依頼先 相見積もり 比較",
+    answer: `${siteConfig.legalName}は${siteConfig.contact.address.region}${siteConfig.contact.address.locality}のWeb制作・ホームページ制作の事業者です（${siteConfig.foundingDate.slice(0, 4)}年創業、${siteConfig.memberOf.map((m) => m.name).join("・")}所属）。京都府内は対面で伺い、大阪府・兵庫県・奈良県・滋賀県も対面の打ち合わせに対応しています。既存システムとの連携、AIチャットボット、3DCG演出まで自社で実装できるのが特徴です。依頼先の種類ごとの違い、費用の目安、相見積もりで確認すべき項目は「京都でWeb制作を依頼するには」のコラムにまとめています。`,
+    href: "/columns/kyoto-web-seisaku-irai",
+  });
+
   // サイト内の案内（「どこに何が書いてあるか」を聞かれたときのための道案内）
   docs.push({
     id: "sitemap",
