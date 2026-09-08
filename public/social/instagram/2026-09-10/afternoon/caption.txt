@@ -1,0 +1,15 @@
+【AI知識｜2026年9月10日】
+AEO／LLMOは、AIを使う検索でも自社の情報を見つけてもらいやすくする取り組みです。ただし、特別なファイルや専用の構造化データを追加すれば掲載される、とは限りません。
+
+Googleは、従来のSEOの基礎に加え、読者に役立つ独自情報、クロール可能なページ、本文として読める重要情報などを重視しています。まずは問い合わせの多い質問を1つ選び、結論・条件・根拠を自社の経験に基づいて整理しましょう。
+
+掲載や引用は保証されないため、公開後はSearch Consoleなどで継続的に確認することも大切です。
+
+詳しくはプロフィールの yebisusoft.jp へ。
+
+#AI知識 #AEO #LLMO #SEO対策 #Web制作 #中小企業DX
+
+出典:
+- Google Search Central：生成AI機能向け最適化ガイド: https://developers.google.com/search/docs/fundamentals/ai-optimization-guide
+- Google Search Central：AI機能とウェブサイト: https://developers.google.com/search/docs/appearance/ai-features
+- Google Search Central：構造化データに関する一般的なガイドライン: https://developers.google.com/search/docs/appearance/structured-data/sd-policies
