@@ -1,7 +1,6 @@
-【AIニュース｜2026年9月12日】OpenAIは9月3日、GPT-6 Astraを発表しました。コード作成、調査、PC操作、資料作成など、複数工程にまたがる仕事への対応を強化したモデルです。重要なのは、AIに単発の作業を頼むだけでなく、確認を挟みながら業務の流れを支援する方向が示されたことです。一方、発表時点では一部組織からの段階提供で、すべての業務を任せられると確認されたわけではありません。まずは社内FAQの下書きや定型レポート作成など、失敗しても影響が小さい仕事で試し、確認者・入力データ・利用範囲を決めて効果を測りましょう。詳しくはプロフィールの yebisusoft.jp へ。
+9月8日、OpenAIが「ChatGPT Images 2.5」を発表しました。画像の細部・編集精度・複数回の修正の一貫性を改善し、生成速度も従来モデル比で最大50％短縮したと説明しています。商品画像や広告素材、Webサイト用ビジュアルの試作に活用しやすくなりますが、文字情報や権利関係の確認は必要です。まずは既存の画像1枚を選び、「背景だけ変更」「商品は変えない」と範囲を限定して試してみましょう。詳しくはプロフィールの yebisusoft.jp へ。
 
-#AIニュース #GPT6 #生成AI活用 #業務改善 #中小企業 #AI導入
+#AIニュース #画像生成AI #業務改善 #Web制作 #中小企業 #生成AI活用
 
 出典:
-- OpenAI公式リリースノート：GPT-6 Astra: https://help-lb.openai.com/en/articles/6825453-chatgpt-release-notes
-- OpenAI公式発表：The Work Now Within Reach: https://openai.com/index/the-work-now-within-reach/
+- OpenAI｜Introducing ChatGPT Images 2.5（2026年9月8日）: https://openai.com/index/introducing-chatgpt-images-2-5/

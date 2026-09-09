@@ -1,0 +1,18 @@
+AI検索（AEO／LLMO）対策で、特別な裏技を探していませんか？
+
+まずは、検索エンジンとAIが内容を理解しやすいページづくりが基本です。
+
+・ページの主題をタイトルで明確にする
+・見出しごとに質問へ答える
+・一次情報や事例を明記する
+・重要な情報を画像だけにしない
+
+たとえば「京都の製造業向けIoT相談」なら、対象・対応範囲・費用の考え方・導入事例を1ページに整理。まずは自社サイトの主力ページを1枚選び、タイトルと見出しだけ見直してみましょう。
+
+詳しくはプロフィールの yebisusoft.jp へ。
+
+#AI検索 #AEO #LLMO #SEO対策 #中小企業DX #Web制作
+
+出典:
+- Google Search Central｜AI features and your website: https://developers.google.com/search/docs/appearance/ai-features
+- Google Search Central｜SEO Starter Guide: https://developers.google.com/search/docs/fundamentals/seo-starter-guide
