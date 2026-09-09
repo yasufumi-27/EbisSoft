@@ -1,0 +1,15 @@
+{
+  "date": "2026-09-12",
+  "slot": "afternoon",
+  "category": "AI知識",
+  "captionFile": "caption.txt",
+  "reelFile": "reel.mp4",
+  "imageFiles": [
+    "01.png",
+    "02.png",
+    "03.png",
+    "04.png",
+    "05.png",
+    "06.png"
+  ]
+}
