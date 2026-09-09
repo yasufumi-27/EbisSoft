@@ -1,12 +1,13 @@
 import fs from "node:fs";
 import path from "node:path";
+import { exportJarvisReport } from "./jarvis-report.mjs";
 
 const TIME_CANDIDATES = {
   morning: ["07:30", "08:30", "09:30", "10:30"],
   afternoon: ["15:30", "17:00", "18:30", "20:00"],
 };
 
-export async function refreshPerformanceStrategy({ bufferQuery, config, statePath }) {
+export async function refreshPerformanceStrategy({ bufferQuery, config, statePath, scheduledPosts = [], jarvisOutputDir }) {
   const query = `query SentPostsWithMetrics($organizationId: OrganizationId!, $channelId: ChannelId!) {
     posts(first: 50, input: {
       organizationId: $organizationId,
@@ -34,12 +35,18 @@ export async function refreshPerformanceStrategy({ bufferQuery, config, statePat
   const report = {
     version: 1,
     generatedAt: new Date().toISOString(),
+    account: { platform: "instagram", username: "yebisusoft" },
     sentPostCount: posts.length,
+    scheduledPostCount: scheduledPosts.length,
     strategy,
-    posts,
+    posts: [
+      ...posts.map((post) => ({ ...post, status: "sent" })),
+      ...scheduledPosts.map(normalizeScheduledPost),
+    ],
   };
   fs.mkdirSync(path.dirname(statePath), { recursive: true });
   fs.writeFileSync(statePath, `${JSON.stringify(report, null, 2)}\n`, "utf8");
+  exportJarvisReport(report, jarvisOutputDir);
   return strategy;
 }
 
@@ -121,6 +128,7 @@ function normalizePost(post) {
     id: post.id,
     dueAt: post.dueAt,
     category: inferCategory(post.text),
+    content: post.text ?? "",
     excerpt: cleanExcerpt(post.text),
     metricsUpdatedAt: post.metricsUpdatedAt,
     metrics,
@@ -137,8 +145,30 @@ function performanceScore(metrics) {
     3 * (metrics.shares ?? 0) +
     4 * (metrics.saves ?? 0);
   const engagementRate = exposure > 0 ? engagement / exposure : 0;
-  const watch = (metrics.averageTimeWatched ?? 0) + Math.log1p(metrics.totalTimeWatched ?? 0);
-  return Number((10 * Math.log1p(exposure) + 500 * engagementRate + watch).toFixed(3));
+  const exposureScore = 40 * clamp(Math.log1p(exposure) / Math.log1p(10000));
+  const engagementScore = 40 * clamp(engagementRate / 0.1);
+  const watchScore = metrics.averageTimeWatched !== undefined
+    ? 20 * clamp((metrics.averageTimeWatched ?? 0) / 15)
+    : 20 * clamp(Math.log1p(metrics.totalTimeWatched ?? 0) / Math.log1p(1000));
+  return Number(clamp(exposureScore + engagementScore + watchScore, 0, 100).toFixed(2));
+}
+
+function normalizeScheduledPost(post) {
+  return {
+    id: post.id,
+    status: "scheduled",
+    dueAt: post.dueAt,
+    category: inferCategory(post.text),
+    content: post.text ?? "",
+    excerpt: cleanExcerpt(post.text),
+    metricsUpdatedAt: null,
+    metrics: {},
+    score: null,
+  };
+}
+
+function clamp(value, minimum = 0, maximum = 1) {
+  return Math.min(maximum, Math.max(minimum, value));
 }
 
 function summarizeForPrompt(post) {

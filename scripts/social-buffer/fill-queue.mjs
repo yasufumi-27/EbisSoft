@@ -9,6 +9,7 @@
  */
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
@@ -29,6 +30,9 @@ const target = positiveInt(optionValue("--target") ?? "8", "--target");
 const maxPerRun = positiveInt(optionValue("--max-per-run") ?? "2", "--max-per-run");
 
 loadEnv(path.join(projectDir, ".env.local"));
+
+const jarvisOutputDir = process.env.JARVIS_EBISSOFT_SOCIAL_DIR?.trim() ||
+  path.join(os.homedir(), "dev", "jarvis", "ebissoft", "instagram");
 
 const config = {
   apiKey: process.env.BUFFER_API_KEY?.trim(),
@@ -55,7 +59,7 @@ if (checkOnly) {
   process.exit(0);
 }
 
-const performanceStrategy = dryRun ? null : await loadPerformanceStrategy(config);
+const performanceStrategy = dryRun ? null : await loadPerformanceStrategy(config, scheduled);
 if (performanceOnly) {
   console.log(`Performance report updated: ${performancePath}`);
   process.exit(0);
@@ -72,6 +76,7 @@ if (publishExistingDate) {
     const post = await createReelPost(config, job);
     console.log(`Queued existing ${job.slot} Reel for ${post.dueAt ?? "the next Buffer slot"}: ${post.id}`);
   }
+  await loadPerformanceStrategy(config, await scheduledPosts(config));
   process.exit(0);
 }
 const needed = Math.max(0, Math.min(maxPerRun, target - scheduled.length));
@@ -101,6 +106,7 @@ for (const job of jobs) {
   const post = await createReelPost(config, job);
   console.log(`Queued ${job.slot} Reel for ${post.dueAt ?? "the next Buffer slot"}: ${post.id}`);
 }
+await loadPerformanceStrategy(config, await scheduledPosts(config));
 
 function loadEnv(filePath) {
   if (!fs.existsSync(filePath)) return;
@@ -161,12 +167,14 @@ async function scheduledPosts(current) {
   return data.posts?.edges?.map((edge) => edge.node) ?? [];
 }
 
-async function loadPerformanceStrategy(current) {
+async function loadPerformanceStrategy(current, scheduled = []) {
   try {
     const strategy = await refreshPerformanceStrategy({
       bufferQuery,
       config: current,
       statePath: performancePath,
+      scheduledPosts: scheduled,
+      jarvisOutputDir,
     });
     strategy.generatedAt = new Date().toISOString();
     console.log(

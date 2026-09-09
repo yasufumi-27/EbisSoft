@@ -23,6 +23,7 @@
     "social:buffer:check": "node scripts/social-buffer/fill-queue.mjs --check",
     "social:buffer:performance": "node scripts/social-buffer/fill-queue.mjs --performance-only",
     "social:buffer:test-performance": "node --test scripts/social-buffer/performance.test.mjs",
+    "social:buffer:test-report": "node --test scripts/social-buffer/jarvis-report.test.mjs",
     "social:buffer:test": "node scripts/social-buffer/fill-queue.mjs --dry-run --sample"
   },
   "dependencies": {
