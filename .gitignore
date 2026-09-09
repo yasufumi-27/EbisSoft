@@ -41,5 +41,11 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# Instagram投稿前の自動生成物（画像・原稿・ZIP）
+/social-drafts/
+
+# Instagram投稿パフォーマンスのローカル履歴
+/social-data/
+
 # claude code（個人のローカル設定はコミットしない）
 .claude/settings.local.json

@@ -13,7 +13,17 @@
     "precompress": "node scripts/precompress.mjs",
     "build:pages": "GITHUB_PAGES=true NEXT_PUBLIC_SITE_URL=https://yasufumi-27.github.io/EbisSoft next build",
     "size": "node scripts/bundle-size.mjs",
-    "analyze": "GITHUB_PAGES=true next experimental-analyze"
+    "analyze": "GITHUB_PAGES=true next experimental-analyze",
+    "social:drafts": "node scripts/social-drafts/run.mjs both",
+    "social:draft:news": "node scripts/social-drafts/run.mjs morning",
+    "social:draft:knowledge": "node scripts/social-drafts/run.mjs afternoon",
+    "social:draft:test": "node scripts/social-drafts/run.mjs both --sample --no-notify",
+    "social:send-profile-icon": "node scripts/social-drafts/send-profile-icon.mjs",
+    "social:buffer:fill": "node scripts/social-buffer/fill-queue.mjs",
+    "social:buffer:check": "node scripts/social-buffer/fill-queue.mjs --check",
+    "social:buffer:performance": "node scripts/social-buffer/fill-queue.mjs --performance-only",
+    "social:buffer:test-performance": "node --test scripts/social-buffer/performance.test.mjs",
+    "social:buffer:test": "node scripts/social-buffer/fill-queue.mjs --dry-run --sample"
   },
   "dependencies": {
     "@types/three": "^0.185.1",
@@ -29,6 +39,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
+    "sharp": "^0.34.5",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
