@@ -1,0 +1,10 @@
+OpenAIは2026年9月10日、ChatGPT Work向けの「Data agent」を発表しました。承認済みの社内データに接続し、自然な言葉で質問すると、変化の要因を調べ、根拠を確認しながら共有可能なダッシュボードを作成できます。接続先にはBigQuery、Snowflake、Google Drive、SharePointなどが含まれます。
+
+中小企業にとっては、「先週の売上が下がった理由は？」といった問いを現場で深掘りできる可能性があります。ただし、AIの回答をそのまま経営判断に使うのではなく、KPIの定義、アクセス権、元データ、確認者を先に決めることが重要です。
+
+まずは週次売上など1テーマに絞り、読み取り専用のデータで試行。既存レポートと照合し、精度と確認時間を記録してみましょう。詳しくはプロフィールの yebisusoft.jp へ。
+
+#AIニュース #生成AI #データ分析 #業務効率化 #中小企業DX #ChatGPT
+
+出典:
+- OpenAI「Now everyone can put data to work」（2026年9月10日）: https://openai.com/index/put-data-to-work/

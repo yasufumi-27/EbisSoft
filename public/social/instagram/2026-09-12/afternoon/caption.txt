@@ -1,7 +1,18 @@
-【2026年9月12日｜AI知識】AI検索に見つけてもらうために、専用の裏技や特別なタグが必須とは限りません。GoogleはAI機能でも、従来の検索向け基本施策や、独自性・正確性・読みやすさを重視しています。まずはサービスページに「誰の、どんな課題を、どう解決するか」を明記し、実績や料金・対応範囲など確認しやすい情報を整えましょう。詳しくはプロフィールの yebisusoft.jp へ。
+【AI知識｜2026年9月12日】
+生成AIで議事録やメールの下書きを作る前に、入力する情報を「緑・黄・赤」の3段階に分けてみませんか。
 
-#AI検索 #LLMO #SEO対策 #Web制作 #中小企業 #生成AI活用
+緑：公開済みで入力できる情報
+黄：匿名化・要約してから入力する情報
+赤：営業秘密や個人情報など、入力しない情報
+
+有料版や法人向けサービスでも、無条件にあらゆる情報を入力してよいとは限りません。利用規約やデータの取扱方針を確認し、生成物は人が点検することが大切です。
+
+まずは「会議メモの要約」など一つの業務を選び、入力ルールと確認担当者を決めて小さく試しましょう。
+
+詳しくはプロフィールの yebisusoft.jp へ。
+
+#生成AI #AI活用 #業務効率化 #情報セキュリティ #中小企業 #京都
 
 出典:
-- Google Search Central｜AI features and your website: https://developers.google.com/search/docs/appearance/ai-features
-- Google Search Central｜Creating helpful, reliable, people-first content: https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+- IPA「AI利用者のためのセキュリティ豆知識」: https://www.ipa.go.jp/digital/ai/security/ai_security_tips.html
+- IPA「中小企業の情報セキュリティ対策ガイドライン 第4.0版」: https://www.ipa.go.jp/security/guide/sme/ug65p90000019cbk-att/sme_guideline_v4.0.pdf

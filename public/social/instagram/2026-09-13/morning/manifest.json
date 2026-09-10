@@ -1,7 +1,7 @@
 {
-  "date": "2026-09-12",
-  "slot": "afternoon",
-  "category": "AI知識",
+  "date": "2026-09-13",
+  "slot": "morning",
+  "category": "AIニュース",
   "captionFile": "caption.txt",
   "mediaType": "carousel",
   "imageFiles": [
@@ -12,6 +12,6 @@
     "05.png",
     "06.png"
   ],
-  "dueAt": "2026-09-12T11:00:00.000Z",
+  "dueAt": "2026-09-12T23:30:00.000Z",
   "strategyGeneratedAt": "2026-09-10T17:30:12.746Z"
 }
