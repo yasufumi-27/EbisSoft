@@ -22,7 +22,7 @@ Register-ScheduledTask `
   -Action $action `
   -Trigger $trigger `
   -Settings $settings `
-  -Description "Codex CLIでInstagramカルーセルを生成し、Buffer Freeの予約キューを4日分に保つ" `
+  -Description "Generate Instagram carousels with Codex CLI and keep four days queued in Buffer Free" `
   -Force | Out-Null
 
 Get-ScheduledTask -TaskName "EbisSoft Buffer Instagram Queue" |
