@@ -1,0 +1,8 @@
+OpenAIは2026年9月9日、業務向けモデル「GPT-6 Astra」をChatGPT Work、Codex、APIで利用できると発表しました。ブラウザーや業務アプリを操作し、既存の仕事の流れを大きく変えずに活用できる点が特徴です。企業向けには、接続先やファイル操作を制限する管理機能、重要操作の確認設定も用意されています。ただし、性能値は主にOpenAIや協力企業の評価です。まずは機密情報を使わない定型業務で試し、時間・誤り・費用を従来手順と比較しましょう。詳しくはプロフィールの yebisusoft.jp へ。
+
+#AIニュース #生成AI #業務効率化 #中小企業DX #AI活用
+
+出典:
+- OpenAI「GPT-6 Astra: The next generation in intelligence for work」（2026年9月9日）: https://openai.com/index/gpt-6-astra-next-generation-work/
+- OpenAI「GPT-6 Astra System Card」（2026年9月9日更新）: https://deploymentsafety.openai.com/gpt-6-astra
+- OpenAI API「GPT-6 Astra Model」: https://developers.openai.com/api/docs/models/gpt-6-astra

@@ -1,9 +1,9 @@
 {
-  "date": "2026-09-11",
+  "date": "2026-09-12",
   "slot": "afternoon",
   "category": "AI知識",
   "captionFile": "caption.txt",
-  "reelFile": "reel.mp4",
+  "mediaType": "carousel",
   "imageFiles": [
     "01.png",
     "02.png",
@@ -12,6 +12,6 @@
     "05.png",
     "06.png"
   ],
-  "dueAt": "2026-09-11T06:30:00.000Z",
-  "strategyGeneratedAt": "2026-09-09T20:59:37.293Z"
+  "dueAt": "2026-09-11T12:28:00.000Z",
+  "strategyGeneratedAt": "2026-09-10T05:02:30.464Z"
 }
