@@ -22,7 +22,7 @@ Register-ScheduledTask `
   -Action $action `
   -Trigger $trigger `
   -Settings $settings `
-  -Description "Codex CLIでInstagram Reelsを生成し、Buffer Freeの予約キューを4日分に保つ" `
+  -Description "Codex CLIでInstagramカルーセルを生成し、Buffer Freeの予約キューを4日分に保つ" `
   -Force | Out-Null
 
 Get-ScheduledTask -TaskName "EbisSoft Buffer Instagram Queue" |

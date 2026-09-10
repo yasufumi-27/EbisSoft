@@ -65,7 +65,7 @@ export function buildStrategy(posts) {
       morning: contentGuidance("morning", posts),
       afternoon: contentGuidance("afternoon", posts),
     },
-    scoring: "views/reach + saves/shares/comments/reactions + watch time",
+    scoring: "exposure 40 + weighted engagement rate 60",
   };
 }
 
@@ -127,7 +127,7 @@ function normalizePost(post) {
   return {
     id: post.id,
     dueAt: post.dueAt,
-    category: inferCategory(post.text),
+    category: inferCategory(post.text, post.dueAt),
     content: post.text ?? "",
     excerpt: cleanExcerpt(post.text),
     metricsUpdatedAt: post.metricsUpdatedAt,
@@ -146,11 +146,8 @@ function performanceScore(metrics) {
     4 * (metrics.saves ?? 0);
   const engagementRate = exposure > 0 ? engagement / exposure : 0;
   const exposureScore = 40 * clamp(Math.log1p(exposure) / Math.log1p(10000));
-  const engagementScore = 40 * clamp(engagementRate / 0.1);
-  const watchScore = metrics.averageTimeWatched !== undefined
-    ? 20 * clamp((metrics.averageTimeWatched ?? 0) / 15)
-    : 20 * clamp(Math.log1p(metrics.totalTimeWatched ?? 0) / Math.log1p(1000));
-  return Number(clamp(exposureScore + engagementScore + watchScore, 0, 100).toFixed(2));
+  const engagementScore = 60 * clamp(engagementRate / 0.1);
+  return Number(clamp(exposureScore + engagementScore, 0, 100).toFixed(2));
 }
 
 function normalizeScheduledPost(post) {
@@ -158,7 +155,7 @@ function normalizeScheduledPost(post) {
     id: post.id,
     status: "scheduled",
     dueAt: post.dueAt,
-    category: inferCategory(post.text),
+    category: inferCategory(post.text, post.dueAt),
     content: post.text ?? "",
     excerpt: cleanExcerpt(post.text),
     metricsUpdatedAt: null,
@@ -181,9 +178,10 @@ function summarizeForPrompt(post) {
   };
 }
 
-function inferCategory(text = "") {
+function inferCategory(text = "", dueAt) {
   if (text.includes("#AIニュース") || text.includes("【AIニュース")) return "AIニュース";
   if (text.includes("#AI知識") || text.includes("【AI知識")) return "AI知識";
+  if (dueAt) return jstMinutes(dueAt) < 12 * 60 ? "AIニュース" : "AI知識";
   return null;
 }
 

@@ -1,4 +1,4 @@
-# Buffer FreeでのInstagram自動投稿
+# Buffer FreeでのInstagramカルーセル自動投稿
 
 ## 方針
 
@@ -23,11 +23,13 @@ BUFFER_API_KEY=...
 ## 実行
 
 ```powershell
-npm run social:buffer:test # APIやGitへ書き込まず、サンプルのReel MP4を生成
+npm run social:buffer:test # APIやGitへ書き込まず、6枚のサンプル画像を生成
 npm run social:buffer:check # 投稿を作らず、Buffer接続と予約件数を確認
 npm run social:buffer:performance # 指標取得と改善方針だけを更新
 npm run social:buffer:fill # 実際にBufferの予約キューを補充
-# 送信失敗後、既にGitHubへ公開済みの動画だけを予約する場合
+# 既存の予約動画を6枚画像のカルーセルへ置換
+npm run social:buffer:replace-media
+# 送信失敗後、既にGitHubへ公開済みの画像だけを予約する場合
 npm run social:buffer:fill -- --publish-existing 2026-09-10
 ```
 
@@ -39,7 +41,7 @@ powershell -ExecutionPolicy Bypass -File scripts/social-buffer/register-buffer-t
 
 ## メディアの公開先
 
-Buffer APIはローカルファイルを受け取れず、公開HTTPS URLからMP4を取得します。そのため、この処理は生成した動画を `public/social/instagram/` へ配置し、`main` ブランチへ**その動画ファイルだけ**をコミット・pushします。BufferにはGitHub rawの恒久URLを渡します。
+Buffer APIはローカルファイルを受け取れず、公開HTTPS URLから画像を取得します。そのため、この処理は生成した6枚のPNG画像を `public/social/instagram/` へ配置し、`main` ブランチへ**その投稿用ファイルだけ**をコミット・pushします。Bufferには表示順どおりにGitHub rawの恒久URLを渡します。画像はInstagramフィード向けの縦長4:5（1080×1350）です。
 
 ローカルのGitHub認証と、Codex CLIのChatGPTサブスクリプション認証が同じWindowsユーザーで使える状態にしてください。GitHubやBufferへ秘密情報をコミットしません。
 
@@ -49,7 +51,7 @@ Buffer APIはローカルファイルを受け取れず、公開HTTPS URLからM
 
 - **投稿時間**：AIニュースは 07:30 / 08:30 / 09:30 / 10:30、AI知識は 15:30 / 17:00 / 18:30 / 20:00 を候補にする。最初は各時刻を探索し、実績が揃った後は成績と未検証時間の探索を両立して選ぶ。
 - **投稿内容**：カテゴリごとの好調投稿・低調投稿を抽出し、次回のCodex CLIプロンプトへ渡す。好調な切り口を参考にしながら、同じ題材や表現の繰り返しは避ける。
-- **評価**：100点満点（閲覧規模40点、反応率40点、視聴時間20点）。保存・共有・コメントを強めに評価する。
+- **評価**：100点満点（閲覧規模40点、反応率60点）。保存・共有・コメントを強めに評価する。
 - **履歴**：`social-data/instagram-performance.json` に保存する。このファイルはローカル専用でGitには含めない。
 
 同時に、ジャービス用データを既定で `~/dev/jarvis/ebissoft/instagram/` へ出力します。別の場所にする場合は `.env.local` の `JARVIS_EBISSOFT_SOCIAL_DIR` で変更できます。

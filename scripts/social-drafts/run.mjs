@@ -23,6 +23,7 @@ const requestedSlot = process.argv[2] ?? "both";
 const slots =
   requestedSlot === "both" ? ["morning", "afternoon"] : [requestedSlot];
 const sample = args.has("--sample");
+const reuseDraft = args.has("--reuse-draft");
 const noNotify = args.has("--no-notify");
 const requestedDate = optionValue("--date");
 const strategyPath = optionValue("--strategy");
@@ -52,12 +53,15 @@ for (const slot of slots) {
   const draftDir = path.join(outputRoot, date, slotLabel);
   fs.mkdirSync(draftDir, { recursive: true });
 
-  const draft = sample
-    ? sampleDraft(slot)
-    : generateWithCodex(
+  const existingDraftPath = path.join(draftDir, "draft.json");
+  const draft = reuseDraft && fs.existsSync(existingDraftPath)
+    ? JSON.parse(fs.readFileSync(existingDraftPath, "utf8"))
+    : sample
+      ? sampleDraft(slot)
+      : generateWithCodex(
         slot,
         date,
-        path.join(draftDir, "draft.json"),
+        existingDraftPath,
         performanceReport?.strategy?.content?.[slot],
       );
   validateDraft(draft, slot);
@@ -75,7 +79,6 @@ for (const slot of slots) {
   );
 
   const images = await renderDraft(draft, draftDir, date);
-  const reelPath = renderReel(images, draftDir);
   fs.writeFileSync(
     path.join(draftDir, "manifest.json"),
     `${JSON.stringify(
@@ -84,7 +87,7 @@ for (const slot of slots) {
         slot,
         category: draft.category,
         captionFile: "caption.txt",
-        reelFile: path.basename(reelPath),
+        mediaType: "carousel",
         imageFiles: images.map((file) => path.basename(file)),
       },
       null,
@@ -177,38 +180,6 @@ ${performanceAdvice ? JSON.stringify(performanceAdvice, null, 2) : "まだ実績
   return JSON.parse(fs.readFileSync(outputPath, "utf8"));
 }
 
-/** 6枚のスライドを、Instagram Reels 用の縦型 MP4 に合成する。 */
-function renderReel(imagePaths, draftDir) {
-  const reelPath = path.join(draftDir, "reel.mp4");
-  const args = ["-y"];
-  for (const imagePath of imagePaths) {
-    args.push("-loop", "1", "-t", "2.8", "-i", imagePath);
-  }
-  const inputs = imagePaths.map((_, index) => `[${index}:v]`).join("");
-  args.push(
-    "-filter_complex",
-    `${inputs}concat=n=${imagePaths.length}:v=1:a=0,format=yuv420p[v]`,
-    "-map",
-    "[v]",
-    "-r",
-    "30",
-    "-c:v",
-    "libx264",
-    "-movflags",
-    "+faststart",
-    reelPath,
-  );
-  const result = spawnSync("ffmpeg", args, {
-    windowsHide: true,
-    encoding: "utf8",
-    timeout: 4 * 60 * 1000,
-  });
-  if (result.status !== 0 || !fs.existsSync(reelPath)) {
-    throw new Error(`リール動画の生成に失敗しました: ${result.stderr || result.stdout}`);
-  }
-  return reelPath;
-}
-
 function validateDraft(draft, slot) {
   const expected = slot === "morning" ? "AIニュース" : "AI知識";
   if (draft.category !== expected) throw new Error(`category must be ${expected}`);
@@ -235,8 +206,8 @@ async function renderDraft(draft, draftDir, date) {
     const page = pages[index];
     const svg = cardSvg(page, draft, index, pages.length, date);
     const overlays = [
-      { input: logo, left: 76, top: 76 },
-      ...(page.type === "cta" ? [{ input: mark, left: 360, top: 470 }] : []),
+      { input: logo, left: 76, top: 58 },
+      ...(page.type === "cta" ? [{ input: mark, left: 360, top: 260 }] : []),
     ];
     const outputPath = path.join(draftDir, `${String(index + 1).padStart(2, "0")}.png`);
     await sharp(Buffer.from(svg))
@@ -256,31 +227,31 @@ function cardSvg(page, draft, index, total, date) {
 
   if (page.type === "cover") {
     main = `
-      <rect x="76" y="430" width="260" height="72" rx="36" fill="${accent}" opacity="0.14"/>
-      <text x="206" y="480" text-anchor="middle" class="label" fill="${accent}">${label}</text>
-      ${textBlock(page.heading, 76, 640, 76, 12, 1.22, "title")}
-      ${textBlock(page.body, 80, 1160, 38, 22, 1.65, "summary")}
+      <rect x="76" y="285" width="260" height="72" rx="36" fill="${accent}" opacity="0.14"/>
+      <text x="206" y="335" text-anchor="middle" class="label" fill="${accent}">${label}</text>
+      ${textBlock(page.heading, 76, 470, 76, 12, 1.18, "title")}
+      ${textBlock(page.body, 80, 900, 38, 22, 1.55, "summary")}
     `;
   } else if (page.type === "body") {
     main = `
-      <text x="76" y="410" class="eyebrow" fill="${accent}">${label}  ${String(index).padStart(2, "0")}</text>
-      ${textBlock(page.heading, 76, 535, 58, 15, 1.35, "heading")}
-      <line x1="76" y1="835" x2="1004" y2="835" stroke="${accent}" stroke-width="3" opacity="0.45"/>
-      ${textBlock(page.body, 80, 950, 38, 22, 1.72, "body")}
+      <text x="76" y="290" class="eyebrow" fill="${accent}">${label}  ${String(index).padStart(2, "0")}</text>
+      ${textBlock(page.heading, 76, 410, 58, 15, 1.28, "heading")}
+      <line x1="76" y1="650" x2="1004" y2="650" stroke="${accent}" stroke-width="3" opacity="0.45"/>
+      ${textBlock(page.body, 80, 760, 38, 22, 1.62, "body")}
     `;
   } else {
     main = `
-      <text x="540" y="980" text-anchor="middle" class="ctaTitle">AIを、事業の力に。</text>
-      <text x="540" y="1090" text-anchor="middle" class="ctaBody">毎日のAI情報を、実務につながる言葉で。</text>
-      <rect x="170" y="1240" width="740" height="160" rx="42" fill="#22d3ee" opacity="0.12" stroke="#22d3ee" stroke-width="2"/>
-      <text x="540" y="1310" text-anchor="middle" class="handle">@yebisusoft</text>
-      <text x="540" y="1370" text-anchor="middle" class="url">https://www.yebisusoft.jp/</text>
-      <text x="540" y="1535" text-anchor="middle" class="ctaSmall">プロフィールからご相談ください</text>
+      <text x="540" y="735" text-anchor="middle" class="ctaTitle">AIを、事業の力に。</text>
+      <text x="540" y="820" text-anchor="middle" class="ctaBody">毎日のAI情報を、実務につながる言葉で。</text>
+      <rect x="170" y="900" width="740" height="160" rx="42" fill="#22d3ee" opacity="0.12" stroke="#22d3ee" stroke-width="2"/>
+      <text x="540" y="970" text-anchor="middle" class="handle">@yebisusoft</text>
+      <text x="540" y="1030" text-anchor="middle" class="url">https://www.yebisusoft.jp/</text>
+      <text x="540" y="1145" text-anchor="middle" class="ctaSmall">プロフィールからご相談ください</text>
     `;
   }
 
   return `
-  <svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1920" viewBox="0 0 1080 1920">
+  <svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350">
     <defs>
       <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
         <stop offset="0" stop-color="#071a35"/>
@@ -306,15 +277,15 @@ function cardSvg(page, draft, index, total, date) {
         .footer { font-size: 24px; font-weight: 600; fill: #94a3b8; }
       </style>
     </defs>
-    <rect width="1080" height="1920" fill="url(#bg)"/>
-    <rect width="1080" height="1920" fill="url(#glow)"/>
+    <rect width="1080" height="1350" fill="url(#bg)"/>
+    <rect width="1080" height="1350" fill="url(#glow)"/>
     <circle cx="1015" cy="90" r="210" fill="none" stroke="${accent}" stroke-width="2" opacity="0.22"/>
     <circle cx="1015" cy="90" r="142" fill="none" stroke="${accent}" stroke-width="1" opacity="0.17"/>
     ${main}
-    <text x="76" y="1815" class="footer">${escapeXml(date)}  ·  エビスソフト</text>
-    <text x="1004" y="1815" text-anchor="end" class="footer">${index + 1} / ${total}</text>
-    <rect x="76" y="1855" width="928" height="5" rx="2.5" fill="#fff" opacity="0.12"/>
-    <rect x="76" y="1855" width="${progress}" height="5" rx="2.5" fill="${accent}"/>
+    <text x="76" y="1265" class="footer">${escapeXml(date)}  ·  エビスソフト</text>
+    <text x="1004" y="1265" text-anchor="end" class="footer">${index + 1} / ${total}</text>
+    <rect x="76" y="1305" width="928" height="5" rx="2.5" fill="#fff" opacity="0.12"/>
+    <rect x="76" y="1305" width="${progress}" height="5" rx="2.5" fill="${accent}"/>
   </svg>`;
 }
 

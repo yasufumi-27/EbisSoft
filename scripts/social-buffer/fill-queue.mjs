@@ -1,9 +1,9 @@
 /**
- * Buffer Free 向けの Instagram Reels キュー補充。
+ * Buffer Free 向けの Instagram カルーセル投稿キュー補充。
  *
  * - 無料枠の「同時予約10件」を超えず、常に8件（4日分）を目標にする
- * - Codex CLI で原稿・スライド・Reel MP4 を生成する
- * - 動画を GitHub の公開 raw URL に置き、Buffer API へ予約を作成する
+ * - Codex CLI で原稿と6枚のカルーセル画像を生成する
+ * - 画像を GitHub の公開 raw URL に置き、Buffer API へ予約を作成する
  *
  * 投稿実績から選んだ朝・午後の時刻をUTCへ変換して個別予約する。
  */
@@ -25,6 +25,7 @@ const dryRun = args.has("--dry-run");
 const sample = args.has("--sample");
 const checkOnly = args.has("--check");
 const performanceOnly = args.has("--performance-only");
+const replaceScheduledMedia = args.has("--replace-scheduled-media");
 const publishExistingDate = optionValue("--publish-existing");
 const target = positiveInt(optionValue("--target") ?? "8", "--target");
 const maxPerRun = positiveInt(optionValue("--max-per-run") ?? "2", "--max-per-run");
@@ -65,6 +66,12 @@ if (performanceOnly) {
   process.exit(0);
 }
 
+if (replaceScheduledMedia) {
+  await replaceScheduledPosts(config, scheduled, performanceStrategy);
+  await loadPerformanceStrategy(config, await scheduledPosts(config));
+  process.exit(0);
+}
+
 if (publishExistingDate) {
   const jobs = ["morning", "afternoon"].map((slot) =>
     existingMedia(publishExistingDate, slot, dueAtFor(publishExistingDate, slot, performanceStrategy)),
@@ -73,8 +80,8 @@ if (publishExistingDate) {
     throw new Error(`予約件数が上限を超えます: ${scheduled.length} + ${jobs.length}`);
   }
   for (const job of jobs) {
-    const post = await createReelPost(config, job);
-    console.log(`Queued existing ${job.slot} Reel for ${post.dueAt ?? "the next Buffer slot"}: ${post.id}`);
+    const post = await createCarouselPost(config, job);
+    console.log(`Queued existing ${job.slot} carousel for ${post.dueAt ?? "the next Buffer slot"}: ${post.id}`);
   }
   await loadPerformanceStrategy(config, await scheduledPosts(config));
   process.exit(0);
@@ -97,14 +104,14 @@ for (const plan of planNewJobs(scheduled, needed)) {
 }
 
 if (dryRun) {
-  for (const job of jobs) console.log(`Dry run: ${job.slot} ${job.date} -> ${job.publicUrl}`);
+  for (const job of jobs) console.log(`Dry run: ${job.slot} ${job.date} -> ${job.imageUrls.length} images`);
   process.exit(0);
 }
 
 pushMedia(jobs, config);
 for (const job of jobs) {
-  const post = await createReelPost(config, job);
-  console.log(`Queued ${job.slot} Reel for ${post.dueAt ?? "the next Buffer slot"}: ${post.id}`);
+  const post = await createCarouselPost(config, job);
+  console.log(`Queued ${job.slot} carousel for ${post.dueAt ?? "the next Buffer slot"}: ${post.id}`);
 }
 await loadPerformanceStrategy(config, await scheduledPosts(config));
 
@@ -157,7 +164,7 @@ async function resolveBufferConfig(current) {
 async function scheduledPosts(current) {
   const query = `query ScheduledPosts($organizationId: OrganizationId!, $channelId: ChannelId!) {
     posts(first: 20, input: { organizationId: $organizationId, filter: { status: [scheduled], channelIds: [$channelId] } }) {
-      edges { node { id dueAt text } }
+      edges { node { id dueAt text assets { mimeType } } }
     }
   }`;
   const data = await bufferQuery(current, query, {
@@ -187,10 +194,11 @@ async function loadPerformanceStrategy(current, scheduled = []) {
   }
 }
 
-function generateDraft(slot, date, useSample, strategyPath) {
+function generateDraft(slot, date, useSample, strategyPath, reuseDraft = false) {
   const command = process.execPath;
   const commandArgs = [path.join(projectDir, "scripts", "social-drafts", "run.mjs"), slot, "--date", date, "--no-notify"];
   if (useSample) commandArgs.push("--sample");
+  if (reuseDraft) commandArgs.push("--reuse-draft");
   if (strategyPath && fs.existsSync(strategyPath)) commandArgs.push("--strategy", strategyPath);
   const result = spawnSync(command, commandArgs, {
     cwd: projectDir,
@@ -204,8 +212,9 @@ function generateDraft(slot, date, useSample, strategyPath) {
   const baseLabel = slot === "morning" ? "am-news" : "pm-knowledge";
   const label = useSample ? `${baseLabel}-sample` : baseLabel;
   const draftDir = path.join(draftRoot, date, label);
-  if (!fs.existsSync(path.join(draftDir, "reel.mp4"))) {
-    throw new Error(`Reel MP4 が見つかりません: ${draftDir}`);
+  const manifest = readManifest(draftDir);
+  if (manifest.imageFiles?.length < 2 || manifest.imageFiles.some((name) => !fs.existsSync(path.join(draftDir, name)))) {
+    throw new Error(`カルーセル画像が見つかりません: ${draftDir}`);
   }
   return draftDir;
 }
@@ -219,7 +228,8 @@ function updateDraftManifest(draftDir, additions) {
 function stageMedia(draftDir, date, slot) {
   const destinationDir = path.join(publicRoot, date, slot);
   fs.mkdirSync(destinationDir, { recursive: true });
-  for (const name of ["reel.mp4", "caption.txt", "manifest.json"]) {
+  const manifest = readManifest(draftDir);
+  for (const name of ["caption.txt", "manifest.json", ...manifest.imageFiles]) {
     fs.copyFileSync(path.join(draftDir, name), path.join(destinationDir, name));
   }
   return { destinationDir, ...previewMedia(draftDir, date, slot) };
@@ -227,9 +237,10 @@ function stageMedia(draftDir, date, slot) {
 
 function existingMedia(date, slot, dueAt) {
   const destinationDir = path.join(publicRoot, date, slot);
-  for (const name of ["reel.mp4", "caption.txt"]) {
+  const manifest = readManifest(destinationDir);
+  for (const name of ["caption.txt", ...manifest.imageFiles]) {
     if (!fs.existsSync(path.join(destinationDir, name))) {
-      throw new Error(`公開済みReelの${name}が見つかりません: ${destinationDir}`);
+      throw new Error(`公開済みカルーセルの${name}が見つかりません: ${destinationDir}`);
     }
   }
   return { date, slot, dueAt, destinationDir, ...previewMedia(destinationDir, date, slot) };
@@ -237,11 +248,19 @@ function existingMedia(date, slot, dueAt) {
 
 function previewMedia(draftDir, date, slot) {
   const caption = fs.readFileSync(path.join(draftDir, "caption.txt"), "utf8").trim();
-  const relativePath = path.posix.join(date, slot, "reel.mp4");
+  const manifest = readManifest(draftDir);
   return {
     caption,
-    publicUrl: `${config.mediaBaseUrl}/${relativePath}`,
+    imageUrls: manifest.imageFiles.map((name) =>
+      `${config.mediaBaseUrl}/${path.posix.join(date, slot, name)}`,
+    ),
   };
+}
+
+function readManifest(directory) {
+  const manifestPath = path.join(directory, "manifest.json");
+  if (!fs.existsSync(manifestPath)) throw new Error(`manifest.json が見つかりません: ${directory}`);
+  return JSON.parse(fs.readFileSync(manifestPath, "utf8"));
 }
 
 function pushMedia(jobs, current) {
@@ -255,7 +274,7 @@ function pushMedia(jobs, current) {
   if (result.status === 0) return;
   if (result.status !== 1) throw new Error("Gitのステージ状態を確認できませんでした");
   const dates = [...new Set(jobs.map((job) => job.date))].join(", ");
-  git(["commit", "-m", `chore(social): stage Instagram reels ${dates}`, "--", ...targets]);
+  git(["commit", "-m", `chore(social): stage Instagram carousels ${dates}`, "--", ...targets]);
   git(["push", current.gitRemote, `HEAD:${current.gitBranch}`]);
 }
 
@@ -269,8 +288,8 @@ function git(commandArgs) {
   if (result.status !== 0) throw new Error(`git ${commandArgs[0]} に失敗しました: ${result.stderr || result.stdout}`);
 }
 
-async function createReelPost(current, job) {
-  const query = `mutation CreateInstagramReel($input: CreatePostInput!) {
+async function createCarouselPost(current, job) {
+  const query = `mutation CreateInstagramCarousel($input: CreatePostInput!) {
     createPost(input: $input) {
       ... on PostActionSuccess { post { id dueAt } }
       ... on MutationError { message }
@@ -283,8 +302,8 @@ async function createReelPost(current, job) {
     mode: job.dueAt ? "customScheduled" : "addToQueue",
     ...(job.dueAt ? { dueAt: job.dueAt } : {}),
     aiAssisted: true,
-    assets: [{ video: { url: job.publicUrl, metadata: { thumbnailOffset: 0 } } }],
-    metadata: { instagram: { type: "reel", shouldShareToFeed: true } },
+    assets: carouselAssets(job),
+    metadata: { instagram: { type: "post", shouldShareToFeed: true } },
   };
   const data = await bufferQuery(current, query, { input });
   const payload = data.createPost;
@@ -293,12 +312,116 @@ async function createReelPost(current, job) {
   return payload.post;
 }
 
+async function replaceScheduledPosts(current, posts, strategy) {
+  const replaceable = posts.filter((post) =>
+    post.assets?.some((asset) => asset.mimeType?.startsWith("video/")) || post.assets?.length !== 6,
+  );
+  if (replaceable.length === 0) {
+    console.log("All scheduled posts already use 6-image carousels");
+    return;
+  }
+  const jobs = [];
+  for (const post of replaceable) {
+    const date = jstDate(new Date(post.dueAt));
+    const source = findSourceDraft(post.text);
+    const slot = source?.slot ?? slotForPost(post);
+    const draftDir = source
+      ? generateDraft(slot, source.date, false, performancePath, true)
+      : generateDraft(slot, date, false, performancePath);
+    updateDraftManifest(draftDir, { dueAt: post.dueAt, strategyGeneratedAt: strategy?.generatedAt });
+    jobs.push({ id: post.id, slot, date, dueAt: post.dueAt, draftDir, ...stageMedia(draftDir, date, slot) });
+  }
+  pushMedia(jobs, current);
+  for (const job of jobs) {
+    const post = await editCarouselPost(current, job);
+    console.log(`Replaced scheduled video with ${job.imageUrls.length}-image carousel: ${post.id}`);
+  }
+}
+
+function findSourceDraft(postText) {
+  const expected = normalizeText(postText);
+  let best = null;
+  for (const dateEntry of fs.readdirSync(draftRoot, { withFileTypes: true })) {
+    if (!dateEntry.isDirectory() || !/^\d{4}-\d{2}-\d{2}$/.test(dateEntry.name)) continue;
+    const dateDir = path.join(draftRoot, dateEntry.name);
+    for (const slotEntry of fs.readdirSync(dateDir, { withFileTypes: true })) {
+      if (!slotEntry.isDirectory() || slotEntry.name.endsWith("-sample")) continue;
+      const captionPath = path.join(dateDir, slotEntry.name, "caption.txt");
+      const draftPath = path.join(dateDir, slotEntry.name, "draft.json");
+      if (!fs.existsSync(captionPath) || !fs.existsSync(draftPath)) continue;
+      const candidate = normalizeText(fs.readFileSync(captionPath, "utf8"));
+      const prefixLength = commonPrefixLength(expected, candidate);
+      if (!best || prefixLength > best.prefixLength) {
+        best = {
+          prefixLength,
+          date: dateEntry.name,
+          slot: slotEntry.name.startsWith("pm-") ? "afternoon" : "morning",
+        };
+      }
+    }
+  }
+  return best?.prefixLength >= 60 ? best : null;
+}
+
+function slotForPost(post) {
+  const category = inferCategory(post.text);
+  if (category === "AI知識") return "afternoon";
+  if (category === "AIニュース") return "morning";
+  const hour = Number(new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Asia/Tokyo", hour: "2-digit", hourCycle: "h23",
+  }).format(new Date(post.dueAt)));
+  return hour >= 12 ? "afternoon" : "morning";
+}
+
+function normalizeText(value = "") {
+  return value.replace(/\s+/g, " ").trim();
+}
+
+function commonPrefixLength(left, right) {
+  const limit = Math.min(left.length, right.length);
+  let index = 0;
+  while (index < limit && left[index] === right[index]) index += 1;
+  return index;
+}
+
+async function editCarouselPost(current, job) {
+  const query = `mutation EditInstagramCarousel($input: EditPostInput!) {
+    editPost(input: $input) {
+      ... on PostActionSuccess { post { id dueAt } }
+      ... on MutationError { message }
+    }
+  }`;
+  const data = await bufferQuery(current, query, {
+    input: {
+      id: job.id,
+      text: job.caption,
+      aiAssisted: true,
+      assets: carouselAssets(job),
+      metadata: { instagram: { type: "post", shouldShareToFeed: true } },
+    },
+  });
+  const payload = data.editPost;
+  if (payload?.message) throw new Error(`Buffer予約の画像化に失敗しました: ${payload.message}`);
+  if (!payload?.post) throw new Error("Buffer投稿編集の応答が不正です");
+  return payload.post;
+}
+
+function carouselAssets(job) {
+  const category = job.slot === "morning" ? "AIニュース" : "AI知識";
+  return job.imageUrls.map((url, index) => ({
+    image: {
+      url,
+      metadata: { altText: `${category} ${index + 1}/${job.imageUrls.length}枚目` },
+    },
+  }));
+}
+
 function planNewJobs(scheduled, count) {
   const plans = [];
   for (let offset = 1; offset <= 30 && plans.length < count; offset += 1) {
     const date = jstDate(addDays(new Date(), offset));
     const postsForDate = scheduled.filter((post) => jstDate(new Date(post.dueAt)) === date);
-    const categories = new Set(postsForDate.map((post) => inferCategory(post.text)));
+    const categories = new Set(postsForDate.map((post) => inferCategory(post.text, post.dueAt)));
     if (!categories.has("AIニュース") && plans.length < count) plans.push({ date, slot: "morning" });
     if (!categories.has("AI知識") && plans.length < count) plans.push({ date, slot: "afternoon" });
   }
@@ -306,9 +429,15 @@ function planNewJobs(scheduled, count) {
   return plans;
 }
 
-function inferCategory(text = "") {
+function inferCategory(text = "", dueAt) {
   if (text.includes("#AIニュース") || text.includes("【AIニュース")) return "AIニュース";
   if (text.includes("#AI知識") || text.includes("【AI知識")) return "AI知識";
+  if (dueAt) {
+    const hour = Number(new Intl.DateTimeFormat("en-GB", {
+      timeZone: "Asia/Tokyo", hour: "2-digit", hourCycle: "h23",
+    }).format(new Date(dueAt)));
+    return hour < 12 ? "AIニュース" : "AI知識";
+  }
   return null;
 }
 

@@ -165,7 +165,7 @@ function overviewChart(posts) {
   }));
   return svgDocument(`
     <text x="90" y="82" class="title">エビスソフト Instagram 投稿スコア推移</text>
-    <text x="90" y="122" class="meta">公開順 / 0–100点（閲覧40・反応40・視聴20）</text>
+    <text x="90" y="122" class="meta">公開順 / 0–100点（閲覧規模40・保存等の反応率60）</text>
     ${scored.length === 0 ? '<text x="600" y="220" text-anchor="middle" class="empty">公開済み投稿の計測データを待っています</text>' : ""}
     ${plotPanel(history, { title: "全投稿", keys: ["score"], colors: ["#2563eb"], fixedMax: 100 }, 90, 180, 1020, 520)}
   `);
@@ -215,7 +215,7 @@ function schemaContract() {
     },
     score: {
       range: [0, 100],
-      weights: { exposure: 40, engagement_rate: 40, watch_time: 20 },
+      weights: { exposure: 40, weighted_engagement_rate: 60 },
       note: "Bufferが返した指標だけで算出。未取得時はnull。",
     },
     timezone: "Asia/Tokyo",
