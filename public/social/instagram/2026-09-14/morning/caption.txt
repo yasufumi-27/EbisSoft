@@ -1,0 +1,13 @@
+AWSは2026年9月11日、生成AIモデルを「トークン単価」だけでなく、「正しい回答1件の費用」「完了までの往復回数」「実務成果物の合格率」で比べるオープンソースの検証基盤と結果を公開しました。
+
+問い合わせ回答や調査、資料作成では、安価なモデルでも再試行や人の修正が増えると総費用が上がる場合があります。導入時は料金表だけで決めず、自社の実例で精度、処理費用、確認時間を測ることが重要です。
+
+なお、公開結果はモデルごとに設定条件が異なり、AWSも小さな差は参考値として扱い、自社業務で再検証するよう促しています。まずは過去の問い合わせや定型資料を10件選び、合格条件を決めて比較してみましょう。
+
+詳しくはプロフィールの yebisusoft.jp へ。
+
+#AIニュース #生成AI #AI活用 #中小企業DX #業務効率化 #コスト削減
+
+出典:
+- AWS公式ブログ（2026年9月11日）: https://aws.amazon.com/blogs/machine-learning/beyond-the-price-per-token-choosing-the-right-openai-model-on-amazon-bedrock-for-your-workload/
+- 公開された検証基盤（GitHub）: https://github.com/openai-on-aws/benchmarks-openai

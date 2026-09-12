@@ -1,0 +1,17 @@
+【2026年9月14日｜AI知識】
+社内FAQを生成AIで効率化したいとき、選択肢になるのが「RAG」です。
+
+RAGは、質問に関係する情報を社内資料などから検索し、その内容を生成AIへ渡して回答を作る仕組みです。モデルを再学習させなくても、独自情報を回答に反映できます。
+
+ただし、資料をつなげれば必ず正しい回答になるわけではありません。検索した箇所が不適切なら回答もずれる可能性があり、生成AI特有の誤りも残ります。
+
+まずは問い合わせの多い10問を選び、正解となる資料と期待する回答を用意して試しましょう。回答の正確さだけでなく、根拠の箇所を示せるか、人による確認が必要かも記録すると改善につながります。
+
+詳しくはプロフィールの yebisusoft.jp へ。
+
+#AI知識 #生成AI #RAG #業務効率化 #社内FAQ #中小企業DX
+
+出典:
+- NIST CSRC Glossary：Retrieval-Augmented Generation: https://csrc.nist.gov/glossary/term/retrieval_augmented_generation
+- NIST：Generative AI Profile（NIST AI 600-1）: https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf
+- Google Cloud Documentation：RAG Engine overview: https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/rag-engine/rag-overview
