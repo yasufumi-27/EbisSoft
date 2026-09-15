@@ -1,0 +1,17 @@
+{
+  "date": "2026-09-17",
+  "slot": "morning",
+  "category": "AIニュース",
+  "captionFile": "caption.txt",
+  "mediaType": "carousel",
+  "imageFiles": [
+    "01.png",
+    "02.png",
+    "03.png",
+    "04.png",
+    "05.png",
+    "06.png"
+  ],
+  "dueAt": "2026-09-17T00:30:00.000Z",
+  "strategyGeneratedAt": "2026-09-15T17:30:09.169Z"
+}

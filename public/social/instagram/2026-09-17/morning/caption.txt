@@ -1,0 +1,7 @@
+AWSは2026年9月14日、Amazon Bedrock AgentCoreに「Consent portal」を追加したと発表しました。AIエージェントがGitHubやSlackなどを操作する前に、利用者が接続先ごとに権限を確認して許可できます。認証の仕組みを自社で一から構築する負担を減らせるほか、許可操作はAWS CloudTrailで確認できます。ただし、安全性が自動的に保証されるわけではありません。まずは対象業務を1つに絞り、必要最小限の権限、解除手順、操作記録をテストしましょう。詳しくはプロフィールの yebisusoft.jp へ。
+
+#AIニュース #AIエージェント #生成AI活用 #中小企業DX #業務効率化 #情報セキュリティ
+
+出典:
+- AWS公式ブログ（2026年9月14日）: https://aws.amazon.com/blogs/machine-learning/manage-end-user-oauth-consent-for-ai-agents-with-amazon-bedrock-agentcore/
+- AWS公式ドキュメント：Consent portal: https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/identity-consent-portal.html
