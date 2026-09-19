@@ -1,0 +1,10 @@
+AWSは2026年9月18日、仕事を自動で進めるAIエージェント向けの新しい実行基盤を発表しました。使い終えたメモリを途中で回収し、利用量に沿った課金を目指します。AWSの試験では、条件を変えても起動時間は約2秒でした。
+
+問い合わせ対応や社内検索など、利用の波が大きい業務では費用と初回応答の改善が期待できます。ただし、実際の効果は処理内容や利用頻度で変わるため、現在の費用・応答時間との比較が必要です。
+
+まずは自社でAI化したい仕事を1つ選び、忙しい時間と使われない時間を書き出してみましょう。詳しくはプロフィールの yebisusoft.jp へ。
+
+#AIニュース #AI活用 #中小企業DX #業務効率化 #AWS
+
+出典:
+- AWS公式：The new AgentCore runtime（2026年9月18日）: https://aws.amazon.com/blogs/machine-learning/the-new-agentcore-runtime-elastic-optimized-and-consistently-fast-starts/
