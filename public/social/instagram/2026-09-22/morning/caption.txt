@@ -1,0 +1,11 @@
+AnthropicとAccentureは2026年9月18日、AIを開発現場の内側から検証する専門チームを設けると発表しました。モデルの弱点探しや安全対策の確認を、開発担当とは別の視点で進めます。
+
+この動きから中小企業が学べるのは、AI導入を「使えるか」だけで決めず、「間違いを見つけられるか」まで考えることです。まずは見積書やメール文など1つの業務を選び、正確さ・表現・情報漏えいの3項目で出力を確認してみましょう。
+
+なお、外部評価の共通ルールや報告方法はまだ固まっておらず、当初の費用はAnthropicが負担する予定です。詳しくはプロフィールの yebisusoft.jp へ。
+
+#AIニュース #生成AI #中小企業DX #AI活用 #業務改善 #AIリスク管理
+
+出典:
+- Anthropic：Partnering with Accenture on embedded evaluation（2026年9月18日）: https://www.anthropic.com/news/accenture-embedded-evaluation
+- Accenture：Accenture and Anthropic Partner to Build Team of Embedded Evaluators（米: https://newsroom.accenture.com/news/2026/accenture-and-anthropic-partner-to-build-team-of-embedded-evaluators-at-anthropic
