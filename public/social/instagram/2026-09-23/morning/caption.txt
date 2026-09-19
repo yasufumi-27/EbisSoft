@@ -1,0 +1,10 @@
+Anthropicは2026年9月18日、AccentureとAIの「組み込み型評価」で提携すると発表しました。第三者の評価担当者が、社員に近い範囲で開発過程を確認し、安全対策や見落としを検証する新しい試みです。
+
+AIを仕事で選ぶ際は、性能や料金だけでなく、「第三者が検証しているか」「問題をどう公表するか」も判断材料になりそうです。ただし、評価方法や報告基準などは検討中です。
+
+まずは利用中のAIサービスについて、第三者評価・事故時の説明・データの扱いを5分で確認してみましょう。詳しくはプロフィールの yebisusoft.jp へ。
+
+#AIニュース #生成AI #AI活用 #中小企業DX #業務改善 #AI安全性
+
+出典:
+- Anthropic「Partnering with Accenture on embedded evaluation」（2026年9月18日）: https://www.anthropic.com/news/accenture-embedded-evaluation
