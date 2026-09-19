@@ -1,0 +1,13 @@
+【2026年9月21日 AIニュース】Anthropicは9月18日、Accentureと組み、開発中のAIを第三者が社内に入って検証する取り組みを発表しました。評価担当者はモデルの試験や安全対策の確認に加え、見落としの発見にも取り組む予定です。
+
+これは、完成後だけでなく開発途中から外部の目を入れる動きです。ただし、閲覧できる情報や報告方法の共通基準はまだなく、詳細は今後詰めるとしています。
+
+利用企業も「有名なAIだから安心」で終わらせず、自社の仕事で起こり得る誤回答や情報漏えいを具体的に試すことが大切です。まずは今日、AIに任せたい作業を1つ選び、失敗すると困る例を3つ書き出してみましょう。
+
+詳しくはプロフィールの yebisusoft.jp へ。
+
+#AIニュース #生成AI #AI活用 #中小企業DX #業務改善 #AIリスク管理
+
+出典:
+- Anthropic：Partnering with Accenture on embedded evaluation（2026年9月18日）: https://www.anthropic.com/news/accenture-embedded-evaluation
+- Accenture：Accenture and Anthropic Partner to Build Team of Embedded Evaluators（発: https://newsroom.accenture.com/news/2026/accenture-and-anthropic-partner-to-build-team-of-embedded-evaluators-at-anthropic
