@@ -1,0 +1,11 @@
+Anthropicは2026年9月18日、Accentureと提携し、外部の評価担当者がAI開発の現場に入り、安全性や防御策を検証する取り組みを発表しました。両社は今後5年間で、それぞれ少なくとも10億ドルを投資する予定です。
+
+注目点は、開発会社だけで安全性を判断せず、実際の業務を知る第三者の視点を取り入れること。詳しい運用方法は検討中ですが、中小企業がAIサービスを選ぶ際も、性能や価格に加えて「導入前にどんなテストをしたか」「問題が起きたとき誰が確認するか」を尋ねる重要性が増しそうです。
+
+まずは自社で使っているAIを1つ選び、期待する回答・避けたい回答・最終確認する人をメモしてみましょう。詳しくはプロフィールの yebisusoft.jp へ。
+
+#AIニュース #生成AI #中小企業DX #AI活用 #業務改善 #情報セキュリティ
+
+出典:
+- Anthropic「Partnering with Accenture on embedded evaluation」（2026年9月18日）: https://www.anthropic.com/news/accenture-embedded-evaluation
+- Accenture「Accenture and Anthropic Partner to Build Team of Embedded Evaluators」（: https://newsroom.accenture.com/news/2026/accenture-and-anthropic-partner-to-build-team-of-embedded-evaluators-at-anthropic

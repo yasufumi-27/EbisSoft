@@ -1,0 +1,17 @@
+【AI知識｜2026年9月23日】
+Webサイトの画像に添える代替テキストは、画像を見られない人にも情報や機能を伝えるための文章です。
+
+AIに画像だけを見せると、見た目の説明に偏ることがあります。下書きを頼むときは「このページで画像が果たす役割」も伝えるのがポイントです。
+
+例えば予約ボタンの虫眼鏡画像なら、形ではなく機能を書く必要があります。一方、意味を持たない装飾画像は、詳しく説明せず空の代替テキストにする場合があります。
+
+まずは自社サイトの画像を1枚選び、「誰に、何を伝えるページか」を添えてAIに案を出させ、画像がなくても意味が通じるか確認してみましょう。
+
+詳しくはプロフィールの yebisusoft.jp へ。
+
+#AI知識 #生成AI活用 #Web制作 #ホームページ改善 #Webアクセシビリティ #中小企業DX
+
+出典:
+- W3C WAI：Images Tutorial: https://www.w3.org/WAI/tutorials/images/
+- W3C WAI：An alt Decision Tree: https://www.w3.org/WAI/tutorials/images/decision-tree/
+- W3C：Web Content Accessibility Guidelines (WCAG) 2.2: https://www.w3.org/TR/WCAG22/
