@@ -1,0 +1,16 @@
+【AI知識｜2026年9月24日】
+AI検索対策と聞いて、専用ファイルや特別なタグが必要だと思っていませんか。
+
+Googleの公式資料では、AIによる検索機能に表示されるための特別な要件や専用の構造化データは不要と案内されています。基本になるのは、ページを検索エンジンが確認できる状態にし、重要な情報を文章で分かりやすく示すことです。
+
+例えばサービス紹介なら、「誰向けか」「何を提供するか」「どの地域に対応するか」を画像だけでなく本文にも記載します。構造化データを使う場合も、画面に見える内容と一致させることが大切です。なお、整備しても掲載が保証されるわけではありません。
+
+今日は主力サービスのページを1つ開き、この3点が文章で読めるか確認してみましょう。
+
+詳しくはプロフィールの yebisusoft.jp へ。
+
+#AI知識 #AI検索 #AEO #LLMO #SEO対策 #Web制作 #中小企業DX
+
+出典:
+- Google Search Central「AI features and your website」: https://developers.google.com/search/docs/appearance/ai-features
+- Google Search Central「Organization structured data」: https://developers.google.com/search/docs/appearance/structured-data/organization
