@@ -1,0 +1,14 @@
+【AI知識｜2026年9月26日】
+AI検索対策と聞くと、llms.txtや特別な構造化データを急いで用意したくなるかもしれません。Googleの公式ガイドでは、Google検索の生成AI機能に表示されるために、こうした専用ファイルや専用マークアップは必要ないとしています。
+
+まず見直したいのは、従来のSEOの土台です。ページが検索から読める状態か、見出しが分かりやすいか、一般論だけでなく自社の経験や一次情報があるかを確認しましょう。
+
+例えばサービスページなら、冒頭に「誰の、どんな悩みを、どう解決するか」を1文で示し、実績や事例へのリンクを添えます。今日は1ページだけ、5分で下書きしてみてください。
+
+詳しくはプロフィールの yebisusoft.jp へ。
+
+#AI活用 #AI検索 #SEO #AEO #Web制作 #中小企業
+
+出典:
+- Google検索の生成AI機能向け最適化ガイド: https://developers.google.com/search/docs/fundamentals/ai-optimization-guide?hl=ja
+- Google検索の基本事項: https://developers.google.com/search/docs/essentials?hl=ja

@@ -1,0 +1,13 @@
+AWSは2026年9月22日、AIが業務データを受け取る前に、見せてよい範囲を細かく制限するオープンソース技術「TOLAP」を公開しました。
+
+従来の権限設定では「顧客データベースを使えるか」までしか決められず、AIが見られる顧客や項目を十分に絞れない場合があります。TOLAPでは、担当外の顧客を除く、原価を隠す、メールアドレスを伏せるといった制御を、データがAIへ渡る前に適用できます。
+
+顧客管理や社内検索へAIをつなぐ企業は、機能だけでなく「AIに何を見せないか」も先に決めることが重要です。まずは対象業務を1つ選び、必要な項目と見せてはいけない項目を書き分けてみましょう。
+
+詳しくはプロフィールの yebisusoft.jp へ。
+
+#AIニュース #生成AI #中小企業DX #情報セキュリティ #業務改善
+
+出典:
+- AWS公式発表：Introducing TOLAP: https://aws.amazon.com/blogs/opensource/introducing-tolap-object-level-access-control-for-ai-agent-tools/
+- AWS Labs公式リポジトリ：TOLAP: https://github.com/awslabs/tolap
