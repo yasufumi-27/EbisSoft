@@ -1,14 +1,17 @@
 【AI知識｜2026年9月26日】
-AI検索対策と聞くと、llms.txtや特別な構造化データを急いで用意したくなるかもしれません。Googleの公式ガイドでは、Google検索の生成AI機能に表示されるために、こうした専用ファイルや専用マークアップは必要ないとしています。
+AI検索対策と聞くと、専用ファイルや特別な設定を追加したくなるかもしれません。
 
-まず見直したいのは、従来のSEOの土台です。ページが検索から読める状態か、見出しが分かりやすいか、一般論だけでなく自社の経験や一次情報があるかを確認しましょう。
+Googleは、AI OverviewsやAI Modeへの掲載に、AI専用ファイルや特別なマークアップは不要と案内しています。まず大切なのは、ページが検索に登録でき、重要な情報が文字で読める状態にすることです。
 
-例えばサービスページなら、冒頭に「誰の、どんな悩みを、どう解決するか」を1文で示し、実績や事例へのリンクを添えます。今日は1ページだけ、5分で下書きしてみてください。
+そのうえで、読者の疑問に具体的に答え、料金の条件や更新日、根拠、作成者などの確かめられる情報を添えます。ただし、要件を満たしても掲載が保証されるわけではありません。
+
+今日の5分で、主力サービスへの質問を一つ選び、「2文の回答＋根拠一つ」をメモしてみませんか。
 
 詳しくはプロフィールの yebisusoft.jp へ。
 
-#AI活用 #AI検索 #SEO #AEO #Web制作 #中小企業
+#AI知識 #AI検索 #SEO対策 #AEO #Web制作 #中小企業DX
 
 出典:
-- Google検索の生成AI機能向け最適化ガイド: https://developers.google.com/search/docs/fundamentals/ai-optimization-guide?hl=ja
-- Google検索の基本事項: https://developers.google.com/search/docs/essentials?hl=ja
+- Google Search Central｜生成AI検索向け最適化ガイド: https://developers.google.com/search/docs/fundamentals/ai-optimization-guide
+- Google Search Central｜AI機能とウェブサイト: https://developers.google.com/search/docs/appearance/ai-features
+- Google Search Central｜有用で信頼できる、人を第一に考えたコンテンツ: https://developers.google.com/search/docs/fundamentals/creating-helpful-content
