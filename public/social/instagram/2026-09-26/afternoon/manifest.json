@@ -4,12 +4,12 @@
   "category": "AI知識",
   "templateVersion": 4,
   "characterVariants": {
-    "cover": "cover-06",
+    "cover": "cover-08",
     "body": [
-      "body-23",
-      "body-22",
+      "body-02",
+      "body-27",
       "body-28",
-      "body-01"
+      "body-36"
     ],
     "cta": "cta-08"
   },
@@ -24,5 +24,5 @@
     "06.png"
   ],
   "dueAt": "2026-09-26T09:30:00.000Z",
-  "strategyGeneratedAt": "2026-09-24T17:30:05.280Z"
+  "strategyGeneratedAt": "2026-09-25T17:30:04.795Z"
 }

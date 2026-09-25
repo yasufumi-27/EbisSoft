@@ -1,17 +1,16 @@
 【AI知識｜2026年9月26日】
-AI検索対策と聞くと、専用ファイルや特別な設定を追加したくなるかもしれません。
+AIにサイトのURLを伝えるだけでは、アクセス権のない検索実績までは分析材料になりません。
 
-Googleは、AI OverviewsやAI Modeへの掲載に、AI専用ファイルや特別なマークアップは不要と案内しています。まず大切なのは、ページが検索に登録でき、重要な情報が文字で読める状態にすることです。
+そこで役立つのが、Google Search Consoleのデータです。検索結果での表示回数、クリック数、クリック率、検索語句などを確認・出力できます。
 
-そのうえで、読者の疑問に具体的に答え、料金の条件や更新日、根拠、作成者などの確かめられる情報を添えます。ただし、要件を満たしても掲載が保証されるわけではありません。
+例えば「表示回数は多いのに、クリック率が低い検索語句」をAIに渡すと、ページタイトルや説明文、内容の見直し候補を整理できます。ただし、提案は正解ではありません。実際のページと照らし合わせ、変更後の数字も確認しましょう。
 
-今日の5分で、主力サービスへの質問を一つ選び、「2文の回答＋根拠一つ」をメモしてみませんか。
+まずは上位10件だけで十分です。推測ではなく、自社の数字を材料にすることがAI活用の小さな一歩になります。
 
 詳しくはプロフィールの yebisusoft.jp へ。
 
-#AI知識 #AI検索 #SEO対策 #AEO #Web制作 #中小企業DX
+#AI活用 #中小企業DX #Web改善 #SEO対策 #業務効率化 #京都の企業
 
 出典:
-- Google Search Central｜生成AI検索向け最適化ガイド: https://developers.google.com/search/docs/fundamentals/ai-optimization-guide
-- Google Search Central｜AI機能とウェブサイト: https://developers.google.com/search/docs/appearance/ai-features
-- Google Search Central｜有用で信頼できる、人を第一に考えたコンテンツ: https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+- Google Search Console ヘルプ：検索パフォーマンス レポートの概要と基本設定: https://support.google.com/webmasters/answer/7576553?hl=ja
+- Google Search Console ヘルプ：パフォーマンス レポートの一般的なタスクとユースケース: https://support.google.com/webmasters/answer/17010961?hl=ja
