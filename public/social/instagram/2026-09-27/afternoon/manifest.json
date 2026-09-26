@@ -1,17 +1,17 @@
 {
   "date": "2026-09-27",
-  "slot": "morning",
-  "category": "AIニュース",
+  "slot": "afternoon",
+  "category": "AI知識",
   "templateVersion": 4,
   "characterVariants": {
-    "cover": "cover-20",
+    "cover": "cover-06",
     "body": [
-      "body-01",
-      "body-17",
-      "body-21",
-      "body-16"
+      "body-41",
+      "body-35",
+      "body-40",
+      "body-49"
     ],
-    "cta": "cta-03"
+    "cta": "cta-08"
   },
   "captionFile": "caption.txt",
   "mediaType": "carousel",
@@ -23,6 +23,6 @@
     "05.png",
     "06.png"
   ],
-  "dueAt": "2026-09-27T00:30:00.000Z",
+  "dueAt": "2026-09-27T11:00:00.000Z",
   "strategyGeneratedAt": "2026-09-26T17:30:04.787Z"
 }
