@@ -1,0 +1,28 @@
+{
+  "date": "2026-09-28",
+  "slot": "morning",
+  "category": "AIニュース",
+  "templateVersion": 4,
+  "characterVariants": {
+    "cover": "cover-12",
+    "body": [
+      "body-36",
+      "body-17",
+      "body-31",
+      "body-16"
+    ],
+    "cta": "cta-04"
+  },
+  "captionFile": "caption.txt",
+  "mediaType": "carousel",
+  "imageFiles": [
+    "01.png",
+    "02.png",
+    "03.png",
+    "04.png",
+    "05.png",
+    "06.png"
+  ],
+  "dueAt": "2026-09-27T22:30:00.000Z",
+  "strategyGeneratedAt": "2026-09-27T17:30:05.259Z"
+}

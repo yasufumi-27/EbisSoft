@@ -1,0 +1,16 @@
+【AI知識｜2026年9月28日】
+Webサイトの画像説明文（alt）は、画像の見た目を細かく実況する欄ではありません。そのページで画像が伝える情報や、ボタンとしての働きを文字にするものです。
+
+そのため、同じ写真でも掲載場所が変われば、適切な説明も変わります。AIに作成を頼むときは、画像だけでなく「ページの見出し」「画像の役割」「前後の文章」も一緒に渡すのがポイントです。
+
+飾りだけの画像には空のaltが適切な場合もあります。検索語の詰め込みは避け、AIの案を人が確認して仕上げましょう。
+
+まずは重要なページの画像1枚から試してみませんか。
+
+詳しくはプロフィールの yebisusoft.jp へ。
+
+#AI知識 #AI活用 #Web制作 #ホームページ改善 #SEO #アクセシビリティ
+
+出典:
+- W3C WAI「Images Tutorial」: https://www.w3.org/WAI/tutorials/images/
+- Google Search Central「Image SEO Best Practices」: https://developers.google.com/search/docs/appearance/google-images
