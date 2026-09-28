@@ -1,0 +1,15 @@
+【AI知識｜2026年9月29日】
+AI検索対策と聞くと、専用ファイルや特別なタグを先に用意したくなります。けれどGoogleは、AI OverviewsやAI Mode向けに追加の技術要件や特別な構造化データは不要と案内し、従来のSEOの基本を勧めています。
+
+まず確認したいのは、重要ページが検索対象になっているか、主要な情報が本文の文字で読めるか、内部リンクでたどれるかです。そのうえで、価格帯、対応範囲、納期の目安、実例など、自社だから書ける判断材料を加えるのが実務的です。
+
+今日の5分で、主力サービスのページを開き、「誰の困りごとか」「何を解決するか」「根拠となる実例は」の3点を確認してみてください。答えが抜けていたら、まず1文だけ下書きしましょう。
+
+詳しくはプロフィールの yebisusoft.jp へ。
+
+#AI知識 #AI検索 #SEO対策 #Web制作 #ホームページ改善 #中小企業DX
+
+出典:
+- Google Search Central：生成AI検索向け最適化ガイド: https://developers.google.com/search/docs/fundamentals/ai-optimization-guide
+- Google Search Central：AI機能とウェブサイト: https://developers.google.com/search/docs/appearance/ai-features
+- Google Search Consoleヘルプ：URL検査ツール: https://support.google.com/webmasters/answer/9012289?hl=en

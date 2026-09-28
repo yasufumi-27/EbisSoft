@@ -1,0 +1,11 @@
+【2026年9月29日 AIニュース】マイクロソフトは9月25日、仕事向けAI「Copilot」の新機能を発表しました。質問や文書作成に加え、自然な言葉から業務用ツールを作る「Code」や、決めた範囲で継続的に作業する「Autopilot」を提供予定です。HomeとCodeは段階的な展開、Autopilotは限定公開のため、現時点ですべての企業が利用できるわけではありません。
+
+注目点は、AI活用の単位が「1回の質問」から「一連の仕事」へ広がることです。中小企業でも、見積書の下書きや確認依頼など、繰り返し業務を整理しておくと導入判断がしやすくなります。まずは1つの作業を、入力・AIの作業・人の確認・完了の4段階に分けてみましょう。
+
+詳しくはプロフィールの yebisusoft.jp へ。
+
+#AIニュース #生成AI #中小企業DX #業務効率化 #MicrosoftCopilot
+
+出典:
+- Microsoft公式ブログ（2026年9月25日）: https://blogs.microsoft.com/blog/2026/09/25/introducing-the-new-copilot-with-home-code-and-autopilot/
+- Microsoft公式パートナーブログ（2026年9月25日）: https://partner.microsoft.com/en-us/blog/article/ai-at-work-marketing-moment
