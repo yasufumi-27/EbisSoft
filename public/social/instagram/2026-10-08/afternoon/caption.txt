@@ -1,0 +1,16 @@
+【AI知識｜2026年10月7日】
+生成AIに細かく説明したのに、思った形の文章が返ってこないことはありませんか。
+
+そんなときは、指示を長くするだけでなく、「この形に合わせて」と良い見本を1つ添える方法があります。Google Cloudの公式資料でも、明確な指示に加えて、回答例や出力形式を示すことが案内されています。
+
+例えばWebサイトのFAQを作るなら、確認済みの商品情報、過去の良い回答例、「80字以内」「不明点は推測しない」といった条件を一緒に渡します。見本は内容を覚えさせるためではなく、文の長さや調子、構成を伝える設計図として使います。
+
+まずは過去に自分で修正したAI文章を1つ選び、修正後の文を次の依頼に添えて、結果を見比べてみてください。機密情報は必ず除き、出力内容も人が確認しましょう。
+
+詳しくはプロフィールの yebisusoft.jp へ。
+
+#AI知識 #生成AI活用 #業務効率化 #Web制作 #中小企業DX #プロンプト
+
+出典:
+- Google Cloud「Overview of prompting strategies」: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/prompts/prompt-design-strategies
+- Google Cloud「Introduction to prompting」: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/prompts/introduction-prompt-design
