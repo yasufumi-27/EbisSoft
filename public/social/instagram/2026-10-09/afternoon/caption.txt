@@ -1,0 +1,14 @@
+【AI知識｜2026年10月9日】
+社内文書を探してから回答するAIの仕組みは、一般にRAGと呼ばれます。就業規則や製品マニュアルを探す時間の短縮に役立ちますが、文書を接続すれば必ず正しくなるわけではありません。
+
+NISTは、生成AIが誤った内容を自信ありげに示し、根拠や引用まで誤る場合があると説明しています。そこで実務では、回答だけでなく「文書名・見出し・該当文・更新日」も表示させ、元の文書を開いて確かめられる形にするのがポイントです。
+
+まずは機密情報を含まない公開文書1枚で、「この文書だけを使い、回答・根拠の一文・見出しを示して。不明なら不明と答えて」と試してみましょう。
+
+詳しくはプロフィールの yebisusoft.jp へ。
+
+#AI知識 #生成AI活用 #業務効率化 #中小企業DX #社内検索 #京都の企業
+
+出典:
+- IPA「AI利用者のためのセキュリティ豆知識」: https://www.ipa.go.jp/digital/ai/security/rcu1hd0000009h9u-att/1-1.pdf
+- NIST「Artificial Intelligence Risk Management Framework: Generative Artificial‌‍‍: https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=958388
