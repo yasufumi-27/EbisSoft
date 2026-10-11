@@ -1,0 +1,15 @@
+【AI知識｜2026年10月12日】
+Webサイトの画像説明をAIで下書きするとき、画像だけを見せても適切な文章になるとは限りません。
+
+W3Cは、画像の用途・文脈・内容に応じて説明を決めるよう案内しています。商品写真なら大切な特徴、ボタン画像なら見た目ではなく機能を伝えます。一方、情報を持たない飾りの画像は、読み上げを増やさない設定が適切です。
+
+まずは自社サイトの画像を1枚選び、AIへページ名と画像の役割を伝えて説明案を作成。「画像が見えなくても、必要な情報や機能が伝わるか」を人が確認してみましょう。
+
+詳しくはプロフィールの yebisusoft.jp へ。
+
+#AI活用 #Web制作 #ホームページ改善 #Webアクセシビリティ #中小企業DX
+
+出典:
+- W3C WAI Images Tutorial: https://www.w3.org/WAI/tutorials/images/
+- W3C WAI An alt Decision Tree: https://www.w3.org/WAI/tutorials/images/decision-tree/
+- W3C WCAG 2.2 Understanding Success Criterion 1.1.1: https://www.w3.org/WAI/WCAG22/Understanding/non-text-content
