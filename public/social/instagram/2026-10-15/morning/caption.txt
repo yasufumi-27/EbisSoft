@@ -1,0 +1,10 @@
+【2026年10月15日 AIニュース】マイクロソフトは10月12日、AI処理用の自社チップ「Azure Maia 200」を本番稼働させ、2027年から大規模に展開すると発表しました。すでにMicrosoft Copilotで使われ、GitHub Copilotなどにも広げる計画です。
+
+AI企業がモデルだけでなく、その裏側の設備まで自社向けに整える動きです。将来は速度や運用効率の改善につながる可能性がありますが、今回、利用料金の値下げや具体的な性能向上は発表されていません。
+
+利用企業が今できるのは、よく使うAI業務を一つ選び、応答時間・費用・やり直し回数を記録すること。変化があったとき、本当に仕事が楽になったかを数字で判断できます。詳しくはプロフィールの yebisusoft.jp へ。
+
+#AIニュース #生成AI #業務効率化 #中小企業DX #MicrosoftCopilot #エビスソフト
+
+出典:
+- Microsoft公式発表（2026年10月12日）: https://blogs.microsoft.com/blog/2026/10/12/microsoft-to-expand-azure-maia-system-to-multi-gigawatt-deployments/
