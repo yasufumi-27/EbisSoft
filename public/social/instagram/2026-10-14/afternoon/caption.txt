@@ -1,0 +1,15 @@
+【AI知識｜2026年10月14日】
+AIに自社の情報を答えさせるために、大量の資料を丸ごと覚えさせる必要があると思っていませんか。
+
+「RAG（検索拡張生成）」は、質問に関係する箇所を資料から探し、その部分をAIに渡して回答させる方法です。いわば、AIに必要なページだけ開いた教科書を渡す仕組みです。
+
+例えば、自社サイトのFAQや料金表を検索対象にすれば、問い合わせ回答の下書きに必要な根拠を集めやすくなります。ただし、関係の薄い情報が選ばれると回答も的外れになり得るため、出典との照合は欠かせません。
+
+まずは公開中のFAQを1ページ使い、質問と回答を3組作らせて原文と比べてみましょう。詳しくはプロフィールの yebisusoft.jp へ。
+
+#AI活用 #生成AI #業務効率化 #中小企業DX #Web活用
+
+出典:
+- Google Cloud｜RAGとは: https://cloud.google.com/use-cases/retrieval-augmented-generation
+- RAG原論文｜Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks: https://arxiv.org/abs/2005.11401
+- NIST｜生成AIリスク管理プロファイル: https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf
