@@ -1,0 +1,16 @@
+【AI知識｜2026年10月15日】
+AIに「出典付きで」と頼めば、内容も正確になると思っていませんか。
+
+生成AIは、もっともらしい説明だけでなく、誤った出典や実在しない引用を示すことがあります。米国NISTも、生成AIが作った引用が人の判断を誤らせる可能性を挙げています。
+
+Web記事やFAQを公開するときは、出典が書かれているだけで安心せず、リンクを実際に開き、「発信元」「記載内容」「更新日」を確認しましょう。Googleも、AI生成コンテンツは公開前に人が事実確認することが重要だと案内しています。
+
+まずは今日、AIで作った文章を1つ選び、重要な数字や制度の出典を5分だけ確認してみてください。
+
+詳しくはプロフィールの yebisusoft.jp へ。
+
+#エビスソフト #生成AI活用 #業務効率化 #Web制作 #SEO対策 #中小企業DX
+
+出典:
+- NIST「生成AIリスク管理プロファイル」: https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf
+- Google Search Central「生成AIコンテンツの利用に関するガイダンス」: https://developers.google.com/search/docs/fundamentals/using-gen-ai-content?hl=ja
