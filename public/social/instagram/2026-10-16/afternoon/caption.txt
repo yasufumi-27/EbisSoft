@@ -1,0 +1,17 @@
+【AI知識｜2026年10月16日】
+AIで作ったWeb文章が、どこかで読んだような一般論になっていませんか。
+
+Googleの公式資料では、AI検索でも従来のSEOの基本が引き続き重要とされ、一般論のまとめではなく、独自の視点や実体験を含む有用な内容が勧められています。
+
+例えば制作事例なら、業界共通の課題を並べるだけでなく、「表示時間を実測して何を直したか」「なぜその機能を採用しなかったか」など、自社で確認できる事実を加えます。AIは構成や下書きに使い、数字・経験・判断は人が補い、公開前に事実確認するのが実務的です。
+
+まずは公開予定の1ページに、自社だから書ける事実を1つ足してみましょう。
+
+詳しくはプロフィールの yebisusoft.jp へ。
+
+#AI知識 #生成AI活用 #Web制作 #SEO対策 #中小企業DX #業務効率化
+
+出典:
+- Google Search Central：生成AIコンテンツをウェブサイトで使用する際のガイダンス: https://developers.google.com/search/docs/fundamentals/using-gen-ai-content?hl=ja
+- Google Search Central：Google検索の生成AI機能向けウェブサイト最適化ガイド: https://developers.google.com/search/docs/fundamentals/ai-optimization-guide?hl=ja
+- Google Search Central：有用で信頼性の高い、ユーザー第一のコンテンツの作成: https://developers.google.com/search/docs/fundamentals/creating-helpful-content?hl=ja
