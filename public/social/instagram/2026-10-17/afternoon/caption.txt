@@ -1,0 +1,17 @@
+【AI知識｜2026年10月17日】
+AIは、いつも遠くのクラウドで動くとは限りません。「エッジAI」は、カメラやセンサーのデータを機器本体や近くのコンピューターで処理する考え方です。
+
+例えば検品カメラなら、現場で異常候補を見つけ、結果や必要な画像だけを送る設計が考えられます。通信量や待ち時間を抑え、回線が不安定な場所でも処理を続けやすくなります。
+
+ただし、クラウドが不要になるわけではありません。学習や更新はクラウド、急ぐ判定は現場という役割分担も可能です。導入時は機器性能、監視、更新方法まで確認しましょう。
+
+まずはAI化したい作業を1つ選び、「即時判断」「通信切断」「データの持ち出し」の3点を○×で確認してみてください。
+
+詳しくはプロフィールの yebisusoft.jp へ。
+
+#AI知識 #エッジAI #IoT #組み込み開発 #業務効率化 #中小企業DX
+
+出典:
+- NIST「Edge AI」: https://www.nist.gov/programs-projects/edge-ai
+- AWS Machine Learning Lens「クラウドとエッジの評価」: https://docs.aws.amazon.com/wellarchitected/latest/machine-learning-lens/mlperf05-bp01.html
+- AWS IoT Lens「エッジ向けMLモデルの最適化」: https://docs.aws.amazon.com/wellarchitected/latest/iot-lens/optimize-ml-models-for-the-edge.html
