@@ -1,0 +1,15 @@
+【2026年10月20日 AIニュース】
+Metaは10月15日、AIモデル「Muse Spark Open」を公開しました。文章だけでなく、画像・動画・音声を受け取り、内容を文章で回答できます。モデルの中身にあたる「重み」も入手でき、自社向けの調整や自社環境での運用が可能です。
+
+ただし、Metaの資料では、自社運用に少なくとも700GBのGPUメモリが必要です。中小企業がすぐ機器を購入する話ではなく、画面と音声メモなど、形式の違う資料をまとめて扱う選択肢が増えたニュースと捉えるのが現実的です。
+
+まずは機密情報を除いた過去の問い合わせ1件で、今使える画像対応AIに「原因候補・確認事項・返信案」を作らせ、精度と所要時間を記録してみましょう。
+
+詳しくはプロフィールの yebisusoft.jp へ。
+
+#AIニュース #生成AI #中小企業DX #業務効率化 #AI活用
+
+出典:
+- Meta公式 Muse Spark Openモデルカード: https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B
+- Meta公式 Muse Model License: https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B/blob/main/LICENSE.md
+- Hugging Face公式技術解説: https://github.com/huggingface/blog/blob/main/meta-muse-spark-open.md
