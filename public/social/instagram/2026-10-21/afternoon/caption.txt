@@ -1,0 +1,17 @@
+【AI知識｜2026年10月21日】
+AIに画像を見せれば、Webサイト用の説明文も自動で完成すると思っていませんか。
+
+画像の代わりになる説明文（altテキスト）は、見た目だけでなく、そのページで画像が果たす役割に合わせて考えます。同じ社員写真でも、会社紹介なら職場の雰囲気、採用ページなら働く様子が重要になるかもしれません。飾りだけの画像では、説明を付けない判断もあります。
+
+W3Cは、画像の用途や文脈に応じて説明を決めるよう案内しています。Googleも、画像の説明文と周辺の内容などを画像理解に利用すると説明しています。
+
+AIに頼むときは、画像と一緒に「掲載ページ」「伝えたいこと」「クリック時の動作」を渡し、最後は人がページを見ながら確認するのがおすすめです。
+
+詳しくはプロフィールの yebisusoft.jp へ。
+
+#AI知識 #AI活用 #Web制作 #ホームページ改善 #アクセシビリティ #中小企業DX
+
+出典:
+- W3C WAI：Images Tutorial: https://www.w3.org/WAI/tutorials/images/
+- W3C WAI：An alt Decision Tree: https://www.w3.org/WAI/tutorials/images/decision-tree/
+- Google Search Central：Google画像検索SEOベストプラクティス: https://developers.google.com/search/docs/appearance/google-images

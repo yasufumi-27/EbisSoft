@@ -1,0 +1,28 @@
+{
+  "date": "2026-10-21",
+  "slot": "afternoon",
+  "category": "AI知識",
+  "templateVersion": 4,
+  "characterVariants": {
+    "cover": "cover-15",
+    "body": [
+      "body-43",
+      "body-40",
+      "body-01",
+      "body-50"
+    ],
+    "cta": "cta-10"
+  },
+  "captionFile": "caption.txt",
+  "mediaType": "carousel",
+  "imageFiles": [
+    "01.png",
+    "02.png",
+    "03.png",
+    "04.png",
+    "05.png",
+    "06.png"
+  ],
+  "dueAt": "2026-10-21T09:30:00.000Z",
+  "strategyGeneratedAt": "2026-10-21T06:30:52.452Z"
+}
