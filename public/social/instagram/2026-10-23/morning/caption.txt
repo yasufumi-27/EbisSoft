@@ -1,0 +1,13 @@
+【2026年10月23日 AIニュース】OpenAIは10月19日、COBOLやVisual Basicなど、AIが苦手としてきた古いプログラミング言語への対応が向上したと発表しました。
+
+同社の試験では、COBOLで作られたプログラムを別の言語へ移す課題で、GPT-6.1 Solの正答率は設定により86.6％〜97.9％でした。ただし、これは用意された試験での結果です。実際の業務システムでは、専門家による確認と業務ルールに沿ったテストが必要だと説明しています。
+
+担当者が退職し、仕様書も十分に残っていないシステムでは、まずAIに処理内容を説明させたり、確認項目を洗い出させたりする使い方が考えられます。いきなり全面移行を任せず、機密情報を除いた小さな処理から試すのが現実的です。
+
+詳しくはプロフィールの yebisusoft.jp へ。
+
+#AIニュース #生成AI #業務システム #システム改修 #中小企業DX #京都の企業
+
+出典:
+- OpenAI「Advancing Coding in Low-Resource Programming Languages」（2026年10月19日）: https://openai.com/index/low-resource-programming-languages/
+- OpenAI公式 MultiLangBench 評価コード: https://github.com/openai/MultiLangBench
